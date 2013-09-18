@@ -134,7 +134,8 @@
                         updateStemAndLeaf(d.data,areaData[source][areaName],areaData[source]["AverageValue"],areaData[source]["MinimumValue"],areaData[source]["MaximumValue"], div);
                     } else if (d.type == "isotope") {
                         updateIsotope(areaData[source][areaName],areaData[source]["MinimumValue"],areaData[source]["MaximumValue"], div, d.data);
-                    }
+                    } else if (d.type == "waffle")
+                        updateWaffle(areaData[source][areaName], areaData[source]["Description"], d.data, div);
                 });
             } else {
                 graphs.selectAll(".graph").each(function(d){ 
@@ -156,7 +157,7 @@
 
         function appendGraph(source, type, data, div, notes) {
             if (type == "waffle") {
-                processWaffle(areaData[source][areaName], areaData[source]["Description"], data, div);
+                drawWaffle(areaData[source][areaName], areaData[source]["Description"], data, div);
             }
             if (type == "isotope") {
                 drawIsotope(areaData[source][areaName],areaData[source]["AverageValue"],areaData[source]["MinimumValue"],areaData[source]["MaximumValue"],areaData[source]["Description"], data, div);
@@ -287,47 +288,61 @@
             });
         }
 
-        function processWaffle(data, descriptions, types, div) {
+        function processWaffle() {
+            
+        }
+
+        function drawWaffle(data, descriptions, types, div) {
+            console.log(div)
+            var waffle = div.selectAll(".waffle")
+                .data([types]).enter()
+                .append("div").attr("class","waffle"),
+
+                chartSize = 200,
+                boxSize = chartSize/10;
+            var wrapper = waffle.append("div").attr("class","box-wrapper")
+                        .style("width",chartSize+"px").style("height",chartSize+"px");
+            var key = waffle.append("ul").attr("class","boxes-key").style("left", chartSize + "px");
+
+            var numBoxes = 0;
+
+            for (var i = 0; i < 100; i++) {
+                wrapper.append("div").attr("class","box")
+                    .style("width",(boxSize - 2)+"px")
+                    .style("height",(boxSize - 2)+"px")
+                    .style("left",(numBoxes%10)*boxSize+"px")
+                    .style("top",Math.floor(numBoxes/10)*boxSize + "px");
+                numBoxes++;
+            }
+            types.forEach(function(land,i){
+                var li = key.append("li").attr("class","l-"+i);
+                    li.append("div").attr("class","key-color").style("background-color",colors[i]);
+                    li.append("span").html(land + " <span class='num'></span>");
+            });
+
+            updateWaffle(data, descriptions, types, div);
+        }
+
+        function updateWaffle(data, descriptions, types, div) {
+
             var waffleTypes = [], totalValue = 0;
             types.forEach(function(type,i){
                 waffleTypes[i] = { "title":type, "data":data[type] };
                 totalValue += parseFloat(data[type]);
             });
-            drawWaffle(waffleTypes, totalValue, div);
-        }
 
-        function drawWaffle(landUses, totalLand, div) {
-            var waffle = div.append("div").attr("class","waffle"),
-                chartSize = 200,
-                boxSize = chartSize/10;
-            var div = waffle.append("div").attr("class","box-wrapper")
-                        .style("width",chartSize+"px").style("height",chartSize+"px");
-            var key = waffle.append("ul").attr("class","boxes-key").style("left", chartSize + "px");
             var numBoxes = 0;
+            var key = div.select(".boxes-key");
 
-            landUses.forEach(function(land,j){
-                var p = landUses[j].data/totalLand*100;
+            waffleTypes.forEach(function(land,j){
+                var p = waffleTypes[j].data/totalValue*100;
                 for (var i = 0; i < Math.round(p); i++) {
-                    // drawing a box for each percentage point
-                    // color is based on first character in the name <- hacky
-                    div.append("div").attr("class","box")
-                        .style("width",(boxSize - 2)+"px")
-                        .style("height",(boxSize - 2)+"px")
-                        .style("left",(numBoxes%10)*boxSize+"px")
-                        .style("top",Math.floor(numBoxes/10)*boxSize + "px")
-                        .style("background-color",colors[j]);
+                    $(div[0]).find(".box").eq(numBoxes).css("background-color",colors[j]);
 
                     numBoxes++;
                 }
-                // building out the key on the side
-                var li = key.append("li");
-                li.append("div").attr("class","key-color").style("background-color",colors[j]);
-                li.append("span").text(land.title + " (" + p.toFixed(1) + "%)");
+                key.select(".l-"+j+" .num").text("(" + p.toFixed(1) + "%)");
             });
-        }
-
-        function updateWaffle() {
-            
         }
 
         function drawPie(value, avgValue, attr, div) {
