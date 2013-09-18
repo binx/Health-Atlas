@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <script type="text/javascript" src="jquery.min.js" charset="utf-8"></script>
-        <script type="text/javascript" src="d3.v3.min.js" charset="utf-8"></script>
+        <script type="text/javascript" src="lib/jquery.min.js" charset="utf-8"></script>
+        <script type="text/javascript" src="lib/d3.v3.min.js" charset="utf-8"></script>
         <!-- <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script> -->
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
@@ -30,8 +30,8 @@
         mostRecentData,
         masterData = {};
 
-        d3.json("CPA_small.json",function(collection){
-            d3.csv("CPA.csv",function(csv){
+        d3.json("data/map.json",function(collection){
+            d3.csv("data/CPA.csv",function(csv){
                 var c = [];
                 csv.forEach(function(d){
                     if (specialRows.indexOf(d["Area Name"]) == -1 && d["Area Name"]) {
@@ -45,7 +45,7 @@
 
                 generateMap(collection);
 
-                d3.csv("order.csv",function(order){
+                d3.csv("data/order.csv",function(order){
                     var headings = d3.nest().key(function(d){
                         return d["Chrolopleth Map Cat"];
                     }).entries(order);

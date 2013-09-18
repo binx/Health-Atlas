@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <script type="text/javascript" src="jquery.min.js" charset="utf-8"></script>
-        <script type="text/javascript" src="d3.v3.min.js" charset="utf-8"></script>
+        <script type="text/javascript" src="lib/jquery.min.js" charset="utf-8"></script>
+        <script type="text/javascript" src="lib/d3.v3.min.js" charset="utf-8"></script>
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
     <body>
@@ -121,7 +121,7 @@
         function showData() {
             console.log(areaData);
             map.select("h1").text(areaName);
-            d3.json("profile.json",function(json){
+            d3.json("data/profile.json",function(json){
                 $("#graphs").empty();
                 json.data.forEach(function(v){
                     var div = graphs.append("div").attr("class","section");
@@ -200,7 +200,7 @@
         }
 
         function loadMap() {
-            d3.json("CPA_med.json",function(collection){
+            d3.json("data/map.json",function(collection){
                 var svg = map.select("svg").attr("width","400").attr("height","600").append("g");
 
                 var projection = d3.geo.albers().scale(50000)
