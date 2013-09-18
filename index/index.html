@@ -277,7 +277,7 @@
                 var t = d3.select(this);
 
                 if (t.attr("class") == p) {
-                    t.select("rect").attr("fill",(selectedArea && d.placeName != selectedArea) ? "#0FF" : "yellow");
+                    t.select("rect").attr("z",(selectedArea && d.placeName != selectedArea) ? "#0FF" : "yellow");
                     t.select("text").style("display","block");
 
                 } else if (t.attr("class") == selectedArea) {

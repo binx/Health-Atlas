@@ -179,10 +179,10 @@
 
         function loadMap() {
             d3.json("data/map.json",function(collection){
-                var svg = map.select("svg").attr("width","400").attr("height","600").append("g");
+                var svg = map.select("svg").attr("width","200").attr("height","300").append("g");
 
-                var projection = d3.geo.albers().scale(50000)
-                    .translate([310, 260])
+                var projection = d3.geo.albers().scale(25000)
+                    .translate([160, 140])
                     .rotate([118.25,0])
                     .center([0, 34.05]);
 
@@ -264,7 +264,7 @@
 
         function drawWaffle(landUses, totalLand, div) {
             var waffle = div.append("div").attr("class","waffle"),
-                chartSize = 200,
+                chartSize = 100,
                 boxSize = chartSize/10;
             var div = waffle.append("div").attr("class","box-wrapper")
                         .style("width",chartSize+"px").style("height",chartSize+"px");
@@ -358,8 +358,11 @@
                 leafMaxWidth = 50,
                 boxPadding = 5,
                 svg = stem.append("svg").attr("width",svgWidth).attr("height",attrs.length*leafHeight);
-                svg.append("rect").attr("x",svgWidth/2).attr("width",2).attr("height",attrs.length*leafHeight);
 
+                svg.append("rect").attr("x",svgWidth/2).attr("width",2).attr("height",attrs.length*leafHeight);
+             
+        
+                
             attrs.forEach(function(attr,i){
                 var barScale = d3.scale.linear().domain([min[attr],max[attr]]).range([2,leafMaxWidth]);
                 var colorScale = d3.scale.linear().domain([min[attr],max[attr]]).range(["#EC8E4F","#64E0E5"]);
@@ -379,6 +382,9 @@
                     .attr("width",Math.abs(diff))
                     .attr("fill",colorScale(val[attr]));
             })
+
+	            var avg = svg.append("div").attr("class","average-label").html("average");
+
         }
 
         function drawThermometer(attr, val, min, max, format, div, showNumber) {
