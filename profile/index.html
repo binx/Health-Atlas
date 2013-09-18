@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript" src="jquery.min.js" charset="utf-8"></script>
+        <script type="text/javascript" src="d3.v3.min.js" charset="utf-8"></script>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+        <div id="map">
+            <h1></h1>
+            <svg></svg>
+        </div>
+        <div id="graphs">
+        </div>
+        <div id="tooltip">
+                <div class="place"></div>
+                <div class="data"></div>
+            </div>
+    </body>
+    <script type="text/javascript">
+        var specialRows = ["DataSource","Description","MinimumValue","MaximumValue","AverageValue","GeographicScale","AveValueGeo"];
+        var colors = ["yellow","orange","pink","green","purple","red"];
+        var graphs = d3.select("#graphs"),
+            map = d3.select("#map"),
+            tooltip = d3.select("#tooltip"),
+            areaName,
+            areaData = {};
+
+        loadCPA(1);
+
+        function loadCPA(id) {
+            d3.csv("data/"+id+"-CPA.csv",function(csv){
+                areaName = csv[0]["Area Name"];
+                areaData["CPA"] = {};
+
+                csv.forEach(function(v,i){
+                    if (v["Area Name"] != "") {
+                        areaData["CPA"][v["Area Name"]] = v;
+                    }
+                });
+                loadCD(id);
+            });            
+        }
+        function loadCD(id) {
+            d3.csv("data/"+id+"-CD.csv",function(csv){
+                areaData["CD"] = {};
+                csv.forEach(function(v,i){
+                    if (v["Area Name"] != "") {
+                        if (v["Specific area"] != "")
+                            areaData["CD"][v["Specific area"]] = v;
+                        else
+                            areaData["CD"][v["Area Name"]] = v;
+                    }
+                    // if (v["Area Name"] == areaName) {
+                    //     areaData["CD"][v["Specific area"]] = v;
+                    // } else if (v["Area Name"] == "AverageValue") {
+                    //     areaData["CD"]["AverageValue"] = v;
+                    // }
+                });
+                loadHD(id);
+            });
+        }
+        function loadHD(id) {
+            d3.csv("data/"+id+"-HD.csv",function(csv){
+                areaData["HD"] = {};
+                csv.forEach(function(v,i){
+                    if (v["Area Name"] != "") {
+                        if (v["Specific area"] != "")
+                            areaData["HD"][v["Specific area"]] = v;
+                        else
+                            areaData["HD"][v["Area Name"]] = v;
+                    }
+                    // if (v["Area Name"] == areaName) {
+                    //     areaData["HD"][v["Specific area"]] = v;
+                    // } else if (v["Area Name"] == "AverageValue") {
+                    //     areaData["HD"]["AverageValue"] = v;
+                    // }
+                });
+                loadPUMA(id);
+            });            
+        }
+        function loadPUMA(id) {
+            areaData["PUMA"] = {};
+            d3.csv("data/"+id+"-PUMA.csv",function(csv){
+                csv.forEach(function(v,i){
+                    if (v["Area Name"] != "") {
+                        if (v["Specific area"] != "")
+                            areaData["PUMA"][v["Specific area"]] = v;
+                        else
+                            areaData["PUMA"][v["Area Name"]] = v;
+                    }
+                    // if (v["Area Name"] == areaName) {
+                    //     areaData["PUMA"][v["Specific area"]] = v;
+                    // } else if (v["Area Name"] == "AverageValue") {
+                    //     areaData["PUMA"]["AverageValue"] = v;
+                    // }
+                });
+                loadZIP(id);
+            });            
+        }
+        function loadZIP(id) {
+            areaData["ZIP"] = {};
+            d3.csv("data/"+id+"-ZIP.csv",function(csv){
+                csv.forEach(function(v,i){
+                    if (v["Area Name"] != "") {
+                        if (v["Specific area"] != "")
+                            areaData["ZIP"][v["Specific area"]] = v;
+                        else
+                            areaData["ZIP"][v["Area Name"]] = v;
+                    }
+                    // if (v["Area Name"] == areaName) {
+                    //     areaData["ZIP"][v["Specific area"]] = v;
+                    // } else if (v["Area Name"] == "AverageValue") {
+                    //     areaData["ZIP"]["AverageValue"] = v;
+                    // }
+                });
+                showData();
+            });            
+        }
+
+        function showData() {
+            console.log(areaData);
+            map.select("h1").text(areaName);
+            d3.json("profile.json",function(json){
+                $("#graphs").empty();
+                json.data.forEach(function(v){
+                    var div = graphs.append("div").attr("class","section");
+                    div.append("h1").text(v.key);
+
+                    v.obj.forEach(function(w){
+                        var subdiv = div.append("div").attr("class","graph-"+w.obj.type);
+                        if (w.key) subdiv.append("h2").text(w.key);
+                        appendGraph(w.obj.source, w.obj.type, w.obj.data, subdiv, (w.obj.notes ? w.obj.notes : ""));
+                    });
+                });
+            });
+
+            loadMap();
+
+            function appendGraph(source, type, data, div, notes) {
+                if (type == "waffle") {
+                    processWaffle(areaData[source][areaName], areaData[source]["Description"], data, div);
+                }
+                if (type == "isotope") {
+                    processIsotope(areaData[source][areaName],areaData[source]["AverageValue"],areaData[source]["MinimumValue"],areaData[source]["MaximumValue"],areaData[source]["Description"], data, div);
+                }
+                if (type == "thermometer") {
+                    var attr = data[0];
+                    drawThermometer(attr, areaData[source][areaName][attr], areaData[source]["MinimumValue"][attr], areaData[source]["MaximumValue"][attr], areaData[source][areaName][attr+"-FORMAT"], div, notes.number);
+                }
+                if (type == "stemandleaf") {
+                    drawStemAndLeaf(data,areaData[source][areaName],areaData[source]["AverageValue"],areaData[source]["MinimumValue"],areaData[source]["MaximumValue"], div);
+                }
+                if (type == "pie") {
+                    var attr = data[0];
+                    drawPie(areaData[source][areaName][attr], areaData[source]["AverageValue"][attr], attr, div);
+                }
+                if (type == "barchart") {
+                    var dataAggregate = [],
+                        areaList = [];
+                    for (area in areaData[source]) {
+                        if (specialRows.indexOf(area) == -1)
+                            areaList.push(area);
+                    }
+                    areaList.sort();
+                    data.forEach(function(d){
+                        var aList = [];
+                        areaList.forEach(function(a){
+                            aList.push({"place":a, 
+                                        "data":parseFloat(areaData[source][a][d])});
+                        })
+                        var p = {"key":d,
+                                "obj":aList,
+                                "avg":parseFloat(areaData[source]["AverageValue"][d]),
+                                "min":parseFloat(areaData[source]["MinimumValue"][d]),
+                                "max":parseFloat(areaData[source]["MaximumValue"][d])};
+                        dataAggregate.push(p);
+                    });
+                    
+                    drawBars(dataAggregate, source, div);
+                }
+            }      
+        }
+
+        function showTooltip(data, place, attr, source) {
+            tooltip.select(".place").text(source + ": " + place);
+            tooltip.select(".data").html(attr + ": <span>" + data+"</span>");
+        }
+        function positionTooltip(elem, pos) {
+            var m = d3.mouse(elem);
+            // var svg = $(elem).parent();
+            // var pos = svg.position();
+
+            tooltip.style("left",(pos.left + m[0])+"px")
+                .style("top",(pos.top + m[1])+"px")
+                .style("display","block");
+        }
+        function hideTooltip() {
+            tooltip.style("display","none");
+        }
+
+        function loadMap() {
+            d3.json("CPA_med.json",function(collection){
+                var svg = map.select("svg").attr("width","400").attr("height","600").append("g");
+
+                var projection = d3.geo.albers().scale(50000)
+                    .translate([310, 260])
+                    .rotate([118.25,0])
+                    .center([0, 34.05]);
+
+                var path = d3.geo.path().projection(projection);
+
+                var paths = svg.selectAll('path')
+                    .data(collection.features)
+                    .enter().append('path');
+
+                paths.attr('d', path)
+                    .attr("fill",function(d){
+                        if (d.properties.NAME_ALF == areaName)
+                            return "yellow";
+                        return "white";
+                    }).attr("stroke",function(d){
+                        if (d.properties.NAME_ALF == areaName)
+                            return "black";
+                        return "#aaa";
+                    }).on("click",function(d){
+                        loadCPA(d.properties.OBJECTID);
+                    });
+            });
+        }
+
+        function drawBars(data, source, div) {
+            if (data.length == 1) div.style("width","50%").style("clear","none").style("float","left");
+
+            data.forEach(function(datum){
+                var chart = div.append("div").attr("class","barchart").style("width",(100/data.length)+"%"),
+                    chartHeight = 120;
+                var svg = chart.append("svg").attr("width","90%").attr("height",chartHeight+"px"),
+                    chartWidth = $(svg[0]).width(),
+                    minPadding = 10,
+                    barWidth = Math.min((chartWidth-minPadding*datum.obj.length)/datum.obj.length, 70),
+                    barPadding = Math.max((chartWidth-(datum.obj.length*barWidth))/datum.obj.length,minPadding);
+
+                console.log(datum.key, barWidth, datum.obj.length, chartWidth-(datum.obj.length*barWidth), barPadding)
+
+                var barScale = d3.scale.linear().domain([datum.min,datum.max]).range([0,chartHeight-2]),
+                    colorScale = d3.scale.linear().domain([datum.min,datum.max]).range(["#EC8E4F","#64E0E5"]);
+
+                svg.append("rect").attr("width","100%").attr("height",2)
+                    .attr("y",barScale(datum.avg))
+                    .attr("fill","green");
+
+                var bars = svg.selectAll("rect.bar").data(datum.obj)
+                            .enter().append("rect").attr("class","bar");
+
+                bars.attr("width",barWidth)
+                    .attr("height",function(d){ return barScale(d.data); })
+                    .attr("x",function(d,i){ return i*(barWidth+barPadding) + barPadding/2; })
+                    .attr("y",function(d){ return chartHeight - barScale(d.data); })
+                    .attr("fill",function(d){ return colorScale(d.data); });
+
+                var pos = $(svg[0]).offset();
+
+                bars.on("mouseenter",function(d){ showTooltip(d.data, d.place, datum.key, source); })
+                    .on("mousemove",function(d){ positionTooltip(this, pos); })
+                    .on("mouseout",function(d){ hideTooltip(); });
+
+                svg.append("rect").attr("class","axis")
+                    .attr("width","100%").attr("height",2)
+                    .attr("y",chartHeight-2);
+                svg.append("rect").attr("class","axis")
+                    .attr("width",2).attr("height","100%");
+
+                chart.append("div").attr("class","title").text(datum.key)
+            });
+        }
+
+        function processWaffle(data, descriptions, types, div) {
+            var waffleTypes = [], totalValue = 0;
+            types.forEach(function(type,i){
+                // waffleTypes[i] = { "title":descriptions[type], "data":data[type] };
+                waffleTypes[i] = { "title":type, "data":data[type] };
+                totalValue += parseFloat(data[type]);
+            });
+            drawWaffle(waffleTypes, totalValue, div);
+        }
+
+        function drawWaffle(landUses, totalLand, div) {
+            var waffle = div.append("div").attr("class","waffle"),
+                chartSize = 200,
+                boxSize = chartSize/10;
+            var div = waffle.append("div").attr("class","box-wrapper")
+                        .style("width",chartSize+"px").style("height",chartSize+"px");
+            var key = waffle.append("ul").attr("class","boxes-key").style("left", chartSize + "px");
+            var numBoxes = 0;
+
+            landUses.forEach(function(land,j){
+                var p = landUses[j].data/totalLand*100;
+                for (var i = 0; i < Math.round(p); i++) {
+                    // drawing a box for each percentage point
+                    // color is based on first character in the name <- hacky
+                    div.append("div").attr("class","box")
+                        .style("width",(boxSize - 2)+"px")
+                        .style("height",(boxSize - 2)+"px")
+                        .style("left",(numBoxes%10)*boxSize+"px")
+                        .style("top",Math.floor(numBoxes/10)*boxSize + "px")
+                        .style("background-color",colors[j]);
+
+                    numBoxes++;
+                }
+                // building out the key on the side
+                var li = key.append("li");
+                li.append("div").attr("class","key-color").style("background-color",colors[j]);
+                li.append("span").text(land.title + " (" + p.toFixed(1) + "%)");
+            });
+        }
+
+        function drawPie(value, avgValue, attr, div) {
+            var pie = div.append("div").attr("class","pie"),
+                pieSize = 120,
+                svg = pie.append("svg").attr("width",pieSize).attr("height",pieSize);
+
+            var arc = d3.svg.arc()
+                .innerRadius(00)
+                .outerRadius(40)
+                .startAngle(0)
+                .endAngle(value * 2*Math.PI);
+
+            var avg = d3.svg.arc()
+                .innerRadius(50)
+                .outerRadius(53)
+                .startAngle(0)
+                .endAngle(avgValue * (2*Math.PI));
+
+            svg.append("circle").attr("r",40)
+                .attr("cx",pieSize/2).attr("cy",pieSize/2)
+                .attr("fill","#ddd");
+
+            svg.append("path")
+                .attr("d", arc)
+                .attr("transform","translate("+pieSize/2+","+pieSize/2+")")
+                .attr("fill","lightBlue");
+
+            svg.append("path")
+                .attr("d", avg)
+                .attr("transform","translate("+pieSize/2+","+pieSize/2+")")
+                .attr("fill","black");
+
+            // pie.append("div").attr("class","pie-title")
+            //     .text(areaName + " " + (value*100).toFixed(0) + "%");
+
+            pie.append("div").attr("class","pie-avg")
+                .html("LA County<br> " + (avgValue*100).toFixed(0) + "%");
+        }
+
+        function processIsotope(valData, avgData, min, max, desc, attrs, div) {
+            attrs.forEach(function(attr){
+                drawIsotope(valData[attr], avgData[attr], min[attr], max[attr], desc[attr], div, attr);
+            })
+        }
+
+        function drawIsotope(value, avgValue, min, max, desc, div, attr) {
+            var iso = div.append("div").attr("class","isotope"),
+                personScale = d3.scale.linear().domain([min,max]).range([9,400]),
+                bg = d3.scale.linear().domain([min,max]).range([1,5]),
+                imgWidth = 9;
+
+            // iso.append("div").attr("class","title").text(desc);
+            iso.append("div").attr("class","title").text(attr);
+            var graph = iso.append("div").attr("class","graph");
+
+            var val = graph.append("div").attr("class","iso-line value")
+            val.append("div").attr("class","title").text("here");
+            val.append("div").attr("class","img bg-"+Math.round(bg(value))).style("width",(personScale(value)) + "px");
+
+            var avg = graph.append("div").attr("class","iso-line average");
+            avg.append("div").attr("class","title").text("city avg");
+            avg.append("div").attr("class","img").style("width",(personScale(avgValue)) + "px");
+        }
+
+        function drawStemAndLeaf(attrs, val, avg, min, max, div) {
+            var stem = div.append("div").attr("class","stem-and-leaf"),
+                svgWidth = 100,
+                leafHeight = 30,
+                leafMaxWidth = 50,
+                boxPadding = 5,
+                svg = stem.append("svg").attr("width",svgWidth).attr("height",attrs.length*leafHeight);
+                svg.append("rect").attr("x",svgWidth/2).attr("width",2).attr("height",attrs.length*leafHeight);
+
+            attrs.forEach(function(attr,i){
+                var barScale = d3.scale.linear().domain([min[attr],max[attr]]).range([2,leafMaxWidth]);
+                var colorScale = d3.scale.linear().domain([min[attr],max[attr]]).range(["#EC8E4F","#64E0E5"]);
+                var leaf = stem.append("div").attr("class","leaf");
+
+                var format = val[attr+"-FORMAT"];
+                var textDisplay = (format == "percentage") ? (val[attr]*100)+"%" : val[attr];
+                leaf.append("div").attr("class","title").html(attr + " <span>" + textDisplay + "</span>");
+
+                var diff = barScale(avg[attr])-barScale(val[attr]),
+                    neg = (diff < 0) ? true : false;
+
+                svg.append("rect")
+                    .attr("y",i*leafHeight + boxPadding)
+                    .attr("x",(svgWidth/2 + (neg ? 2 : -diff)))
+                    .attr("height",(leafHeight - 2*boxPadding))
+                    .attr("width",Math.abs(diff))
+                    .attr("fill",colorScale(val[attr]));
+            })
+        }
+
+        function drawThermometer(attr, val, min, max, format, div, showNumber) {
+            var therm = div.append("div").attr("class","thermometer"),
+                thermHeight = 200,
+                thermWidth = 15,
+                thermWrapper = therm.append("div").attr("class","therm-wrapper")
+                                    .style("height",thermHeight+"px").style("width",thermWidth+"px"),
+                valueWrapper = therm.append("div").attr("class","value-wrapper")
+                                    .style("height",thermHeight+"px"),
+                colorScale = d3.scale.linear().domain([0,5]).range(["#EC8E4F","#64E0E5"]);
+
+            for (var i = 0; i < 5; i++) {
+                thermWrapper.append("div").attr("class","therm-background")
+                    .style("background-color",colorScale(i))
+                    .style("width",thermWidth + "px")
+                    .style("height",thermHeight/5 + "px")
+                    .style("top",(thermHeight/5)*i + "px");
+            }
+
+            valueWrapper.append("div").attr("class","scale max").text(formatNumber(max));
+            valueWrapper.append("div").attr("class","scale min").text(formatNumber(min));
+
+            var posScale = d3.scale.linear().domain([max,min]).range([0,thermHeight-thermWidth]);
+            var circWrapper = valueWrapper.append("div")
+                .attr("class","circle-wrapper")
+                .style("margin",posScale(val)+"px auto 0")
+                .style("width",thermWidth+"px");
+            circWrapper.append("div").attr("class","circle")
+                .style("width",thermWidth+"px")
+                .style("height",thermWidth+"px");
+
+            function formatNumber(value) {
+                if (format == " Integer ")
+                    value = parseInt(value).toFixed(0);
+                else if (format == " Dollar ") {
+                    value = parseInt(value).toFixed(0);
+                    value = "$"+value.substring(0,2)+","+value.substring(2,val.length);
+                } else if (format == " Percent ")
+                    value = (value*100).toFixed(1)+"%";
+                return value;
+            }
+            val = formatNumber(val);
+
+            if (showNumber) {
+                div.append("div").attr("class","big-number").text(val);
+            } else {
+                circWrapper.append("div").attr("class","circle-label")
+                    .text(val)
+                    .style("margin","-"+thermWidth+"px 0 0 "+(thermWidth+5)+"px");
+            }
+
+            // hacky way to move the title to the bottom of the thermometer
+            var title = div.select("h2").text();
+            therm.append("p").attr("class","desc").text(title);
+            div.select("h2").remove();
+        }
+    </script>
+</html>

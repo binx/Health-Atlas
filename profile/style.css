@@ -1,0 +1,291 @@
+body {
+    font-family: Helvetica;
+}
+#map {
+    width: 35%;
+    float: left;
+    position: fixed;
+}
+#map h1 {
+    text-align: center;
+}
+#map svg {
+    margin: 0 auto 50px;
+    display: block;
+}
+#map #pop-stats {
+    float: right;
+    width: 250px;
+}
+#map #pop-stats h3 {
+    color: #8A8A8A;
+    font-weight: normal;
+    margin: 10px 0 0;
+}
+#map #pop-stats p {
+    margin: 0;
+}
+#map .bold {
+    font-weight: bold;
+}
+#map .pie-charts {
+    width: 100%;
+    clear: both;
+    height: 120px;
+}
+#graphs {
+    width: 60%;
+    border-left: 1px solid black;
+    padding-left: 25px;
+    box-sizing: border-box;
+    position: absolute;
+    right: 0;
+}
+.section {
+    clear: both;
+}
+.section h1 {
+    border-bottom: 1px solid black;
+}
+#tooltip {
+    background-color: black;
+    color: white;
+    max-width: 200px;
+    position: absolute;
+    font-size: 14px;
+    display: none;
+    padding: 10px;
+}
+#tooltip .place {
+    margin-bottom: 3px;
+}
+#tooltip .data span {
+    font-weight: bold;
+}
+
+.graph-barchart {
+    width: 100%;
+    clear: both;
+}
+.graph-barchart h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.barchart {
+    float: left;
+    margin-bottom: 50px;
+}
+.barchart svg {
+    margin: 0 auto 10px;
+    display: block;
+}
+.barchart .axis {
+    fill: #ccc;
+}
+.barchart .title {
+    text-align: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.graph-pie {
+    width: 50%;
+    float: left;
+}
+.pie {
+    width: 50%;
+    height: 150px;
+    float: left;
+    position: relative;
+}
+.pie svg {
+    float: none;
+    margin: 0 auto;
+    display: block;
+}
+.pie path {
+    stroke: none;
+}
+.pie .pie-title {
+    font-size: 12px;
+    position: absolute;
+    top: 130px;
+    width: 100%;
+    padding: 0 30px;
+    box-sizing: border-box;
+    text-align: center;
+}
+.pie .pie-avg {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    text-transform: uppercase;
+    font-size: 12px;
+    text-align: right;
+}
+.isotope {
+    width: 100%;
+    height: 60px;
+    clear: both;
+}
+.isotope .title {
+    float: left;
+    text-align: right;
+    width: 20%;
+    font-size: 14px;
+    padding-top: 10px;
+}
+.isotope .graph {
+    float: left;
+    width: 70%;
+    height: 100%;
+}
+.isotope .graph .title {
+    padding-right: 5%;
+    font-size: 18px;
+    padding-top: 0;
+}
+.isotope .iso-line {
+    float: left;
+    height: 50%;
+    width: 100%;
+}
+.isotope .iso-line .img {
+    height: 24px;
+    float: left;
+}
+.isotope .bg-1 {
+    background-image: url(img/isotype_man_1.png);
+}
+.isotope .bg-2{
+    background-image: url(img/isotype_man_2.png);
+}
+.isotope .bg-3 {
+    background-image: url(img/isotype_man_3.png);
+}
+.isotope .bg-4 {
+    background-image: url(img/isotype_man_4.png);
+}
+.isotope .bg-5 {
+    background-image: url(img/isotype_man_5.png);
+}
+.isotope .iso-line.average .img {
+    background-image: url(img/isotype-man-avg.png);
+}
+.graph-stemandleaf {
+    width: 100%;
+    clear: both;
+}
+.graph-stemandleaf h2 {
+    text-align: center;
+}
+.stem-and-leaf {
+    width: 100%;
+    position: relative;
+}
+.stem-and-leaf .leaf {
+    height: 30px;
+}
+.stem-and-leaf .title {
+    width: 70%;
+    text-align: right;
+    font-size: 12px;
+    line-height: 30px;
+}
+.stem-and-leaf .title span {
+    font-weight: bold;
+    margin-left: 10px;
+}
+.stem-and-leaf svg {
+    position: absolute;
+    left: 75%;
+}
+.waffle {
+    position: relative;
+}
+.waffle .box-wrapper {
+    position: relative;
+}
+.waffle .box {
+    position: absolute;
+}
+.waffle ul{
+    margin: 0 20px;
+    padding: 0;
+    list-style-type: none;
+    position: absolute;
+    top: 0;
+    width: 250px;
+}
+.waffle li {
+    clear: both;
+    margin-bottom: 10px;
+}
+.waffle li span {
+    width: 230px;
+    float: right;
+}
+.waffle .key-color {
+    height: 15px;
+    width: 15px;
+    float: left;
+    margin-right: 5px;
+}
+.graph-thermometer {
+    width: 50%;
+    float: left;
+    position: relative;
+}
+.graph-thermometer .big-number {
+    position: absolute;
+    left: 130px;
+    top: 25%;
+    font-size: 50px;
+    color: #64E0E5;
+}
+.thermometer {
+    position: relative;
+    width: 100px;
+    margin-left: 50px;
+}
+.therm-wrapper {
+    position: relative;
+    margin: 0 auto;
+}
+.therm-background {
+    position: absolute;
+    left: 0;
+}
+.therm-background:first-child {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+.therm-background:last-child {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+.thermometer .value-wrapper {
+    position: absolute;
+    top: 0;
+    width: 100px;
+}
+.thermometer .value-wrapper .scale {
+    position: absolute;
+    left: 60px;
+    font-size: 10px;
+}
+.thermometer .value-wrapper .min {
+    bottom: 0;
+}
+.thermometer .circle {
+    background-color: black;
+    border-radius: 10px;
+    margin: 0 auto;
+}
+.thermometer .circle-label {
+    margin: 0 auto;
+}
+.thermometer .desc {
+    text-align: center;
+    margin-top: 5px;
+}

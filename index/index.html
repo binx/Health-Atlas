@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript" src="jquery.min.js" charset="utf-8"></script>
+        <script type="text/javascript" src="d3.v3.min.js" charset="utf-8"></script>
+        <!-- <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script> -->
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+        <div id="map">
+            <div class="tooltip"></div>
+            <div id="annotation">
+                <div class="title"></div>
+                <div class="source"></div>
+                <div class="desc"></div>
+            </div>
+        </div>
+        <div id="graphs">
+        </div>
+    </body>
+    <script type="text/javascript">
+        var specialRows = ["DataSource","Description","MinimumValue","MaximumValue","AverageValue","GeographicScale","AveValueGeo"];
+        //     metaData = {};
+        // specialRows.forEach(function(attr){ metaData[attr] = {}; });
+        var exclueRows = ["Area Name","Type","Specific area"];
+
+        var collection, descObj, sourceObj;
+        var selectedArea = null,
+        mostRecentAttr = "Total Population",
+        mostRecentData,
+        masterData = {};
+
+        d3.json("CPA_small.json",function(collection){
+            d3.csv("CPA.csv",function(csv){
+                var c = [];
+                csv.forEach(function(d){
+                    if (specialRows.indexOf(d["Area Name"]) == -1 && d["Area Name"]) {
+                        c.push(d);
+                    } else if (d["Area Name"] == "Description") {
+                        descObj = d;
+                    } else if (d["Area Name"] == "DataSource") {
+                        sourceObj = d;
+                    }
+                });
+
+                generateMap(collection);
+
+                d3.csv("order.csv",function(order){
+                    var headings = d3.nest().key(function(d){
+                        return d["Chrolopleth Map Cat"];
+                    }).entries(order);
+
+                    //organizing by subject heading, then adding graphs one by one
+                    headings.forEach(function(s){
+                        var section = graphs.append("div").attr("class","section");
+                        section.append("h2").html("<span>+</span> "+s.key);
+                        var div = section.append("div").attr("class","graph-names").style("display","none");
+
+                        s.values.forEach(function(graph){
+                            var attr = graph["IndicatorName"];
+                            var set = d3.nest().entries(c)
+                                .map(function(d){
+                                return {
+                                    "Area Name" : d["Area Name"],
+                                    "attr" : attr,
+                                    "val" : d[attr],
+                                    "type" : d[attr+"-FORMAT"]
+                                }
+                            });
+                            if (attr == mostRecentAttr)
+                                colorizeMap(set,attr);
+                            generateBars(set,attr,div);
+                            masterData[attr] = set;
+                        });
+                    });
+
+                    $("#graphs").find("h2").click(function(){
+                        var plusMinus = $(this).find("span").text() == "+" ? "-" : "+";
+                        $(this).find("span").text(plusMinus);
+                        var p = $(this).parent();
+                        p.find(".graph-names").slideToggle();
+                    });
+
+                    $("#graphs").find("h3").click(function(){
+                        var plusMinus = $(this).find("span").text() == "+" ? "-" : "+";
+                        $(this).find("span").text(plusMinus);
+
+                        $(this).toggleClass("active");
+
+                        d3.select(this).each(function(d){ mostRecentAttr = d; });
+
+                        var p = $(this).parent();
+                        p.find("svg").slideToggle();
+                    });
+                });
+            });
+        });
+
+        var graphs = d3.select("#graphs"),
+            map = d3.select("#map");
+
+        function generateMap(collection) {
+            var svg = d3.select("#map").append("svg").attr("width","500").attr("height","700").append("g");
+
+            var projection = d3.geo.albers().scale(60000)
+                .translate([390, 325])
+                .rotate([118.25,0])
+                .center([0, 34.05]);
+
+            var path = d3.geo.path().projection(projection);
+
+            var paths = svg.selectAll('path')
+                .data(collection.features)
+                .enter().append('path').attr("fill","#fff");
+
+            paths.attr('d', path)
+                .attr("class",function(d){
+                    d.color = "#fff";
+                    d.placeName = getClassName(d.properties.NAME_ALF);
+                    return d.placeName;
+                }).on("mouseenter",function(d){
+                    var fillColor = (selectedArea && selectedArea != d.placeName) ? "#0FF" : "yellow"
+                    d3.select(this).attr("fill",fillColor);
+                    highlightData(d.placeName);
+
+                    // var m = d3.mouse(this);
+                    // map.select(".tooltip")
+                    //     .style("display","block")
+                    //     .style("left",(m[0]-50)+"px").style("top",(m[1]-120)+"px")
+                    //     .text(d.properties.NAME_ALF);
+
+                }).on("mouseleave",function(d){
+                    if (d.placeName == selectedArea) return;
+                    d3.select(this).attr("fill",function(d){ return d.color || "#fff"; });
+                    resetBars();
+                    map.select(".tooltip").style("display","none");
+                }).on("click",function(d){
+                    if (selectedArea == d.placeName) {
+                        d3.select(this).attr("fill",d.color);
+                        selectedArea = null;
+                        resetBars();
+                    } else {
+                        selectedArea = d.placeName;
+                        highlightArea(d.placeName);
+                        highlightData(d.placeName);
+                    }
+                });
+        }
+
+        function colorizeMap(dataset, attr) {
+            map.select(".attr-name").text(attr);
+
+            var minAttr = d3.min(dataset,function(d){ return parseFloat(d.val); }),
+                maxAttr = d3.max(dataset,function(d){ return parseFloat(d.val); }),
+                colorScale = d3.scale.linear().domain([minAttr,maxAttr]).range(["#64E0E5","#EC8E4F"]);
+
+            dataset.forEach(function(v,i){
+                map.select("."+getClassName(v["Area Name"]))
+                    .attr("fill",function(d){
+                        d.color = colorScale(v.val);
+                        if (d.placeName == selectedArea) return "yellow";
+                        return d.color;
+                    });
+            });
+            fillAnnotation(attr);
+        }
+
+        function getClassName(n) {
+            return n.toLowerCase().replace(/ /g,"_");
+        }
+
+        function generateBars(s, attr, parent) {
+            var graphHeight = 75,
+                barMaxHeight = 60;
+            var maxAttr = parseFloat(d3.max(s,function(d){ return parseFloat(d.val); }));
+            s.sort(function(a,b){ return b.val - a.val; });
+
+            var id = attr.toLowerCase().replace(/ /g,"-");
+            var div = parent.append("div").attr("id","graph-"+id).attr("class","graph").style("width","100%");
+
+            div.on("mouseenter",function(d){
+                colorizeMap(s,attr);
+            }).on("mouseleave",function(d){
+                colorizeMap(masterData[mostRecentAttr],mostRecentAttr);
+            });
+
+            div.append("h3").data([attr]).html("<span>+</span> "+attr);
+
+            var svg = div.append("svg").attr("height",graphHeight).attr("width","95%").style("display","none");
+            var barWidth = $("#graphs").width()*.92/s.length;
+            var g = svg.selectAll("g").data(s);
+            var entering = g.enter().append("g")
+                .attr("class",function(d){ 
+                    d.placeName = getClassName(d["Area Name"]); 
+                    return d.placeName;
+                });
+                entering.append("text");
+                entering.append("rect")
+            g.exit().remove();
+
+            var barScale = d3.scale.linear().domain([0,maxAttr]).range([2,barMaxHeight]),
+                colorScale = d3.scale.linear().domain([0,maxAttr]).range(["#64E0E5","#EC8E4F"]);
+
+            g.attr("transform",function(d,i){
+                return "translate("+i*(barWidth)+",0)";
+            });
+
+            g.select("text").text(function(d){
+                if (d.type == "percentage")
+                    return d.val + "%";
+                return d.val;
+            }).attr("y",function(d){
+                return (graphHeight - barScale(d.val) - 4);
+            });
+
+            g.select("rect").attr("height",function(d){
+                return barScale(d.val);
+            }).attr('width',barWidth-7)
+            .attr("y",function(d){
+                return (graphHeight - barScale(d.val));
+            }).attr("fill",function(d){
+                d.color = colorScale(d.val);
+                return d.color;
+            });
+
+            g.on("mouseenter",function(d){
+                map.select("."+d.placeName).attr("fill",function(d){
+                    if (selectedArea && d.placeName != selectedArea)
+                        return "#0FF"
+                    else 
+                        return "yellow";
+                });
+
+                // var m = $(this).offset();
+                // graphs.select(".tooltip")
+                //     .style("display","block")
+                //     .style("left",(m.left+20)+"px").style("top",m.top+10+"px")
+                //     .text(d["Area Name"]);
+
+                highlightData(d.placeName);
+            }).on("mouseleave",function(d){
+                resetAreas();
+                resetBars();
+            }).on("click",function(d){
+                if (selectedArea == d.placeName) {
+                    selectedArea = null;
+                    resetBars();
+                } else {
+                    selectedArea = d.placeName;
+                    highlightArea(d.placeName);
+                    highlightData(d.placeName);
+                    
+                }
+            });
+        }
+
+        function fillAnnotation(attr) {
+            var a = map.select("#annotation");
+            a.select(".title").text(attr);
+            a.select(".source").text(sourceObj[attr]);
+            a.select(".desc").text(descObj[attr]);
+        }
+
+        function highlightArea(p) {
+            map.selectAll("path").attr("fill",function(d){ return d.color; });
+            map.select("."+p).attr("fill","yellow");
+        }
+
+        function resetAreas() {
+            map.selectAll("path").attr("fill",function(d){
+                if (d.placeName == selectedArea) return "yellow";
+                return d.color;
+            })
+        }
+
+        function highlightData(p) {
+            var g = graphs.selectAll("g");
+            g.each(function(d){
+                var t = d3.select(this);
+
+                if (t.attr("class") == p) {
+                    t.select("rect").attr("fill",(selectedArea && d.placeName != selectedArea) ? "#0FF" : "yellow");
+                    t.select("text").style("display","block");
+
+                } else if (t.attr("class") == selectedArea) {
+                    t.select("rect").attr("fill","yellow");
+                    t.select("text").style("display","block");
+
+                } else {
+                    t.select("rect").attr("fill","#ccc")
+                    t.select("text").style("display","none");
+                }
+            });
+        }
+
+        function resetBars() {
+            graphs.selectAll("text")
+                .style("display",function(d){ return (d.placeName == selectedArea) ? "block" : "none"; });
+            graphs.selectAll("rect")
+                .attr("fill",function(d){ return (d.placeName == selectedArea) ? "yellow" : d.color; });
+        }
+    </script>
+</html>

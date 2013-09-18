@@ -1,0 +1,415 @@
+{
+    "data":[
+        {
+            "key":"Demographic and Social Characteristics",
+            "obj": [
+                {
+                    "key":"Race",
+                    "obj": {
+                        "type":"waffle",
+                        "source":"CPA",
+                        "data":[
+                            "Percentage White Alone Population",
+                            "Percentage Latino Alone Population ",
+                            "Percentage Native American Alone Population",
+                            "Percentage Asian American or Pacific Islander Alone Population",
+                            "Percentage Other Population"
+                        ]
+                    }
+                },
+                {
+                    "key":"Age",
+                    "obj": {
+                        "type":"isotope",
+                        "source":"CPA",
+                        "data":[
+                            "Percentage of Population Under Age 5 ",
+                            "Percentage of Population Under Age 18",
+                            "Percentage of Population Over Age 65"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "key":"Economic Conditions",
+            "obj":[
+                {
+                    "key":"Average per Capita Income",
+                    "obj": {
+                        "type":"thermometer",
+                        "source":"CPA",
+                        "data":[
+                            "Per Capita Income "
+                        ],
+                        "notes":{
+                            "number":true
+                        }
+                    }
+                },
+                {
+                    "key":"Hardship Index",
+                    "obj": {
+                        "type":"thermometer",
+                        "source":"CPA",
+                        "data": [
+                            "Hardship Index"
+                        ],
+                        "notes":{
+                            "number":true
+                        }
+                    }
+                },
+                {
+                    "key":"Poverty",
+                    "obj": {
+                        "type":"stemandleaf",
+                        "source":"CPA",
+                        "data": [
+                            "Percentage of Population below the Federal Poverty Level ",
+                            "Percentage of Unemployed Workers Age 16 and Over ",
+                            "Percentage of Population 200% below the Federal Poverty Level ",
+                            "Percentage of Population living in extreme poverty neighborhoods "
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "key":"Education",
+            "obj":[
+                {
+                    "key":"",
+                    "obj": {
+                        "type":"isotope",
+                        "source":"CPA",
+                        "data": [
+                            "Percentage of Population Age 25 and Over that Did Not Graduate from High School ",
+                            "Percentage of Population Age 25 and Over that Graduated from High School ",
+                            "Percentage of Population Age 25 and Over with a Bachelor's Degree or Higher "
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "key":"Health Conditions",
+            "obj":[
+                {
+                    "key":"",
+                    "obj": {
+                        "type":"barchart",
+                        "source":"PUMA",
+                        "data": [
+                            "Life Expectancy at Birth"
+                        ],
+                        "notes": {
+                            "showLabels":true
+                        }
+                    }
+                },
+                {
+                    "key":"Childhood Obesity",
+                    "obj": {
+                        "type":"thermometer",
+                        "source":"CPA",
+                        "data": [
+                            "Prevalence of Childhood Obesity"
+                        ]
+                    }
+                },
+                {
+                    "key":"Mortality by Council District",
+                    "obj": {
+                        "type":"barchart",
+                        "source":"CD",
+                        "data": [
+                            "Coronary Heart Disease Mortality Rate per 100,000 Residents by City Council District",
+                            "Diabetes Mortality Rate per 100,000 Residents by City Council District",
+                            "Stroke Mortality Rate per 100,000 Residents by City Council District"
+                        ]
+                    }
+                },
+                {
+                    "key":"Hospitalizations by Zipcode",
+                    "obj": {
+                        "type":"barchart",
+                        "source":"ZIP",
+                        "data": [
+                            "Percentage of Low Birth-Weight Infants ",
+                            "Asthma-Related Emergency Department Visits in Adults",
+                            "Asthma-Related Emergency Department Visits in Children",
+                            "Asthma-Related Hospitalizations in Adults"
+                        ]
+                    }
+                },
+                {
+                    "key":"Mental health",
+                    "obj": {
+                        "type":"barchart",
+                        "source":"HD",
+                        "data": [
+                            "Percentage of Children who Reported Fair or Poor Health",
+                            "Percentage of Adults who Reported Fair or Poor Health",
+                            "Percentage of Adults with Depression"
+                        ]
+                    }
+                },
+                {
+                    "key":"Weight",
+                    "obj": {
+                        "type":"barchart",
+                        "source":"HD",
+                        "data": [
+                            "Prevalence of Overweight Adults",
+                            "Prevalence of Obesity Adults"
+                        ]
+                    }
+                },
+                {
+                    "key":"Physical Activity",
+                    "obj": {
+                        "type":"barchart",
+                        "source":"HD",
+                        "data": [
+                            "Percentage of Children who Participated in Physical Activity per Week",
+                            "Percentage of Adults who Met Physical Activity Guidelines for Aerobic and Muscle-Strengthening Activity Each Week"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "key":"Land Use",
+            "obj":[
+                {
+                    "key":"Land Uses",
+                    "obj": {
+                        "type":"waffle",
+                        "source":"CPA",
+                        "data": [
+                            "Entertainment Land Uses",
+                            "Institutional/Open Space Land Uses",
+                            "Multifamily Residential Land Uses",
+                            "Office Land Uses",
+                            "Retail Land Uses",
+                            "Single Family Residential Land Uses"
+                        ]
+                    }
+                },
+                {
+                    "key":"Walkability Index",
+                    "obj": {
+                        "type":"thermometer",
+                        "source":"CPA",
+                        "data": [
+                            "Walkability Index"
+                        ]
+                    }
+                },
+                {
+                    "key":"Land Use Summary",
+                    "obj": {
+                        "type":"stemandleaf",
+                        "source":"CPA",
+                        "data": [
+                            "Land Use Mix",
+                            "Land Use Diversity",
+                            "Intersection Density",
+                            "Park Level of Service (Acres per 1,000 Residents)",
+                            "Percentage of the Population within One-Half Mile Walking Distance of a Park"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "key":"Transportation",
+            "obj":[
+                {
+                    "key":"Percentage of Households without Access to a Vehicle",
+                    "obj":{
+                        "type":"pie",
+                        "source":"CPA",
+                        "data": [
+                            "Percentage of Households without Access to a Vehicle"
+                        ]
+                    }
+                },
+                {
+                    "key":"",
+                    "obj":{
+                        "type":"barchart",
+                        "source":"ZIP",
+                        "data":[
+                            "Average Annual Motor Vehicle Traffic Mortality Rate per 100,000 Residents "
+                        ]
+                    }
+                },
+                {
+                    "key":"Percentage of commuters taking transportation to work",
+                    "obj":{
+                        "type":"stemandleaf",
+                        "source":"CPA",
+                        "data": [
+                            "Percentage of Commuters Driving Alone to Work",
+                            "Percentage of Commuters Carpooling to Work",
+                            "Percentage of Commuters Taking Public Transportation to Work",
+                            "Percentage of Commuters Biking to Work",
+                            "Percentage of Commuters Walking to Work",
+                            "Percentage of Commuters Traveling by Other Means to Work"
+                        ]
+                    }
+                },
+                {
+                    "key":"Collision Rates per 10,000",
+                    "obj":{
+                        "type":"stemandleaf",
+                        "source":"CPA",
+                        "data": [
+                            "Average Annual Rate of Motor Vehicle Collisions with Pedestrians per 10,000 Residents",
+                            "Average Annual Rate of Motor Vehicle Collisions with Bicyclists per 10,000 Residents",
+                            "Average Annual Rate of Motor Vehicle Collisions with Pedestrians and Bicyclists with Children within 1/2 Mile of a School per 10,000 Children",
+                            "Average Annual Rate of Motor Vehicle Collisions Involving Alcohol per 10,000 Residents"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "key":"Food Systems",
+            "obj":[
+                {
+                    "key":"Modified Retail Food Environment Index",
+                    "obj":{
+                        "type":"thermometer",
+                        "source":"CPA",
+                        "data": [
+                            "Modified Retail Food Environment Index"
+                        ]
+                    }
+                },
+                {
+                    "key":"Percentage of Households that are CalFresh Recipients",
+                    "obj":{
+                        "type":"pie",
+                        "source":"CPA",
+                        "data": [
+                            "Percentage of Households that are CalFresh Recipients"
+                        ]
+                    }
+                },
+                {
+                    "key":"Food Environment per 10,000 Residents",
+                    "obj":{
+                        "type":"stemandleaf",
+                        "source":"CPA",
+                        "data": [
+                            "Grocery Store Rate per 10,000 Residents",
+                            "Rate of Fast Food Restaurants per 10,000 Residents",
+                            "Off-Sale Liquor License Rate per 10,000 Residents",
+                            "On-Sale Liquor License Rate per 10,000 Residents"
+                        ]
+                    }
+                },
+                {
+                    "key":"Food Behaviors by Health District",
+                    "obj":{
+                        "type":"barchart",
+                        "source":"HD",
+                        "data": [
+                            "Percentage of Adults Who Reported that Accessing Fresh Produce (Fruits and Vegetables) was Very or Somewhat Easy",
+                            "Percentage of Adults Who Reported Having Eaten Five or More Servings of Fruits or Vegetables in the Past Day",
+                            "Percentage of Children Who Consumed Fast Food At Least Once a Week",
+                            "Percentage of Adults Who Reported Consuming Fast Food at Least Once a Week"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "key":"Crime",
+            "obj":[
+                {
+                    "key":"Crime Summary per 1,000 Residents",
+                    "obj":{
+                        "type":"stemandleaf",
+                        "source":"CPA",
+                        "data":[
+                            "Violent Crime Rate per 1,000 Residents (6-Month Rate, April to September 2012)",
+                            "Property Crime Rate per 1,000 Residents (6-Month Rate, April to September 2012)",
+                            "Crime Rate for All Part I Offences per 1,000 Residents (6-Month Rate, April to September 2012)"
+                        ]
+                    }
+                },
+                {
+                    "key":"Crime Health",
+                    "obj":{
+                        "type":"barchart",
+                        "source":"ZIP",
+                        "data":[
+                            "Average Annual Mortality Rate for Homicide per 100,000 Residents",
+                            "Average Annual Emergency Department Visit Rate for Assault per 100,000 Residents"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "key":"Housing",
+            "obj":[
+                {
+                    "key":"Households Paying More than 30% of Income on Housing Costs",
+                    "obj":{
+                        "type":"pie",
+                        "source":"CPA",
+                        "data":[
+                            "Percentage of Households Paying More than 30% of Income on Housing Costs"
+                        ]
+                    }
+                },
+                {
+                    "key":"",
+                    "obj":{
+                        "type":"barchart",
+                        "source":"CD",
+                        "data":[
+                            "Percentage of Homeless Population by City Council District"
+                        ]
+                    }
+                },
+                {
+                    "key":"General Housing",
+                    "obj":{
+                        "type":"stemandleaf",
+                        "source":"CPA",
+                        "data":[
+                            "Residential Density",
+                            "Housing Diversity",
+                            "Percentage of Renter-Occupied Housing Units",
+                            "Percentage of Housing Units with 1 or More than Persons per Room",
+                            "Percentage of Housing Units with 1.5 or More Persons per Room"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "key":"Environmental Health",
+            "obj":[
+                {
+                    "key":"Pollution Burden Index by Zipcode",
+                    "obj":{
+                        "type":"barchart",
+                        "source":"ZIP",
+                        "data":[
+                            "Pollution Burden Index",
+                            "Environmental Effects",
+                            "Pollution Exposure Score"
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}

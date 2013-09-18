@@ -1,0 +1,102 @@
+body {
+    font-family: Helvetica;
+}
+#map {
+    width: 35%;
+    position: fixed;
+    margin-left: 3%;
+    border: 2px solid orange;
+    padding-bottom: 50px;
+}
+#annotation {
+    position: absolute;
+    top: 500px;
+    width: 250px;
+    left: 25px;
+}
+#annotation .title {
+    font-weight: bold;
+    text-decoration: underline;
+    margin-bottom: 5px;
+}
+#annotation .desc {
+    font-size: 12px;
+    margin-top: 15px;
+}
+#map h2 {
+    font-size: 18px;
+    font-weight: normal;
+}
+#map .place-name {
+    visibility: hidden;
+    white-space: nowrap;
+}
+#map path {
+    stroke: black;
+    cursor: pointer;
+}
+.tooltip {
+    position: absolute;
+    z-index: 1;
+    display: none;
+}
+#map .tooltip {
+    background: yellow;
+    padding: 5px;
+    border: 2px solid black;
+    max-width: 150px;
+    text-align: center;
+}
+#graphs .tooltip {
+    position: fixed;
+    background: black;
+    color: white;
+    padding: 3px;
+}
+#graphs {
+    width: 55%;
+    float: right;
+    margin-right: 5%;
+    position: relative;
+}
+#graphs .graph {
+    background-color: #DBF2EC;
+    padding: 3px 5px;
+}
+#graphs .graph:nth-child(odd) {
+    background-color: #FAF3E9;
+}
+#graphs h2 {
+    color: #0088FF;
+    text-transform: uppercase;
+    font-size: 20px;
+    margin: 5px 0;
+    cursor: pointer;
+}
+#graphs h3 {
+    font-weight: normal;
+    margin: 0;
+    font-size: 16px;
+    cursor: pointer;
+}
+#graphs h3.active {
+    font-weight: bold;
+}
+#graphs svg {
+    display: block;
+    margin: 15px auto;
+}
+#graphs .graph g:first-child text,
+#graphs .graph g:last-child text {
+    display: block !important;
+}
+#graphs text {
+    font-size: 12px;
+    display: none;
+}
+#graphs g:hover text {
+    display: block;
+}
+#graphs rect {
+    cursor: pointer;
+}
