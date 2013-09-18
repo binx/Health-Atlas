@@ -298,8 +298,13 @@
 
                 var bars = svg.selectAll("rect.bar").data(datum.obj);
 
-                bars.enter().append("rect").attr("class","bar");
-                bars.exit().remove();
+                bars.enter().append("rect").attr("class","bar").attr("fill","#fff").attr("height",0).attr("y",chartHeight);
+                bars.exit()
+                    .transition()
+                    .duration(1000)
+                    .attr("height",0)
+                    .attr("y",chartHeight)
+                    .remove();
 
                 bars.transition().duration(1000)
                     .attr("width",barWidth)
@@ -453,11 +458,12 @@
             var svgWidth = 100,
                 boxPadding = 5,
                 leafHeight = 30,
-                svg = stem.append("svg").attr("width",svgWidth).attr("height",attrs.length*leafHeight);
+                svgWrapper = stem.append("div").attr("class","wrapper")
+                svg = svgWrapper.append("svg").attr("width",svgWidth).attr("height",attrs.length*leafHeight);
 
-                svg.append("rect").attr("x",svgWidth/2).attr("width",2).attr("height",attrs.length*leafHeight);
-             
-            var avgLine = svg.append("div").attr("class","average-label").html("average");
+            svg.append("rect").attr("x",svgWidth/2).attr("width",2).attr("height",attrs.length*leafHeight);
+
+            svgWrapper.append("div").attr("class","avg-title").text("avg");
                 
             attrs.forEach(function(attr,i){
                 var leaf = stem.append("div").attr("class","leaf");
