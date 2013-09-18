@@ -51,11 +51,6 @@
                         else
                             areaData["CD"][v["Area Name"]] = v;
                     }
-                    // if (v["Area Name"] == areaName) {
-                    //     areaData["CD"][v["Specific area"]] = v;
-                    // } else if (v["Area Name"] == "AverageValue") {
-                    //     areaData["CD"]["AverageValue"] = v;
-                    // }
                 });
                 loadHD(id);
             });
@@ -70,11 +65,6 @@
                         else
                             areaData["HD"][v["Area Name"]] = v;
                     }
-                    // if (v["Area Name"] == areaName) {
-                    //     areaData["HD"][v["Specific area"]] = v;
-                    // } else if (v["Area Name"] == "AverageValue") {
-                    //     areaData["HD"]["AverageValue"] = v;
-                    // }
                 });
                 loadPUMA(id);
             });            
@@ -89,11 +79,6 @@
                         else
                             areaData["PUMA"][v["Area Name"]] = v;
                     }
-                    // if (v["Area Name"] == areaName) {
-                    //     areaData["PUMA"][v["Specific area"]] = v;
-                    // } else if (v["Area Name"] == "AverageValue") {
-                    //     areaData["PUMA"]["AverageValue"] = v;
-                    // }
                 });
                 loadZIP(id);
             });            
@@ -108,11 +93,6 @@
                         else
                             areaData["ZIP"][v["Area Name"]] = v;
                     }
-                    // if (v["Area Name"] == areaName) {
-                    //     areaData["ZIP"][v["Specific area"]] = v;
-                    // } else if (v["Area Name"] == "AverageValue") {
-                    //     areaData["ZIP"]["AverageValue"] = v;
-                    // }
                 });
                 showData();
             });            
@@ -188,8 +168,6 @@
         }
         function positionTooltip(elem, pos) {
             var m = d3.mouse(elem);
-            // var svg = $(elem).parent();
-            // var pos = svg.position();
 
             tooltip.style("left",(pos.left + m[0])+"px")
                 .style("top",(pos.top + m[1])+"px")
@@ -278,7 +256,6 @@
         function processWaffle(data, descriptions, types, div) {
             var waffleTypes = [], totalValue = 0;
             types.forEach(function(type,i){
-                // waffleTypes[i] = { "title":descriptions[type], "data":data[type] };
                 waffleTypes[i] = { "title":type, "data":data[type] };
                 totalValue += parseFloat(data[type]);
             });
@@ -346,9 +323,6 @@
                 .attr("transform","translate("+pieSize/2+","+pieSize/2+")")
                 .attr("fill","black");
 
-            // pie.append("div").attr("class","pie-title")
-            //     .text(areaName + " " + (value*100).toFixed(0) + "%");
-
             pie.append("div").attr("class","pie-avg")
                 .html("LA County<br> " + (avgValue*100).toFixed(0) + "%");
         }
@@ -365,7 +339,6 @@
                 bg = d3.scale.linear().domain([min,max]).range([1,5]),
                 imgWidth = 9;
 
-            // iso.append("div").attr("class","title").text(desc);
             iso.append("div").attr("class","title").text(attr);
             var graph = iso.append("div").attr("class","graph");
 
