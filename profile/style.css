@@ -1,5 +1,5 @@
 body {
-    font-family: Helvetica;
+    font-family: Gotham, Helvetica;
 }
 #map {
     width: 35%;
@@ -43,10 +43,14 @@ body {
 }
 .section {
     clear: both;
+    padding-bottom: 24px;
 }
+
 .section h1 {
     border-bottom: 1px solid black;
-}
+    font-style: normal;
+    font-size: 16px;}
+    
 #tooltip {
     background-color: black;
     color: white;
@@ -107,7 +111,7 @@ body {
     stroke: none;
 }
 .pie .pie-title {
-    font-size: 12px;
+    font-size: 10px;
     position: absolute;
     top: 130px;
     width: 100%;
@@ -123,6 +127,11 @@ body {
     font-size: 12px;
     text-align: right;
 }
+.boxes-key{
+font-size: 10px;
+line-height: 14px;
+}
+
 .isotope {
     width: 100%;
     height: 60px;
@@ -226,8 +235,8 @@ body {
     float: right;
 }
 .waffle .key-color {
-    height: 15px;
-    width: 15px;
+    height: 12px;
+    width: 12px;
     float: left;
     margin-right: 5px;
 }
@@ -243,6 +252,10 @@ body {
     font-size: 50px;
     color: #64E0E5;
 }
+.big-number {
+font-weight: bold;
+}
+
 .thermometer {
     position: relative;
     width: 100px;
@@ -291,4 +304,10 @@ body {
 .thermometer .desc {
     text-align: center;
     margin-top: 5px;
+}
+.desc{
+font-size: 10px;
+}
+h2{
+font-size: 12px;
 }
