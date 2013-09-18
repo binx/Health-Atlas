@@ -135,12 +135,12 @@ body {
     font-size: 14px;
     padding-top: 10px;
 }
-.isotope .graph {
+.isotope .iso-graph {
     float: left;
     width: 70%;
     height: 100%;
 }
-.isotope .graph .title {
+.isotope .iso-graph .title {
     padding-right: 5%;
     font-size: 18px;
     padding-top: 0;
@@ -281,6 +281,9 @@ body {
     background-color: black;
     border-radius: 10px;
     margin: 0 auto;
+}
+.thermometer .circle-wrapper {
+    margin: 0px auto 0;
 }
 .thermometer .circle-label {
     margin: 0 auto;
