@@ -223,7 +223,6 @@
             paths.attr('d', path)
                 .attr("fill",function(d){
                     var prop = getIdentifier(source);
-                    console.log(source, d.properties, d.properties[prop], places);
                     if (places.indexOf(d.properties[prop]) != -1)
                         return "yellow";
                     return "#fff";
@@ -282,24 +281,6 @@
         function drawBars(data, source, div) {
             if (data.length == 1) div.style("width","50%").style("clear","none").style("float","left");
 
-            $(div[0]).hover(function(){
-                places = [];
-                data[0].obj.forEach(function(p){
-                    if (source == "CD")
-                        places.push(p.place.substr(-1));
-                    else
-                        places.push(p.place);
-                });
-                if (source in mapData) loadMapData(mapData[source], places, source);
-                else
-                    d3.json("data/"+source+"_small.json",function(collection){
-                        mapData[source] = collection;
-                        loadMapData(collection, places, source);
-                    });
-            },function(){
-                loadMapData(mapData["CPA"], areaName, "CPA");
-            });
-
             data.forEach(function(datum, i){
                 var chart = div.append("div").attr("class","barchart c-"+i).style("width",(100/data.length)+"%"),
                     chartHeight = 120;
@@ -321,6 +302,25 @@
         }
 
         function updateBars(data, source, div) {
+
+            $(div[0]).hover(function(){
+                places = [];
+                data[0].obj.forEach(function(p){
+                    if (source == "CD")
+                        places.push(p.place.substr(-1));
+                    else
+                        places.push(p.place);
+                });
+                if (source in mapData) loadMapData(mapData[source], places, source);
+                else
+                    d3.json("data/"+source+"_small.json",function(collection){
+                        mapData[source] = collection;
+                        loadMapData(collection, places, source);
+                    });
+            },function(){
+                loadMapData(mapData["CPA"], areaName, "CPA");
+            });
+
             data.forEach(function(datum,i){
                 var chart = div.select(".c-"+i),
                     svg = chart.select("svg");
