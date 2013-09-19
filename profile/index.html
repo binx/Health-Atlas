@@ -24,7 +24,8 @@
             map = d3.select("#map"),
             tooltip = d3.select("#tooltip"),
             areaName,
-            areaData = {};
+            areaData = {},
+            mapData = {};
 
         var layoutData;
 
@@ -116,7 +117,6 @@
         var loaded = false;
 
         function showData() {
-            console.log(layoutData);
             map.select("h1").text(areaName);
 
             if (loaded) {
@@ -199,32 +199,60 @@
 
         function loadMap() {
             d3.json("data/map.json",function(collection){
-                var svg = map.select("svg").attr("width","200").attr("height","300").append("g");
-
-                var projection = d3.geo.albers().scale(25000)
-                    .translate([160, 140])
-                    .rotate([118.25,0])
-                    .center([0, 34.05]);
-
-                var path = d3.geo.path().projection(projection);
-
-                var paths = svg.selectAll('path')
-                    .data(collection.features)
-                    .enter().append('path');
-
-                paths.attr('d', path)
-                    .attr("fill",function(d){
-                        if (d.properties.NAME_ALF == areaName)
-                            return "yellow";
-                        return "white";
-                    }).attr("stroke",function(d){
-                        if (d.properties.NAME_ALF == areaName)
-                            return "black";
-                        return "#aaa";
-                    }).on("click",function(d){
-                        loadCPA(d.properties.OBJECTID);
-                    });
+                mapData["CPA"] = collection;
+                map.select("svg").attr("width","200").attr("height","300").append("g");
+                loadMapData(collection, areaName, "CPA");
             });
+        }
+
+        function loadMapData(collection, places, source) {
+            var svg = map.select("svg g")
+            var projection = d3.geo.albers().scale(25000)
+                .translate([160, 140])
+                .rotate([118.25,0])
+                .center([0, 34.05]);
+
+            var path = d3.geo.path().projection(projection);
+
+            var paths = svg.selectAll('path')
+                .data(collection.features)
+            
+            paths.enter().append('path').attr("fill","#fff");
+            paths.exit().remove();
+
+            paths.attr('d', path)
+                .attr("fill",function(d){
+                    var prop = getIdentifier(source);
+                    console.log(source, d.properties, d.properties[prop], places);
+                    if (places.indexOf(d.properties[prop]) != -1)
+                        return "yellow";
+                    return "#fff";
+                }).attr("stroke",function(d){
+                    if (d.properties.NAME_ALF == areaName)
+                        return "black";
+                    return "#aaa";
+                }).on("click",function(d){
+                    loadCPA(d.properties.OBJECTID);
+                });
+            function getIdentifier(source) {
+                switch (source) {
+                    case "CPA":
+                        return "NAME_ALF";
+                        break;
+                    case "CD": 
+                        return "DIST";
+                        break;
+                    case "HD":
+                        return "Area";
+                        break;
+                    case "PUMA":
+                        return "NAMELSAD10";
+                        break;
+                    case "ZIP":
+                        return "ZIPCODE";
+                        break;
+                }
+            }
         }
 
         function processBarData(data, source) {
@@ -253,6 +281,24 @@
 
         function drawBars(data, source, div) {
             if (data.length == 1) div.style("width","50%").style("clear","none").style("float","left");
+
+            $(div[0]).hover(function(){
+                places = [];
+                data[0].obj.forEach(function(p){
+                    if (source == "CD")
+                        places.push(p.place.substr(-1));
+                    else
+                        places.push(p.place);
+                });
+                if (source in mapData) loadMapData(mapData[source], places, source);
+                else
+                    d3.json("data/"+source+"_small.json",function(collection){
+                        mapData[source] = collection;
+                        loadMapData(collection, places, source);
+                    });
+            },function(){
+                loadMapData(mapData["CPA"], areaName, "CPA");
+            });
 
             data.forEach(function(datum, i){
                 var chart = div.append("div").attr("class","barchart c-"+i).style("width",(100/data.length)+"%"),
@@ -316,7 +362,6 @@
         }
 
         function drawWaffle(data, descriptions, types, div) {
-            console.log(div)
             var waffle = div.selectAll(".waffle")
                 .data([types]).enter()
                 .append("div").attr("class","waffle"),
@@ -369,7 +414,7 @@
                         .on("mouseenter",function(d){ showTooltip(waffleTypes[j].data, areaName, land.title, "CPA"); })
                         .on("mousemove",function(d){ positionTooltip(this, pos); })
                         .on("mouseout",function(d){ hideTooltip(); });
-                        
+
                     numBoxes++;
                 }
                 key.select(".l-"+j+" .num").text("(" + p.toFixed(1) + "%)");
