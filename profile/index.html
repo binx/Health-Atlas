@@ -129,7 +129,7 @@
                         var attr = d.data[0];
                         updateThermometer(attr, areaData[source][areaName][attr], areaData[source]["MinimumValue"][attr], areaData[source]["MaximumValue"][attr], areaData[source][areaName][attr+"-FORMAT"], div, notes.number);
                     } else if (d.type == "pie") {
-                        updatePie(areaData[source][areaName][d.data[0]], div);
+                        updatePie(areaData[source][areaName][d.data[0]], d.data[0], div);
                     } else if (d.type == "stemandleaf") {
                         updateStemAndLeaf(d.data,areaData[source][areaName],areaData[source]["AverageValue"],areaData[source]["MinimumValue"],areaData[source]["MaximumValue"], div);
                     } else if (d.type == "isotope") {
@@ -138,7 +138,7 @@
                         updateWaffle(areaData[source][areaName], areaData[source]["Description"], d.data, div);
                     else {
                         var dataAggregate = processBarData(d.data, source)
-                        updateBars(dataAggregate, div);
+                        updateBars(dataAggregate, source, div);
                     }
                 });
             } else {
@@ -263,12 +263,6 @@
                     .attr("width","100%").attr("height",2)
                     .attr("fill","green");
 
-                var pos = $(svg[0]).offset();
-
-                // bars.on("mouseenter",function(d){ showTooltip(d.data, d.place, datum.key, source); })
-                //     .on("mousemove",function(d){ positionTooltip(this, pos); })
-                //     .on("mouseout",function(d){ hideTooltip(); });
-
                 svg.append("rect").attr("class","axis")
                     .attr("width","100%").attr("height",2)
                     .attr("y",chartHeight-2);
@@ -277,10 +271,10 @@
 
                 chart.append("div").attr("class","title").text(datum.key)
             });
-            updateBars(data, div);
+            updateBars(data, source, div);
         }
 
-        function updateBars(data, div) {
+        function updateBars(data, source, div) {
             data.forEach(function(datum,i){
                 var chart = div.select(".c-"+i),
                     svg = chart.select("svg");
@@ -312,6 +306,12 @@
                     .attr("x",function(d,i){ return i*(barWidth+barPadding) + barPadding/2; })
                     .attr("y",function(d){ return chartHeight - barScale(d.data); })
                     .attr("fill",function(d){ return colorScale(d.data); });
+
+                var pos = $(svg[0]).offset();
+
+                bars.on("mouseenter",function(d){ showTooltip(d.data, d.place, datum.key, source); })
+                    .on("mousemove",function(d){ positionTooltip(this, pos); })
+                    .on("mouseout",function(d){ hideTooltip(); });
             });
         }
 
@@ -337,6 +337,7 @@
                     .style("top",Math.floor(numBoxes/10)*boxSize + "px");
                 numBoxes++;
             }
+
             types.forEach(function(land,i){
                 var li = key.append("li").attr("class","l-"+i);
                     li.append("div").attr("class","key-color").style("background-color",colors[i]);
@@ -360,7 +361,15 @@
             waffleTypes.forEach(function(land,j){
                 var p = waffleTypes[j].data/totalValue*100;
                 for (var i = 0; i < Math.round(p); i++) {
-                    $(div[0]).find(".box").eq(numBoxes).css("background-color",colors[j]);
+                    var box = $(div[0]).find(".box").eq(numBoxes)
+                    box.css("background-color",colors[j]);
+                    var pos = box.offset();
+
+                    d3.select(box[0])
+                        .on("mouseenter",function(d){ showTooltip(waffleTypes[j].data, areaName, land.title, "CPA"); })
+                        .on("mousemove",function(d){ positionTooltip(this, pos); })
+                        .on("mouseout",function(d){ hideTooltip(); });
+                        
                     numBoxes++;
                 }
                 key.select(".l-"+j+" .num").text("(" + p.toFixed(1) + "%)");
@@ -396,10 +405,10 @@
             pie.append("div").attr("class","pie-avg")
                 .html("LA County<br> " + (avgValue*100).toFixed(0) + "%");
 
-            updatePie(value, div);
+            updatePie(value, attr, div);
         }
 
-        function updatePie(value, div) {
+        function updatePie(value, attr, div) {
             var arc = d3.svg.arc()
                 .innerRadius(00)
                 .outerRadius(40)
@@ -408,6 +417,13 @@
 
             div.select(".pieData")
                 .attr("d", arc);
+
+            var pos = $(div[0]).find("svg").offset();
+
+            div.select("svg")
+                .on("mouseenter",function(d){ showTooltip(value, areaName, attr, "CPA"); })
+                .on("mousemove",function(d){ positionTooltip(this, pos); })
+                .on("mouseout",function(d){ hideTooltip(); });
         }
 
         function drawIsotope(valData, avgData, min, max, desc, attrs, div) {
@@ -436,7 +452,6 @@
         }
 
         function updateIsotope(valData, min, max, div, attrs) {
-            console.log(div)
             var isos = div.selectAll(".isotope").data(attrs);
 
             attrs.forEach(function(attr,i){
@@ -448,6 +463,13 @@
                     .transition()
                     .duration(1000)
                     .style("width",function(d) { return personScale(valData[d]) + "px" });
+
+                var pos = $(div[0]).find(".v-"+i).offset();
+
+                div.select(".v-"+i)
+                    .on("mouseenter",function(d){ showTooltip(valData[attr], areaName, attr, "CPA"); })
+                    .on("mousemove",function(d){ positionTooltip(this, pos); })
+                    .on("mouseout",function(d){ hideTooltip(); });
             });
         }
 
@@ -502,6 +524,13 @@
                     .attr("x",(svgWidth/2 + (neg ? 2 : -diff)))
                     .attr("width",Math.abs(diff))
                     .attr("fill",colorScale(val[attr]));
+
+                var pos = $(stem[0]).find(".leaf-"+i).offset();
+
+                div.select(".leaf-"+i)
+                    .on("mouseenter",function(d){ showTooltip(val[attr], areaName, attr, "CPA"); })
+                    .on("mousemove",function(d){ positionTooltip(this, pos); })
+                    .on("mouseout",function(d){ hideTooltip(); });
             });
         }
 
@@ -543,11 +572,6 @@
             }
 
             updateThermometer(attr, val, min, max, format, div, showNumber);
-
-            // hacky way to move the title to the bottom of the thermometer
-            // var title = div.select("h2").text();
-            // therm.append("p").attr("class","desc").text(title);
-            // div.select("h2").remove();
         }
 
         function updateThermometer(attr, val, min, max, format, div, showNumber) {
@@ -560,6 +584,13 @@
                 .transition()
                 .duration(1000)
                 .style("margin-top",posScale(val)+"px");
+
+            var pos = $(div[0]).find(".thermometer").offset();
+
+            div.select(".thermometer")
+                .on("mouseenter",function(d){ showTooltip(val, areaName, attr, "CPA"); })
+                .on("mousemove",function(d){ positionTooltip(this, pos); })
+                .on("mouseout",function(d){ hideTooltip(); });
 
             val = formatNumber(format, val);
 
@@ -578,7 +609,7 @@
                 value = parseInt(value).toFixed(0);
             else if (format == " Dollar ") {
                 value = parseInt(value).toFixed(0);
-                value = "$"+value.substring(0,2)+","+value.substring(2,value.length);
+                value = "$"+value.substring(0,value.length-3)+","+value.substring(2,value.length);
             } else if (format == " Percent ")
                 value = (value*100).toFixed(1)+"%";
             return value;
