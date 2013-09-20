@@ -37,6 +37,28 @@ body {
     font-size: 12px;
     margin-top: 15px;
 }
+#map #hovered-name ,
+#map #selected-name {
+    position: absolute;
+    left: 10px;
+    width: 300px;
+}
+#map #selected-name {
+    color: #45A3FF;
+    top: 500px;
+}
+#map #hovered-name {
+    color: #33B333;
+    top: 550px;
+}
+#map #hovered-name .place,
+#map #selected-name .place {
+    float: left;
+}
+#map #hovered-name .value,
+#map #selected-name .value {
+    font-weight: bold;
+}
 #map h2 {
     font-size: 18px;
     font-weight: normal;

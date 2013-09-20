@@ -10,6 +10,14 @@
         <div id="map">
             <h1></h1>
             <div class="tooltip"></div>
+            <div id="selected-name">
+                <span class="place"></span>
+                <span class="value"></span>
+            </div>
+            <div id="hovered-name">
+                <span class="place"></span>
+                <span class="value"></span>
+            </div>
             <div id="annotation">
                 <div class="source"></div>
                 <div class="desc"></div>
@@ -62,7 +70,7 @@
                                     "Area Name" : d["Area Name"],
                                     "attr" : attr,
                                     "val" : d[attr],
-                                    "type" : d[attr+"-FORMAT"]
+                                    "format" : d[attr+"-FORMAT"]
                                 }
                             });
                             if (attr == mostRecentAttr)
@@ -125,6 +133,8 @@
                     // resort when needed
                     // maybe build a funciton for highlighting areas??
 
+                    var nameDiv = (selectedArea && selectedArea != d.placeName) ? "#hovered-name .place" : "#selected-name .place";
+                    map.select(nameDiv).text(d.properties.NAME_ALF);
 
                     map.selectAll("path").sort(function (a, b) { 
                         if (a.placeName != d.placeName && a.placeName != selectedArea) return -1;
@@ -143,15 +153,18 @@
                     if (d.placeName == selectedArea) return;
                     d3.select(this).attr("fill",function(d){ return d.color || "#fff"; });
                     d3.select(this).attr("stroke","none");
+                    map.select("#hovered-name .place").text("");
                     resetBars();
                     map.select(".tooltip").style("display","none");
                 }).on("click",function(d){
                     if (selectedArea == d.placeName) {
                         d3.select(this).attr("fill",d.color);
+                        map.select("#selected-name .place").text("");
                         selectedArea = null;
                         resetBars();
                     } else {
                         selectedArea = d.placeName;
+                        map.select("#hovered-name .place").text("");
                         highlightArea(d.placeName);
                         highlightData(d.placeName);
                     }
@@ -175,6 +188,24 @@
                     });
             });
             fillAnnotation(attr);
+            if (selectedArea) {
+                dataset.forEach(function(p){
+                    if (p.placeName == selectedArea) {
+                        console.log(p)
+                        map.select("#selected-name .value").text(": "+formatNumber(p.format, p.val));
+                    }
+                })
+            }
+        }
+
+        function formatNumber(format, num) {
+            if (format == "number") {
+                if (num.length > 3)
+                    num = num.substring(0,num.length-3)+","+num.substring(3,num.length);
+                return num;
+            }
+            if (format == "percentage")
+                return (num*100).toFixed(0) + "%"
         }
 
         function getClassName(n) {
@@ -218,9 +249,7 @@
             });
 
             g.select("text").text(function(d){
-                if (d.type == "percentage")
-                    return d.val + "%";
-                return d.val;
+                return formatNumber(d.format, d.val);
             }).attr("y",function(d){
                 return (graphHeight - barScale(d.val) - 4);
             });
@@ -247,6 +276,10 @@
                         return "#45A3FF";
                 });
 
+                var parentDiv = (selectedArea && selectedArea != d.placeName) ? "#hovered-name" : "#selected-name";
+                map.select(parentDiv).select(".place").text(d["Area Name"]);
+                map.select(parentDiv).select(".value").text(": "+formatNumber(d.format,d.val));
+
                 // var m = $(this).offset();
                 // graphs.select(".tooltip")
                 //     .style("display","block")
@@ -260,9 +293,14 @@
             }).on("click",function(d){
                 if (selectedArea == d.placeName) {
                     selectedArea = null;
+                    resetAreas();
                     resetBars();
                 } else {
                     selectedArea = d.placeName;
+                    map.select("#hovered-name .place").text("");
+                    map.select("#hovered-name .value").text("");
+                    map.select("#selected-name .place").text(d["Area Name"]);
+                    map.select("#selected-name .value").text(": "+formatNumber(d.format, d.val));
                     highlightArea(d.placeName);
                     highlightData(d.placeName);
                     
@@ -287,7 +325,13 @@
             map.selectAll("path").attr("stroke",function(d){
                 if (d.placeName == selectedArea) return "#45A3FF";
                 return "none";
-            })
+            });
+            if (!selectedArea) {
+                map.select("#selected-name .place").text("");
+                map.select("#selected-name .value").text("");
+            }
+            map.select("#hovered-name .place").text("");
+            map.select("#hovered-name .value").text("");
         }
 
         function highlightData(p) {
