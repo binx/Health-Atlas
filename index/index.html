@@ -158,13 +158,17 @@
                     map.select(".tooltip").style("display","none");
                 }).on("click",function(d){
                     if (selectedArea == d.placeName) {
-                        d3.select(this).attr("fill",d.color);
+                        d3.select(this).attr("stroke","none");
                         map.select("#selected-name .place").text("");
                         selectedArea = null;
                         resetBars();
                     } else {
                         selectedArea = d.placeName;
                         map.select("#hovered-name .place").text("");
+                        map.selectAll("path").sort(function (a, b) { 
+                            if (a.placeName != selectedArea) return -1;
+                            else return 1;
+                        });
                         highlightArea(d.placeName);
                         highlightData(d.placeName);
                     }
