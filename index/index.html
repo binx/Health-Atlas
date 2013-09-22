@@ -180,7 +180,7 @@
 
             var minAttr = d3.min(dataset,function(d){ return parseFloat(d.val); }),
                 maxAttr = d3.max(dataset,function(d){ return parseFloat(d.val); }),
-                colorScale = d3.scale.linear().domain([minAttr,maxAttr]).range(["#64E0E5","#EC8E4F"]);
+                colorScale = d3.scale.linear().domain([minAttr,maxAttr]).range(["#DDDDDD","#EC8E4F"]);
 
             dataset.forEach(function(v,i){
                 map.select("."+getClassName(v["Area Name"]))
@@ -246,7 +246,7 @@
             g.exit().remove();
 
             var barScale = d3.scale.linear().domain([0,maxAttr]).range([2,barMaxHeight]),
-                colorScale = d3.scale.linear().domain([0,maxAttr]).range(["#64E0E5","#EC8E4F"]);
+                colorScale = d3.scale.linear().domain([0,maxAttr]).range(["#DDDDDD","#EC8E4F"]);
 
             g.attr("transform",function(d,i){
                 return "translate("+i*(barWidth)+",0)";
@@ -345,15 +345,15 @@
                 var t = d3.select(this);
 
                 if (t.attr("class") == p) {
-                    t.select("rect").attr("fill",(selectedArea && d.placeName != selectedArea) ? "#33B333" : "#45A3FF");
+                    t.select("rect").attr("stroke",(selectedArea && d.placeName != selectedArea) ? "#33B333" : "#45A3FF").attr("stroke-width",2);
                     t.select("text").style("display","block");
 
                 } else if (t.attr("class") == selectedArea) {
-                    t.select("rect").attr("fill","#45A3FF");
+                    t.select("rect").attr("stroke","#45A3FF");
                     t.select("text").style("display","block");
 
                 } else {
-                    t.select("rect").attr("fill","#ccc")
+                    t.select("rect").attr("stroke","#ccc")
                     t.select("text").style("display","none");
                 }
             });

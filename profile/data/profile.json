@@ -11,6 +11,7 @@
                         "data":[
                             "Percentage White Alone Population",
                             "Percentage Latino Alone Population ",
+                            "Percentage African American Alone Population",
                             "Percentage Native American Alone Population",
                             "Percentage Asian American or Pacific Islander Alone Population",
                             "Percentage Other Population"
@@ -20,7 +21,7 @@
                 {
                     "key":"Age",
                     "obj": {
-                        "type":"isotope",
+                        "type":"isotype",
                         "source":"CPA",
                         "data":[
                             "Percentage of Population Under Age 5 ",
@@ -81,7 +82,7 @@
                 {
                     "key":"",
                     "obj": {
-                        "type":"isotope",
+                        "type":"isotype",
                         "source":"CPA",
                         "data": [
                             "Percentage of Population Age 25 and Over that Did Not Graduate from High School ",
@@ -144,7 +145,7 @@
                     }
                 },
                 {
-                    "key":"Mental health",
+                    "key":"Mental health by Health District",
                     "obj": {
                         "type":"barchart",
                         "source":"HD",
@@ -156,7 +157,7 @@
                     }
                 },
                 {
-                    "key":"Weight",
+                    "key":"Weight by Health District",
                     "obj": {
                         "type":"barchart",
                         "source":"HD",
@@ -167,7 +168,7 @@
                     }
                 },
                 {
-                    "key":"Physical Activity",
+                    "key":"Physical Activity by Health District",
                     "obj": {
                         "type":"barchart",
                         "source":"HD",

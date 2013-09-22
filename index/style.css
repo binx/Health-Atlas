@@ -7,7 +7,7 @@ body {
     width: 500px;
     height: 95%;
     position: fixed;
-    border: 2px solid orange;
+    border: 0px solid orange;
     margin: 2.5%;
     box-sizing: border-box;
 }
@@ -89,12 +89,15 @@ body {
     background: black;
     color: white;
     padding: 3px;
+  
 }
 #graphs {
     width: 55%;
     float: right;
     margin-right: 5%;
     position: relative;
+    margin-top: 36px;
+    margin-bottom: 48px;
 }
 #graphs .graph {
     background-color: #DBF2EC;
@@ -106,14 +109,16 @@ body {
 #graphs h2 {
     color: #0088FF;
     text-transform: uppercase;
-    font-size: 20px;
+    font-size: 18px;
     margin: 5px 0;
+    font-weight: normal;
     cursor: pointer;
 }
 #graphs h3 {
     font-weight: normal;
     margin: 0;
-    font-size: 16px;
+    font-size: 12px;
+    line-height: 16px;
     cursor: pointer;
 }
 #graphs h3.active {
