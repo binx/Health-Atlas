@@ -235,8 +235,11 @@ padding-top: 30px;
 }
 .stem-and-leaf .title span {
     font-weight: bold;
-    margin-left: 10px;
+    margin-right: 5px;
     font-size: 12px;
+    width: 30px;
+    text-align: right;
+    display: inline-block;
 }
 .stem-and-leaf .wrapper {
     position: absolute;

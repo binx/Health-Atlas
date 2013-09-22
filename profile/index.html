@@ -523,7 +523,7 @@
                     .style("width",function(d) { return personScale(valData[d]) + "px" });
 
                 isos.select(".v-"+i+" .textVal")
-                    .style("color",quartileColors[Math.round(bg(valData[attr]))-1])
+                    .style("color",quartileColors[5 - Math.round(bg(valData[attr]))])
                     .text(formatNumber(" Percent ",valData[attr]));
 
                 var pos = $(div[0]).find(".v-"+i).offset();
@@ -571,7 +571,8 @@
             var stem = div.selectAll(".stem-and-leaf").data([val]);
             attrs.forEach(function(attr,i){
                 var barScale = d3.scale.linear().domain([min[attr],max[attr]]).range([2,leafMaxWidth]);
-                var colorScale = d3.scale.linear().domain([min[attr],max[attr]]).range(["#64E0E5","#FF885B"]);
+                var colorMinScale = d3.scale.linear().domain([min[attr],avg[attr]]).range(["#64E0E5","#D4DCCF"]),
+                    colorMaxScale = d3.scale.linear().domain([avg[attr],max[attr]]).range(["#D4DCCF","#FF885B"]);;
 
                 var format = val[attr+"-FORMAT"];
                 var textDisplay = formatNumber(format, val[attr]);
@@ -585,7 +586,7 @@
                     .duration(1000)
                     .attr("x",(svgWidth/2 + (neg ? 2 : -diff)))
                     .attr("width",Math.abs(diff))
-                    .attr("fill",colorScale(val[attr]));
+                    .attr("fill",(val[attr] < avg[attr]) ? colorMinScale(val[attr]) : colorMaxScale(val[attr]));
 
                 var pos = $(stem[0]).find(".leaf-"+i).offset();
 
