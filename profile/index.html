@@ -136,7 +136,8 @@
                             updateThermometer(attr, areaData[source][areaName][attr], areaData[source]["MinimumValue"][attr], areaData[source]["MaximumValue"][attr], areaData[source][areaName][attr+"-FORMAT"], div, notes.number);
                             break;
                         case "pie":
-                            updatePie(areaData[source][areaName][d.data[0]], d.data[0], div);
+                            var attr = d.data[0];
+                            updatePie(areaData[source][areaName][attr], areaData[source]["MinimumValue"][attr], areaData[source]["MaximumValue"][attr], attr, div);
                             break;
                         case "stemandleaf":
                             updateStemAndLeaf(d.data,areaData[source][areaName],areaData[source]["AverageValue"],areaData[source]["MinimumValue"],areaData[source]["MaximumValue"], div);
@@ -181,7 +182,7 @@
                     break;
                 case "pie":
                     var attr = data[0];
-                    drawPie(areaData[source][areaName][attr], areaData[source]["AverageValue"][attr], attr, div);
+                    drawPie(areaData[source][areaName][attr], areaData[source]["AverageValue"][attr], areaData[source]["MinimumValue"][attr], areaData[source]["MaximumValue"][attr], attr, div);
                     break;
                 case "barchart":
                     var dataAggregate = processBarData(data, source)
@@ -430,7 +431,7 @@
             });
         }
 
-        function drawPie(value, avgValue, attr, div) {
+        function drawPie(value, avgValue, min, max, attr, div) {
             var pie = div.selectAll(".pie").data([value])
                         .enter().append("div").attr("class","pie"),
                 pieSize = 120,
@@ -447,8 +448,8 @@
                 .attr("fill","#ddd");
 
             svg.append("path").attr("class","pieData")
-                .attr("transform","translate("+pieSize/2+","+pieSize/2+")")
-                .attr("fill","lightBlue");;
+                .attr("transform","translate("+pieSize/2+","+pieSize/2+")");
+                // .attr("fill","lightBlue");
 
             svg.append("path")
                 .transition()
@@ -459,20 +460,21 @@
             pie.append("div").attr("class","pie-avg")
                 .html("LA County<br> " + (avgValue*100).toFixed(0) + "%");
 
-            updatePie(value, attr, div);
+            updatePie(value, min, max, attr, div);
         }
 
-        function updatePie(value, attr, div) {
+        function updatePie(value, min, max, attr, div) {
             var arc = d3.svg.arc()
                 .innerRadius(00)
                 .outerRadius(40)
                 .startAngle(0)
                 .endAngle(value * 2*Math.PI);
-                
-            
+
+            colorScale = d3.scale.linear().domain([min,max]).range(["#64E0E5","#EC8E4F"]);
 
             div.select(".pieData")
-                .attr("d", arc);
+                .attr("d", arc)
+                .attr("fill",colorScale(value));
 
             var pos = $(div[0]).find("svg").offset();
 
