@@ -14,6 +14,12 @@ body {
     margin: 0 auto 50px;
     display: block;
 }
+#map path {
+    cursor: pointer;
+}
+#map path:hover {
+    fill: #ddd;
+}
 #map #pop-stats {
     float: right;
     width: 250px;
@@ -59,18 +65,35 @@ body {
 }
     
 #tooltip {
-    background-color: black;
-    color: white;
-    max-width: 200px;
     position: absolute;
+    top: 450px;
+    left: 0;
     font-size: 14px;
+    color: #0084DB;
     display: none;
-    padding: 10px;
 }
-#tooltip .place {
-    margin-bottom: 3px;
+#tooltip .title {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 12px;
+    margin-bottom: 15px;
 }
-#tooltip .data span {
+#tooltip .attr {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+#tooltip .desc {
+    margin-top: 15px;
+    font-size: 12px;
+}
+#tooltip ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+}
+#tooltip li span {
     font-weight: bold;
 }
 
@@ -87,6 +110,7 @@ body {
     float: left;
     margin-bottom: 50px;
     position: relative;
+    cursor: pointer;
 }
 .barchart .graph-object {
     width: 90%;
@@ -104,6 +128,14 @@ body {
     position: absolute;
     width: 100%;
     height: 2px;
+}
+.barchart .avg-annotation {
+    position: absolute;
+    left: 100%;
+    width: 100px;
+    font-size: 12px;
+    color: green;
+    padding-left: 5px;
 }
 .barchart .bar {
     position: absolute;
@@ -146,6 +178,7 @@ body {
     font-size: 25px;
     margin: 0 10px 10px 0;
     float: left;
+    cursor: pointer;
 }
 .bubble .bub:last-child {
     margin-right: 0;
@@ -170,6 +203,7 @@ body {
     margin: 0 auto;
     display: block;
     padding-top: 10px;
+    cursor: pointer;
 }
 .pie path {
     stroke: none;
@@ -206,6 +240,7 @@ padding-top: 30px;
     width: 100%;
     height: 80px;
     clear: both;
+    cursor: pointer;
 }
 .isotype .title {
     float: left;
@@ -279,6 +314,10 @@ padding-top: 30px;
 }
 .stem-and-leaf .leaf {
     height: 30px;
+    cursor: pointer;
+}
+.stem-and-leaf rect {
+    cursor: pointer;
 }
 .stem-and-leaf .title {
     width: 70%;
@@ -358,6 +397,7 @@ font-weight: bold;
     position: relative;
     width: 100px;
     margin-left: 50px;
+    cursor: pointer;
 }
 .therm-wrapper {
     position: relative;

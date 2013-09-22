@@ -9,13 +9,14 @@
         <div id="map">
             <h1></h1>
             <svg></svg>
-        </div>
-        <div id="graphs">
-        </div>
-        <div id="tooltip">
-                <div class="place"></div>
-                <div class="data"></div>
+            <div id="tooltip">
+                <div class="title">More Information</div>
+                <div class="attr"></div>
+                <ul></ul>
+                <div class="desc"></div>
             </div>
+        </div>
+        <div id="graphs"></div>
     </body>
     <script type="text/javascript">
         var specialRows = ["DataSource","Description","MinimumValue","MaximumValue","AverageValue","GeographicScale","AveValueGeo"];
@@ -23,7 +24,7 @@
             quartileColors = ["#EC8E4F","#FFD5B6","#D4DCCF","#A4DFD0","#4DC9D2"];
         var graphs = d3.select("#graphs"),
             map = d3.select("#map"),
-            tooltip = d3.select("#tooltip"),
+            tooltip = $("#tooltip"),
             areaName,
             areaData = {},
             mapData = {};
@@ -189,7 +190,7 @@
                     break;
                 case "barchart":
                     var dataAggregate = processBarData(data, source)
-                    drawBars(dataAggregate, source, div, notes.showLabels);
+                    drawBars(dataAggregate, source, div, notes.showLabels, notes.annotation);
                     break;
                 case "bubble":
                     var dataAggregate = processBarData(data, source)
@@ -197,19 +198,19 @@
             }
         }
 
-        function showTooltip(data, place, attr, source) {
-            tooltip.select(".place").text(source + ": " + place);
-            tooltip.select(".data").html(attr + ": <span>" + data+"</span>");
-        }
-        function positionTooltip(elem, pos) {
-            var m = d3.mouse(elem);
+        function showTooltip(attr, data, source) {
+            tooltip.show();
+            tooltip.find(".attr").text(attr);
 
-            tooltip.style("left",(pos.left + m[0])+"px")
-                .style("top",(pos.top + m[1])+"px")
-                .style("display","block");
-        }
-        function hideTooltip() {
-            tooltip.style("display","none");
+            var ul = tooltip.find("ul").empty();
+            data.forEach(function(datum){
+                ul.append($("<li>").html(datum.place + ": <span>" + 
+                    formatNumber(areaData[source]["AverageValue"][attr+"-FORMAT"],datum.data)+"</span>"));
+            });
+            ul.append($("<li>").html("City: <span>" + 
+                formatNumber(areaData[source]["AverageValue"][attr+"-FORMAT"],areaData[source]["AverageValue"][attr])+"</span>"));
+
+            tooltip.find(".desc").text(areaData[source]["Description"][attr]);
         }
 
         function loadMap() {
@@ -318,20 +319,24 @@
                 bubbles.text(function(d){ return formatNumber(d.format, d.data); })
                     .style("background-color",function(d){
                         return colorData(d.data, datum.avg, datum.min, datum.max);
-                    });
+                    }).on("click",function(){ showTooltip(datum.key, datum.obj, source); });
             })
         }
 
-        function drawBars(data, source, wrapper, showLabels) {
+        function drawBars(data, source, wrapper, showLabels, annotation) {
             if (data.length == 1) wrapper.style("width","50%").style("clear","none").style("float","left");
 
             data.forEach(function(datum, i){
-                var chart = wrapper.append("div").attr("class","barchart c-"+i).style("width",(100/data.length)+"%"),
+                var chartWidth = (showLabels) ? 75 : (100/data.length);
+                var chart = wrapper.append("div").attr("class","barchart c-"+i).style("width",chartWidth+"%"),
                     chartHeight = 120;
                 var div = chart.append("div").attr("class","graph-object")
                             .style("height",chartHeight+"px");
 
-                div.append("div").attr("class","avg-line");
+                var barScale = d3.scale.linear().domain([datum.min,datum.max]).range([0,chartHeight]);
+
+                div.append("div").attr("class","avg-line")
+                    .style("top",function(d){ return chartHeight - barScale(datum.avg) + "px"; });
 
                 div.append("div").attr("class","axis")
                     .style("width","100%").style("height","2px")
@@ -342,6 +347,9 @@
                 if (showLabels) {
                     chart.insert("h2",".graph-object").text(datum.key);
                     chart.append("div").attr("class","place-labels");
+                    div.append("div").attr("class","avg-annotation")
+                        .html("County Average<br>"+datum.avg+" "+annotation)
+                        .style("top",function(d){ return chartHeight - barScale(datum.avg) - 12 + "px"; });
                 }
                 else 
                     chart.append("div").attr("class","title").text(datum.key);
@@ -380,10 +388,6 @@
 
                 var barScale = d3.scale.linear().domain([datum.min,datum.max]).range([0,chartHeight]);
 
-
-                div.select(".avg-line")
-                    .style("top",function(d){ return chartHeight - barScale(datum.avg) + "px"; })
-
                 var bars = div.selectAll(".bar").data(datum.obj);
 
                 bars.enter()
@@ -416,11 +420,7 @@
                         .style("left",function(d,i){ return i*(barWidth+barPadding) + barPadding/2 + "px"; })
                 }
 
-                var pos = $(svg[0]).offset();
-
-                bars.on("mouseenter",function(d){ showTooltip(d.data, d.place, datum.key, source); })
-                    .on("mousemove",function(d){ positionTooltip(this, pos); })
-                    .on("mouseout",function(d){ hideTooltip(); });
+                chart.on("click",function(){ showTooltip(datum.key, datum.obj, source); });
             });
         }
 
@@ -466,17 +466,13 @@
             var numBoxes = 0;
             var key = div.select(".boxes-key");
 
+            div.on("click",function(d){ showTooltip(); })
+
             waffleTypes.forEach(function(land,j){
                 var p = waffleTypes[j].data/totalValue*100;
                 for (var i = 0; i < Math.round(p); i++) {
                     var box = $(div[0]).find(".box").eq(numBoxes)
                     box.css("background-color",colors[j]);
-                    var pos = box.offset();
-
-                    d3.select(box[0])
-                        .on("mouseenter",function(d){ showTooltip(waffleTypes[j].data, areaName, land.title, "CPA"); })
-                        .on("mousemove",function(d){ positionTooltip(this, pos); })
-                        .on("mouseout",function(d){ hideTooltip(); });
 
                     numBoxes++;
                 }
@@ -529,9 +525,7 @@
             var pos = $(div[0]).find("svg").offset();
 
             div.select("svg")
-                .on("mouseenter",function(d){ showTooltip(value, areaName, attr, "CPA"); })
-                .on("mousemove",function(d){ positionTooltip(this, pos); })
-                .on("mouseout",function(d){ hideTooltip(); });
+                .on("click",function(d){ showTooltip(attr, [{"place":areaName, "data":value}], "CPA"); })
         }
 
         function drawIsotype(valData, avgData, min, max, desc, attrs, div) {
@@ -562,7 +556,8 @@
         }
 
         function updateIsotype(valData, min, max, div, attrs) {
-            var isos = div.selectAll(".isotype").data(attrs);
+            var isos = div.selectAll(".isotype").data(attrs)
+                            .on("click",function(d){ showTooltip(d, [{"place":areaName, "data":valData[d]}], "CPA"); });
 
             attrs.forEach(function(attr,i){
                 var personScale = d3.scale.linear().domain([min[attr],max[attr]]).range([9,400]),
@@ -581,10 +576,6 @@
                     .text(formatNumber(" Percent ",valData[attr]));
 
                 var pos = $(div[0]).find(".v-"+i).offset();
-
-                iso.on("mouseenter",function(d){ showTooltip(valData[attr], areaName, attr, "CPA"); })
-                    .on("mousemove",function(d){ positionTooltip(this, pos); })
-                    .on("mouseout",function(d){ hideTooltip(); });
             });
         }
 
@@ -629,7 +620,8 @@
 
                 var format = val[attr+"-FORMAT"];
                 var textDisplay = formatNumber(format, val[attr]);
-                stem.select(".t-"+i).html("<span>" +textDisplay +"</span> "+ attr );
+                stem.select(".t-"+i).html("<span>" +textDisplay +"</span> "+ attr )
+                    .on("click",function(d){ showTooltip(attr, [{"place":areaName, "data":val[attr]}], "CPA"); });
 
                 var diff = barScale(avg[attr])-barScale(val[attr]),
                     neg = (diff < 0) ? true : false;
@@ -644,9 +636,7 @@
                 var pos = $(stem[0]).find(".leaf-"+i).offset();
 
                 div.select(".leaf-"+i)
-                    .on("mouseenter",function(d){ showTooltip(val[attr], areaName, attr, "CPA"); })
-                    .on("mousemove",function(d){ positionTooltip(this, pos); })
-                    .on("mouseout",function(d){ hideTooltip(); });
+                    .on("click",function(d){ showTooltip(attr, [{"place":areaName, "data":val[attr]}], "CPA"); });
             });
         }
 
@@ -692,20 +682,14 @@
         function updateThermometer(attr, val, min, max, format, div, showNumber) {
             var thermHeight = 15,
                 thermWidth = 200;
-            div.selectAll(".thermometer").data([val]);
+            div.selectAll(".thermometer").data([val])
+                .on("click",function(d){ showTooltip(attr, [{"place":areaName, "data":val}], "CPA"); });
 
             var posScale = d3.scale.linear().domain([max,min]).range([0,thermWidth-thermHeight]);
             div.select(".circle-wrapper")
                 .transition()
                 .duration(1000)
                 .style("margin-right",posScale(val)+"px");
-
-            var pos = $(div[0]).find(".thermometer").offset();
-
-            div.select(".thermometer")
-                .on("mouseenter",function(d){ showTooltip(val, areaName, attr, "CPA"); })
-                .on("mousemove",function(d){ positionTooltip(this, pos); })
-                .on("mouseout",function(d){ hideTooltip(); });
 
             val = formatNumber(format, val);
 

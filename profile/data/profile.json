@@ -105,7 +105,8 @@
                             "Life Expectancy at Birth"
                         ],
                         "notes": {
-                            "showLabels":true
+                            "showLabels":true,
+                            "annotation":"years"
                         }
                     }
                 },
@@ -246,7 +247,8 @@
                             "Average Annual Motor Vehicle Traffic Mortality Rate per 100,000 Residents "
                         ],
                         "notes": {
-                            "showLabels":true
+                            "showLabels":true,
+                            "annotation":"per year"
                         }
                     }
                 },
