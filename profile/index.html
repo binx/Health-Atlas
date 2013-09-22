@@ -19,7 +19,8 @@
     </body>
     <script type="text/javascript">
         var specialRows = ["DataSource","Description","MinimumValue","MaximumValue","AverageValue","GeographicScale","AveValueGeo"];
-        var colors = ["yellow","orange","pink","green","purple","red"];
+        var colors = ["yellow","orange","pink","green","purple","red"],
+            quartileColors = ["#EC8E4F","#FFD5B6","#D4DCCF","#A4DFD0","#4DC9D2"];
         var graphs = d3.select("#graphs"),
             map = d3.select("#map"),
             tooltip = d3.select("#tooltip"),
@@ -38,7 +39,6 @@
                 v.obj.forEach(function(w){
                     var subdiv = div.append("div").attr("class","graph graph-"+w.obj.type).data([w.obj]);
                     if (w.key) subdiv.append("h2").text(w.key);
-                    // appendGraph(w.obj.source, w.obj.type, w.obj.data, subdiv, (w.obj.notes ? w.obj.notes : ""));
                 });
             });
             loadCPA(1);
@@ -125,20 +125,28 @@
                         type = d.type, 
                         div = d3.select(this), 
                         notes = (d.notes) ? d.notes : "";
-                    if (d.type == "thermometer") {
-                        var attr = d.data[0];
-                        updateThermometer(attr, areaData[source][areaName][attr], areaData[source]["MinimumValue"][attr], areaData[source]["MaximumValue"][attr], areaData[source][areaName][attr+"-FORMAT"], div, notes.number);
-                    } else if (d.type == "pie") {
-                        updatePie(areaData[source][areaName][d.data[0]], d.data[0], div);
-                    } else if (d.type == "stemandleaf") {
-                        updateStemAndLeaf(d.data,areaData[source][areaName],areaData[source]["AverageValue"],areaData[source]["MinimumValue"],areaData[source]["MaximumValue"], div);
-                    } else if (d.type == "isotype") {
-                        updateIsotype(areaData[source][areaName],areaData[source]["MinimumValue"],areaData[source]["MaximumValue"], div, d.data);
-                    } else if (d.type == "waffle")
-                        updateWaffle(areaData[source][areaName], areaData[source]["Description"], d.data, div);
-                    else {
-                        var dataAggregate = processBarData(d.data, source)
-                        updateBars(dataAggregate, source, div);
+
+                    switch (d.type) {
+                        case "thermometer":
+                            var attr = d.data[0];
+                            updateThermometer(attr, areaData[source][areaName][attr], areaData[source]["MinimumValue"][attr], areaData[source]["MaximumValue"][attr], areaData[source][areaName][attr+"-FORMAT"], div, notes.number);
+                            break;
+                        case "pie":
+                            updatePie(areaData[source][areaName][d.data[0]], d.data[0], div);
+                            break;
+                        case "stemandleaf":
+                            updateStemAndLeaf(d.data,areaData[source][areaName],areaData[source]["AverageValue"],areaData[source]["MinimumValue"],areaData[source]["MaximumValue"], div);
+                            break;
+                        case "waffle":
+                            updateWaffle(areaData[source][areaName], areaData[source]["Description"], d.data, div);
+                            break;
+                        case "isotype":
+                            updateIsotype(areaData[source][areaName],areaData[source]["MinimumValue"],areaData[source]["MaximumValue"], div, d.data);
+                            break;
+                        case "barchart":
+                            var dataAggregate = processBarData(d.data, source)
+                            updateBars(dataAggregate, source, div);
+                            break;
                     }
                 });
             } else {
@@ -148,37 +156,33 @@
             }
 
             loaded = true;
-            
-            // layoutData.forEach(function(w){
-            //     var subdiv = div.append("div").attr("class","graph-"+w.obj.type);
-            //     if (w.key) subdiv.append("h2").text(w.key);
-            //     appendGraph(w.obj.source, w.obj.type, w.obj.data, subdiv, (w.obj.notes ? w.obj.notes : ""));
-            // });
 
             loadMap();
         }
 
         function appendGraph(source, type, data, div, notes) {
-            if (type == "waffle") {
-                drawWaffle(areaData[source][areaName], areaData[source]["Description"], data, div);
-            }
-            if (type == "isotype") {
-                drawIsotype(areaData[source][areaName],areaData[source]["AverageValue"],areaData[source]["MinimumValue"],areaData[source]["MaximumValue"],areaData[source]["Description"], data, div);
-            }
-            if (type == "thermometer") {
-                var attr = data[0];
-                drawThermometer(attr, areaData[source][areaName][attr], areaData[source]["MinimumValue"][attr], areaData[source]["MaximumValue"][attr], areaData[source][areaName][attr+"-FORMAT"], div, notes.number);
-            }
-            if (type == "stemandleaf") {
-                drawStemAndLeaf(data,areaData[source][areaName],areaData[source]["AverageValue"],areaData[source]["MinimumValue"],areaData[source]["MaximumValue"], div);
-            }
-            if (type == "pie") {
-                var attr = data[0];
-                drawPie(areaData[source][areaName][attr], areaData[source]["AverageValue"][attr], attr, div);
-            }
-            if (type == "barchart") {
-                var dataAggregate = processBarData(data, source)
-                drawBars(dataAggregate, source, div);
+            switch (type) {
+                case "waffle":
+                    drawWaffle(areaData[source][areaName], areaData[source]["Description"], data, div);
+                    break;
+                case "isotype":
+                    drawIsotype(areaData[source][areaName],areaData[source]["AverageValue"],areaData[source]["MinimumValue"],areaData[source]["MaximumValue"],areaData[source]["Description"], data, div);
+                    break;
+                case "thermometer":
+                    var attr = data[0];
+                    drawThermometer(attr, areaData[source][areaName][attr], areaData[source]["MinimumValue"][attr], areaData[source]["MaximumValue"][attr], areaData[source][areaName][attr+"-FORMAT"], div, notes.number);
+                    break;
+                case "stemandleaf":
+                    drawStemAndLeaf(data,areaData[source][areaName],areaData[source]["AverageValue"],areaData[source]["MinimumValue"],areaData[source]["MaximumValue"], div);
+                    break;
+                case "pie":
+                    var attr = data[0];
+                    drawPie(areaData[source][areaName][attr], areaData[source]["AverageValue"][attr], attr, div);
+                    break;
+                case "barchart":
+                    var dataAggregate = processBarData(data, source)
+                    drawBars(dataAggregate, source, div);
+                    break;
             }
         }
 
@@ -311,7 +315,8 @@
                     else
                         places.push(p.place);
                 });
-                if (source in mapData) loadMapData(mapData[source], places, source);
+                if (source in mapData) 
+                    loadMapData(mapData[source], places, source);
                 else
                     d3.json("data/"+source+"_small.json",function(collection){
                         mapData[source] = collection;
@@ -489,10 +494,12 @@
                 var val = graph.append("div").attr("class","iso-line value v-"+i);
                 val.append("div").attr("class","title").text("here");
                 val.append("div").attr("class","img");
+                val.append("div").attr("class","textVal");
 
                 var avg = graph.append("div").attr("class","iso-line average");
                 avg.append("div").attr("class","title").text("city avg");
                 avg.append("div").attr("class","img").style("width",(personScale(avgData[attr])) + "px");
+                avg.append("div").attr("class","textVal").text(formatNumber(" Percent ",avgData[attr]));
 
             });
             updateIsotype(valData, min, max, div, attrs);
@@ -510,6 +517,10 @@
                     .transition()
                     .duration(1000)
                     .style("width",function(d) { return personScale(valData[d]) + "px" });
+
+                isos.select(".v-"+i+" .textVal")
+                    .style("color",quartileColors[Math.round(bg(valData[attr]))-1])
+                    .text(formatNumber(" Percent ",valData[attr]));
 
                 var pos = $(div[0]).find(".v-"+i).offset();
 
@@ -591,19 +602,18 @@
                 thermWrapper = therm.append("div").attr("class","therm-wrapper")
                                     .style("height",thermHeight+"px").style("width",thermWidth+"px"),
                 valueWrapper = therm.append("div").attr("class","value-wrapper")
-                                    .style("width",thermWidth+"px").style("height", thermHeight+"px"),
-                colorScale = d3.scale.linear().domain([0,5]).range(["#64E0E5","#FF885B"]);
+                                    .style("width",thermWidth+"px").style("height", thermHeight+"px");
 
             for (var i = 0; i < 5; i++) {
                 thermWrapper.append("div").attr("class","therm-background")
-                    .style("background-color",colorScale(i))
+                    .style("background-color",quartileColors[i])
                     .style("height",thermHeight + "px")
                     .style("width",thermWidth/5 + "px")
                     .style("left",(thermWidth/5)*i + "px");
             }
 
-            valueWrapper.append("div").attr("class","scale max").text(formatNumber(format, max));
-            valueWrapper.append("div").attr("class","scale min").text(formatNumber(format, min));
+            var textMax = valueWrapper.append("div").attr("class","scale max").text(formatNumber(format, max));
+            var textMin = valueWrapper.append("div").attr("class","scale min").text(formatNumber(format, min));
 
             var circWrapper = valueWrapper.append("div")
                 .attr("class","circle-wrapper")
@@ -658,7 +668,7 @@
                 value = parseInt(value).toFixed(0);
                 value = "$"+value.substring(0,value.length-3)+","+value.substring(2,value.length);
             } else if (format == " Percent ")
-                value = (value*100).toFixed(1)+"%";
+                value = (value*100).toFixed(0)+"%";
             return value;
         }
 

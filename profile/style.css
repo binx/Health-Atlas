@@ -194,6 +194,16 @@ padding-top: 30px;
 .isotype .iso-line.average .img {
     background-image: url(img/isotype-man-avg.png);
 }
+.isotype .textVal {
+    font-weight: bold;
+    padding-left: 5px;
+    float: left;
+    font-size: 18px;
+    line-height: 24px;
+}
+.isotype .average .textVal {
+    color: #00B85B;
+}
 
 .graph-stemandleaf {
     width: 100%;
@@ -312,16 +322,16 @@ font-weight: bold;
 .thermometer .value-wrapper .scale {
     position: absolute;
     left: 0px;
+    bottom: 2px;
     font-size: 10px;
+    width: 50px;
 }
 .thermometer .value-wrapper .min {
-    bottom: 2px;
-    left: -36px;
+    left: -57px;
     text-align: right;
 }
 
 .thermometer .value-wrapper .max {
-    bottom: 2px;
     left: 208px;
     text-align: left;
 }
