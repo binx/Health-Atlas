@@ -35,12 +35,16 @@
             json.data.forEach(function(v){
                 var div = graphs.append("div").attr("class","section");
                 div.append("h1").text(v.key);
+                var graphWrapper = div.append("div").attr("class","graph-wrapper");
 
                 v.obj.forEach(function(w){
-                    var subdiv = div.append("div").attr("class","graph graph-"+w.obj.type).data([w.obj]);
+                    var subdiv = graphWrapper.append("div").attr("class","graph graph-"+w.obj.type).data([w.obj]);
                     if (w.key) subdiv.append("h2").text(w.key);
                 });
             });
+            $("#graphs h1").click(function(){
+                $(this).parent().find(".graph-wrapper").slideToggle();
+            })
             loadCPA(1);
         });
 
