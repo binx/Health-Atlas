@@ -118,6 +118,40 @@ body {
     font-size: 10px;
 }
 
+.graph-bubble {
+    clear: both;
+}
+.bubble {
+    width: 33%;
+    float: left;
+    margin-bottom: 50px;
+}
+.bubble .desc {
+    padding: 0 20px;
+    box-sizing: border-box;
+    text-align: center;
+}
+.bubble-wrapper {
+    margin: 0 auto;
+}
+.bubble .bub {
+    width: 75px;
+    height: 75px;
+    border-radius: 50px;
+    text-align: center;
+    line-height: 75px;
+    color: white;
+    font-size: 25px;
+    margin: 0 10px 10px 0;
+    float: left;
+}
+.bubble .bub:last-child {
+    margin-right: 0;
+}
+.bubble .desc {
+    clear: both;
+}
+
 .graph-pie {
     width: 50%;
     float: left;

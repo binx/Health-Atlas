@@ -147,7 +147,7 @@
                 {
                     "key":"Mental health by Health District",
                     "obj": {
-                        "type":"barchart",
+                        "type":"bubble",
                         "source":"HD",
                         "data": [
                             "Percentage of Children who Reported Fair or Poor Health",
@@ -159,7 +159,7 @@
                 {
                     "key":"Weight by Health District",
                     "obj": {
-                        "type":"barchart",
+                        "type":"bubble",
                         "source":"HD",
                         "data": [
                             "Prevalence of Overweight Adults",
@@ -170,7 +170,7 @@
                 {
                     "key":"Physical Activity by Health District",
                     "obj": {
-                        "type":"barchart",
+                        "type":"bubble",
                         "source":"HD",
                         "data": [
                             "Percentage of Children who Participated in Physical Activity per Week",

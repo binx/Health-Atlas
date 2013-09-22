@@ -152,6 +152,9 @@
                             var dataAggregate = processBarData(d.data, source)
                             updateBars(dataAggregate, source, div, notes.showLabels);
                             break;
+                        case "bubble":
+                            var dataAggregate = processBarData(d.data, source)
+                            updateBubbles(dataAggregate, source, div);
                     }
                 });
             } else {
@@ -188,6 +191,9 @@
                     var dataAggregate = processBarData(data, source)
                     drawBars(dataAggregate, source, div, notes.showLabels);
                     break;
+                case "bubble":
+                    var dataAggregate = processBarData(data, source)
+                    drawBubbles(dataAggregate, source, div);
             }
         }
 
@@ -275,8 +281,10 @@
                 var aList = [];
                 areaList.forEach(function(a){
                     aList.push({"place":a, 
-                                "data":parseFloat(areaData[source][a][d])});
-                })
+                                "data":parseFloat(areaData[source][a][d]),
+                                "format":areaData[source][a][d+"-FORMAT"]
+                            });
+                });
                 var p = {"key":d,
                         "obj":aList,
                         "avg":parseFloat(areaData[source]["AverageValue"][d]),
@@ -285,6 +293,33 @@
                 dataAggregate.push(p);
             });
             return dataAggregate;
+        }
+
+        function drawBubbles(data, source, wrapper) {
+            data.forEach(function(datum, i){
+                var chart = wrapper.append("div").attr("class","bubble b-"+i);
+                chart.append("div").attr("class","bubble-wrapper");
+                chart.append("div").attr("class","desc").text(datum.key);
+            });
+            updateBubbles(data, source, wrapper);
+        }
+
+        function updateBubbles(data, source, wrapper) {
+            var bubbleWidth = 75,
+                bubblePadding = 10;
+            data.forEach(function(datum, i){
+                var chart = wrapper.select(".b-"+i+" .bubble-wrapper")
+                                .style("width",(bubbleWidth*datum.obj.length)+(bubblePadding*(datum.obj.length-1))+"px");
+
+                var bubbles = chart.selectAll(".bub").data(datum.obj);
+                    bubbles.enter().append("div").attr("class","bub")
+                    bubbles.exit().remove();
+
+                bubbles.text(function(d){ return formatNumber(d.format, d.data); })
+                    .style("background-color",function(d){
+                        return colorData(d.data, datum.avg, datum.min, datum.max);
+                    });
+            })
         }
 
         function drawBars(data, source, wrapper, showLabels) {
