@@ -77,6 +77,7 @@ body {
 .graph-barchart {
     width: 100%;
     clear: both;
+    overflow: hidden;
 }
 .graph-barchart h2 {
     text-align: left;
@@ -88,7 +89,7 @@ body {
     position: relative;
 }
 .barchart .graph-object {
-    width: 100%;
+    width: 90%;
     margin-bottom: 10px;
     display: block;
     position: relative;
@@ -96,6 +97,7 @@ body {
 .barchart .axis {
     position: absolute;
     background-color: #ccc;
+    z-index: 1;
 }
 .barchart .avg-line {
     background-color: green;
