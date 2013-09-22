@@ -53,11 +53,11 @@ body {
 }
 #map #hovered-name .place,
 #map #selected-name .place {
-    float: left;
 }
 #map #hovered-name .value,
 #map #selected-name .value {
     font-weight: bold;
+    margin-left: 5px;
 }
 #map h2 {
     font-size: 18px;

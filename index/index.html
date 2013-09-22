@@ -34,19 +34,20 @@
         var selectedArea = null,
         mostRecentAttr = "Total Population",
         mostRecentData,
-        masterData = {};
+        masterData = {},
+        metaData = {};
 
         d3.json("data/map.json",function(collection){
             d3.csv("data/CPA.csv",function(csv){
                 var c = [];
                 csv.forEach(function(d){
+                    console.log(d)
                     if (specialRows.indexOf(d["Area Name"]) == -1 && d["Area Name"]) {
                         c.push(d);
-                    } else if (d["Area Name"] == "Description") {
-                        descObj = d;
-                    } else if (d["Area Name"] == "DataSource") {
-                        sourceObj = d;
-                    }
+                    } 
+
+                    if (!metaData[d["Area Name"]]) metaData[d["Area Name"]] = {};
+                    metaData[d["Area Name"]] = d;
                 });
 
                 generateMap(collection);
@@ -75,7 +76,7 @@
                             });
                             if (attr == mostRecentAttr)
                                 colorizeMap(set,attr);
-                            generateBars(set,attr,div);
+                            generateBars(set, attr, metaData["AverageValue"][attr], metaData["MinimumValue"][attr], metaData["MaximumValue"][attr], div);
                             masterData[attr] = set;
                         });
                     });
@@ -127,14 +128,9 @@
                 }).on("mouseenter",function(d){
                     var fillColor = (selectedArea && selectedArea != d.placeName) ? "#33B333" : "#45A3FF";
 
-
-                    // to do!
-                    // replace fill with stroke for all selected states
-                    // resort when needed
-                    // maybe build a funciton for highlighting areas??
-
-                    var nameDiv = (selectedArea && selectedArea != d.placeName) ? "#hovered-name .place" : "#selected-name .place";
-                    map.select(nameDiv).text(d.properties.NAME_ALF);
+                    var nameDiv = (selectedArea && selectedArea != d.placeName) ? "hovered" : "selected";
+                    setAnnotation(nameDiv, d.properties.NAME_ALF, metaData[d.properties.NAME_ALF][mostRecentAttr+
+                            "-FORMAT"], metaData[d.properties.NAME_ALF][mostRecentAttr]);
 
                     map.selectAll("path").sort(function (a, b) { 
                         if (a.placeName != d.placeName && a.placeName != selectedArea) return -1;
@@ -143,28 +139,24 @@
                     d3.select(this).attr("stroke",fillColor);
                     highlightData(d.placeName);
 
-                    // var m = d3.mouse(this);
-                    // map.select(".tooltip")
-                    //     .style("display","block")
-                    //     .style("left",(m[0]-50)+"px").style("top",(m[1]-120)+"px")
-                    //     .text(d.properties.NAME_ALF);
-
                 }).on("mouseleave",function(d){
                     if (d.placeName == selectedArea) return;
                     d3.select(this).attr("fill",function(d){ return d.color || "#fff"; });
                     d3.select(this).attr("stroke","none");
-                    map.select("#hovered-name .place").text("");
+                    resetAnnotation("hovered");
                     resetBars();
                     map.select(".tooltip").style("display","none");
                 }).on("click",function(d){
                     if (selectedArea == d.placeName) {
                         d3.select(this).attr("stroke","none");
-                        map.select("#selected-name .place").text("");
+                        resetAnnotation("selected");
                         selectedArea = null;
                         resetBars();
                     } else {
                         selectedArea = d.placeName;
-                        map.select("#hovered-name .place").text("");
+                        resetAnnotation("hovered");
+                        setAnnotation("selected",d.properties.NAME_ALF, metaData[d.properties.NAME_ALF][mostRecentAttr+
+                            "-FORMAT"], metaData[d.properties.NAME_ALF][mostRecentAttr]);
                         map.selectAll("path").sort(function (a, b) { 
                             if (a.placeName != selectedArea) return -1;
                             else return 1;
@@ -178,16 +170,20 @@
         function colorizeMap(dataset, attr) {
             map.select(".attr-name").text(attr);
 
-            var minAttr = d3.min(dataset,function(d){ return parseFloat(d.val); }),
-                maxAttr = d3.max(dataset,function(d){ return parseFloat(d.val); }),
-                colorScale = d3.scale.linear().domain([minAttr,maxAttr]).range(["#DDDDDD","#EC8E4F"]);
+            var min = metaData["MinimumValue"][attr],
+                max = metaData["MaximumValue"][attr],
+                avg = metaData["AverageValue"][attr],
+                minColorScale = d3.scale.linear().domain([min,avg]).range(["#64E0E5","#D4DCCF"]),
+                maxColorScale = d3.scale.linear().domain([avg,max]).range(["#D4DCCF","#FF885B"]);
 
             dataset.forEach(function(v,i){
                 map.select("."+getClassName(v["Area Name"]))
                     .transition()
                     .attr("fill",function(d){
-                        d.color = colorScale(v.val);
-                        // if (d.placeName == selectedArea) return "yellow";
+                        if (v.val < avg)
+                            d.color = minColorScale(v.val);
+                        else
+                            d.color = maxColorScale(v.val);
                         return d.color;
                     });
             });
@@ -195,31 +191,26 @@
             if (selectedArea) {
                 dataset.forEach(function(p){
                     if (p.placeName == selectedArea) {
-                        console.log(p)
-                        map.select("#selected-name .value").text(": "+formatNumber(p.format, p.val));
+                        setAnnotation("selected", p["Area Name"], p.format, p.val);
                     }
                 })
             }
         }
 
         function formatNumber(format, num) {
-            if (format == "number") {
-                if (num.length > 3)
-                    num = num.substring(0,num.length-3)+","+num.substring(3,num.length);
-                return num;
-            }
-            if (format == "percentage")
-                return (num*100).toFixed(0) + "%"
+            if (format == "number")
+                return num.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+            else if (format == "percentage")
+                return (num*100).toFixed(0) + "%";
         }
 
         function getClassName(n) {
             return n.toLowerCase().replace(/ /g,"_");
         }
 
-        function generateBars(s, attr, parent) {
+        function generateBars(s, attr, avg, min, max, parent) {
             var graphHeight = 75,
                 barMaxHeight = 60;
-            var maxAttr = parseFloat(d3.max(s,function(d){ return parseFloat(d.val); }));
             s.sort(function(a,b){ return b.val - a.val; });
 
             var id = attr.toLowerCase().replace(/ /g,"-");
@@ -245,8 +236,9 @@
                 entering.append("rect")
             g.exit().remove();
 
-            var barScale = d3.scale.linear().domain([0,maxAttr]).range([2,barMaxHeight]),
-                colorScale = d3.scale.linear().domain([0,maxAttr]).range(["#DDDDDD","#EC8E4F"]);
+            var barScale = d3.scale.linear().domain([min,max]).range([2,barMaxHeight]),
+                minColorScale = d3.scale.linear().domain([min,avg]).range(["#64E0E5","#D4DCCF"]),
+                maxColorScale = d3.scale.linear().domain([avg,max]).range(["#D4DCCF","#FF885B"]);
 
             g.attr("transform",function(d,i){
                 return "translate("+i*(barWidth)+",0)";
@@ -264,7 +256,10 @@
             .attr("y",function(d){
                 return (graphHeight - barScale(d.val));
             }).attr("fill",function(d){
-                d.color = colorScale(d.val);
+                if (d.val < avg)
+                    d.color = minColorScale(d.val);
+                else
+                    d.color = maxColorScale(d.val);
                 return d.color;
             });
 
@@ -280,15 +275,8 @@
                         return "#45A3FF";
                 });
 
-                var parentDiv = (selectedArea && selectedArea != d.placeName) ? "#hovered-name" : "#selected-name";
-                map.select(parentDiv).select(".place").text(d["Area Name"]);
-                map.select(parentDiv).select(".value").text(": "+formatNumber(d.format,d.val));
-
-                // var m = $(this).offset();
-                // graphs.select(".tooltip")
-                //     .style("display","block")
-                //     .style("left",(m.left+20)+"px").style("top",m.top+10+"px")
-                //     .text(d["Area Name"]);
+                var parentDiv = (selectedArea && selectedArea != d.placeName) ? "#hovered" : "#selected";
+                setAnnotation(parentDiv, d["Area Name"], d.format, d.val);
 
                 highlightData(d.placeName);
             }).on("mouseleave",function(d){
@@ -301,10 +289,8 @@
                     resetBars();
                 } else {
                     selectedArea = d.placeName;
-                    map.select("#hovered-name .place").text("");
-                    map.select("#hovered-name .value").text("");
-                    map.select("#selected-name .place").text(d["Area Name"]);
-                    map.select("#selected-name .value").text(": "+formatNumber(d.format, d.val));
+                    resetAnnotation("hovered");
+                    setAnnotation("selected", d["Area Name"], d.format, d.val);
                     highlightArea(d.placeName);
                     highlightData(d.placeName);
                     
@@ -315,8 +301,8 @@
         function fillAnnotation(attr) {
             map.select("h1").text(attr);
             var a = map.select("#annotation");
-            a.select(".source").text(sourceObj[attr]);
-            a.select(".desc").text(descObj[attr]);
+            a.select(".source").text(metaData["DataSource"][attr]);
+            a.select(".desc").text(metaData["Description"][attr]);
         }
 
         function highlightArea(p) {
@@ -331,11 +317,18 @@
                 return "none";
             });
             if (!selectedArea) {
-                map.select("#selected-name .place").text("");
-                map.select("#selected-name .value").text("");
+                resetAnnotation("selected");
             }
-            map.select("#hovered-name .place").text("");
-            map.select("#hovered-name .value").text("");
+            resetAnnotation("hovered");
+        }
+
+        function resetAnnotation(div) {
+            map.select("#"+div+"-name .place").text("");
+            map.select("#"+div+"-name .value").text("");
+        }
+        function setAnnotation(div, place, format, val) {
+            map.select("#"+div+"-name .place").text(place+": ");
+            map.select("#"+div+"-name .value").text(formatNumber(format, val));
         }
 
         function highlightData(p) {
