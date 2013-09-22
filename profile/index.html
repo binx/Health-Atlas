@@ -137,7 +137,7 @@
                             break;
                         case "pie":
                             var attr = d.data[0];
-                            updatePie(areaData[source][areaName][attr], areaData[source]["MinimumValue"][attr], areaData[source]["MaximumValue"][attr], attr, div);
+                            updatePie(areaData[source][areaName][attr], areaData[source]["AverageValue"][attr], areaData[source]["MinimumValue"][attr], areaData[source]["MaximumValue"][attr], attr, div);
                             break;
                         case "stemandleaf":
                             updateStemAndLeaf(d.data,areaData[source][areaName],areaData[source]["AverageValue"],areaData[source]["MinimumValue"],areaData[source]["MaximumValue"], div);
@@ -150,7 +150,7 @@
                             break;
                         case "barchart":
                             var dataAggregate = processBarData(d.data, source)
-                            updateBars(dataAggregate, source, div);
+                            updateBars(dataAggregate, source, div, notes.showLabels);
                             break;
                     }
                 });
@@ -186,7 +186,7 @@
                     break;
                 case "barchart":
                     var dataAggregate = processBarData(data, source)
-                    drawBars(dataAggregate, source, div);
+                    drawBars(dataAggregate, source, div, notes.showLabels);
                     break;
             }
         }
@@ -287,32 +287,35 @@
             return dataAggregate;
         }
 
-        function drawBars(data, source, div) {
-            if (data.length == 1) div.style("width","50%").style("clear","none").style("float","left");
+        function drawBars(data, source, wrapper, showLabels) {
+            if (data.length == 1) wrapper.style("width","50%").style("clear","none").style("float","left");
 
             data.forEach(function(datum, i){
-                var chart = div.append("div").attr("class","barchart c-"+i).style("width",(100/data.length)+"%"),
+                var chart = wrapper.append("div").attr("class","barchart c-"+i).style("width",(100/data.length)+"%"),
                     chartHeight = 120;
-                var svg = chart.append("svg").attr("width","90%").attr("height",chartHeight+"px");
+                var div = chart.append("div").attr("class","graph-object")
+                            .style("height",chartHeight+"px");
 
-                svg.append("rect").attr("class","avg-line")
-                    .attr("width","100%").attr("height",2)
-                    .attr("fill","green");
+                div.append("div").attr("class","avg-line");
 
-                svg.append("rect").attr("class","axis")
-                    .attr("width","100%").attr("height",2)
-                    .attr("y",chartHeight-2);
-                svg.append("rect").attr("class","axis")
-                    .attr("width",2).attr("height","100%");
+                div.append("div").attr("class","axis")
+                    .style("width","100%").style("height","2px")
+                    .style("top",chartHeight-2+"px");
+                div.append("div").attr("class","axis")
+                    .style("width","2px").style("height",chartHeight+"px");
 
-                chart.append("div").attr("class","title").text(datum.key)
+                if (showLabels) {
+                    chart.insert("h2",".graph-object").text(datum.key);
+                    chart.append("div").attr("class","place-labels");
+                }
+                else 
+                    chart.append("div").attr("class","title").text(datum.key);
             });
-            updateBars(data, source, div);
+            updateBars(data, source, wrapper, showLabels);
         }
 
-        function updateBars(data, source, div) {
-
-            $(div[0]).hover(function(){
+        function updateBars(data, source, wrapper, showLabels) {
+            $(wrapper[0]).hover(function(){
                 places = [];
                 data[0].obj.forEach(function(p){
                     if (source == "CD")
@@ -332,36 +335,51 @@
             });
 
             data.forEach(function(datum,i){
-                var chart = div.select(".c-"+i),
-                    svg = chart.select("svg");
-                var chartWidth = $(svg[0]).width(),
+                var chart = wrapper.select(".c-"+i),
+                    div = chart.select(".graph-object");
+                var chartWidth = $(div[0]).width(),
                 minPadding = 10,
                 chartHeight = 120,
                 barWidth = Math.min((chartWidth-minPadding*datum.obj.length)/datum.obj.length, 70),
                 barPadding = Math.max((chartWidth-(datum.obj.length*barWidth))/datum.obj.length,minPadding);
 
-                var barScale = d3.scale.linear().domain([datum.min,datum.max]).range([0,chartHeight]),
-                    colorScale = d3.scale.linear().domain([datum.min,datum.max]).range(["#64E0E5","#EC8E4F"]);
+                var barScale = d3.scale.linear().domain([datum.min,datum.max]).range([0,chartHeight]);
 
-                svg.select(".avg-line")
-                    .attr("y",barScale(datum.avg));
 
-                var bars = svg.selectAll("rect.bar").data(datum.obj);
+                div.select(".avg-line")
+                    .style("top",function(d){ return chartHeight - barScale(datum.avg) + "px"; })
 
-                bars.enter().append("rect").attr("class","bar").attr("fill","#fff").attr("height",0).attr("y",chartHeight);
+                var bars = div.selectAll(".bar").data(datum.obj);
+
+                bars.enter()
+                    .append("div")
+                    .attr("class","bar")
+                    .style("background-color","#fff")
+                    .style("height","0px")
+                    .style("top",chartHeight+"px");
+
                 bars.exit()
                     .transition()
                     .duration(1000)
-                    .attr("height",0)
-                    .attr("y",chartHeight)
+                    .style("height","0px")
+                    .style("top",chartHeight+"px")
                     .remove();
 
                 bars.transition().duration(1000)
-                    .attr("width",barWidth)
-                    .attr("height",function(d){ return barScale(d.data); })
-                    .attr("x",function(d,i){ return i*(barWidth+barPadding) + barPadding/2; })
-                    .attr("y",function(d){ return chartHeight - barScale(d.data); })
-                    .attr("fill",function(d){ return colorScale(d.data); });
+                    .style("width",barWidth+"px")
+                    .style("height",function(d){ return barScale(d.data) + "px"; })
+                    .style("left",function(d,i){ return i*(barWidth+barPadding) + barPadding/2 + "px"; })
+                    .style("top",function(d){ return chartHeight - barScale(d.data) + "px"; })
+                    .style("background-color",function(d){ return colorData(d.data, datum.avg, datum.min, datum.max); });
+
+                if (showLabels) {
+                    var labels = wrapper.select(".place-labels").selectAll(".label").data(datum.obj);
+                    labels.enter().append("div").attr("class","label");
+                    labels.exit().remove();
+
+                    labels.text(function(d){ return d.place; })
+                        .style("left",function(d,i){ return i*(barWidth+barPadding) + barPadding/2 + "px"; })
+                }
 
                 var pos = $(svg[0]).offset();
 
@@ -449,7 +467,6 @@
 
             svg.append("path").attr("class","pieData")
                 .attr("transform","translate("+pieSize/2+","+pieSize/2+")");
-                // .attr("fill","lightBlue");
 
             svg.append("path")
                 .transition()
@@ -460,21 +477,19 @@
             pie.append("div").attr("class","pie-avg")
                 .html("LA County<br> " + (avgValue*100).toFixed(0) + "%");
 
-            updatePie(value, min, max, attr, div);
+            updatePie(value, avgValue, min, max, attr, div);
         }
 
-        function updatePie(value, min, max, attr, div) {
+        function updatePie(value, avg, min, max, attr, div) {
             var arc = d3.svg.arc()
                 .innerRadius(00)
                 .outerRadius(40)
                 .startAngle(0)
                 .endAngle(value * 2*Math.PI);
 
-            colorScale = d3.scale.linear().domain([min,max]).range(["#64E0E5","#EC8E4F"]);
-
             div.select(".pieData")
                 .attr("d", arc)
-                .attr("fill",colorScale(value));
+                .attr("fill",colorData(value, avg, min, max));
 
             var pos = $(div[0]).find("svg").offset();
 
@@ -518,20 +533,21 @@
                 var personScale = d3.scale.linear().domain([min[attr],max[attr]]).range([9,400]),
                 bg = d3.scale.linear().domain([min[attr],max[attr]]).range([1,5]);
 
-                isos.select(".v-"+i+" .img")
+                var iso = isos.select(".v-"+i);
+
+                iso.select(".img")
                     .attr("class",function(d){ return "img bg-"+Math.round(bg(valData[d])); })
                     .transition()
                     .duration(1000)
                     .style("width",function(d) { return personScale(valData[d]) + "px" });
 
-                isos.select(".v-"+i+" .textVal")
+                iso.select(".textVal")
                     .style("color",quartileColors[5 - Math.round(bg(valData[attr]))])
                     .text(formatNumber(" Percent ",valData[attr]));
 
                 var pos = $(div[0]).find(".v-"+i).offset();
 
-                div.select(".v-"+i)
-                    .on("mouseenter",function(d){ showTooltip(valData[attr], areaName, attr, "CPA"); })
+                iso.on("mouseenter",function(d){ showTooltip(valData[attr], areaName, attr, "CPA"); })
                     .on("mousemove",function(d){ positionTooltip(this, pos); })
                     .on("mouseout",function(d){ hideTooltip(); });
             });
@@ -602,7 +618,7 @@
         function drawThermometer(attr, val, min, max, format, div, showNumber) {
             var therm = div.selectAll(".thermometer")
                 .data(["ok"]).enter()
-                .append("div").attr("class","thermometer");
+                .append("div").attr("class",(showNumber) ? "thermometer number" : "thermometer no-number");
 
             var thermHeight = 15,
                 thermWidth = 200,
@@ -658,14 +674,19 @@
 
             val = formatNumber(format, val);
 
-            if (showNumber) {
+            if (showNumber)
                 div.select(".big-number").text(val);
+            else
+                div.select(".circle-label").text(val);
+        }
+
+        function colorData(val, avg, min, max) {
+            if (val > avg) {
+                var colorScale = d3.scale.linear().domain([avg,max]).range(["#D4DCCF","#FF885B"]);
             } else {
-                div.select(".circle-label")
-                    .text(val)
-                    .transition()
-                    .style("margin","-0 " +thermWidth+"px "+(thermWidth+5)+"px 0");
+                var colorScale = d3.scale.linear().domain([min,avg]).range(["#64E0E5","#D4DCCF"]);
             }
+            return colorScale(val);
         }
 
         function formatNumber(format, value) {

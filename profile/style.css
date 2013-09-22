@@ -85,18 +85,36 @@ body {
 .barchart {
     float: left;
     margin-bottom: 50px;
+    position: relative;
 }
-.barchart svg {
-    margin: 0 auto 10px;
+.barchart .graph-object {
+    width: 100%;
+    margin-bottom: 10px;
     display: block;
+    position: relative;
 }
 .barchart .axis {
-    fill: #ccc;
+    position: absolute;
+    background-color: #ccc;
+}
+.barchart .avg-line {
+    background-color: green;
+    position: absolute;
+    width: 100%;
+    height: 2px;
+}
+.barchart .bar {
+    position: absolute;
 }
 .barchart .title {
-    text-align: left;
-    padding: 0 20px;
     box-sizing: border-box;
+    font-size: 10px;
+    width: 90%;
+    text-align: center;
+}
+.barchart .label {
+    position: absolute;
+    width: 120px;
     font-size: 10px;
 }
 
@@ -333,15 +351,33 @@ font-weight: bold;
     font-size: 10px;
     width: 50px;
 }
-.thermometer .value-wrapper .min {
+.thermometer.number .value-wrapper .min {
     left: -57px;
     text-align: right;
 }
 
-.thermometer .value-wrapper .max {
+.thermometer.number .value-wrapper .max {
     left: 208px;
     text-align: left;
 }
+
+.thermometer.no-number .value-wrapper .scale,
+.thermometer.no-number .circle-label {
+    -webkit-transform: rotate(-45deg);
+    bottom: 33px;
+    margin: 0;
+    font-size: 10px
+}
+.thermometer.no-number .value-wrapper .min {
+    left: -7px;
+}
+.thermometer.no-number .value-wrapper .max {
+    left: 191px;
+}
+.thermometer.no-number .circle-label {
+    margin: -33px 200px 0 5px;
+}
+
 .graph-thermometer h2 {
     text-align: left;
     margin-bottom: 20px;
