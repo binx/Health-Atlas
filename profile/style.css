@@ -67,16 +67,15 @@ body {
 #tooltip {
     position: absolute;
     top: 425px;
-    left: 0;
+    left: 20px;
     font-size: 14px;
-    color: #0084DB;
     display: none;
 }
 #tooltip .title {
     text-transform: uppercase;
-    font-weight: bold;
     font-size: 12px;
     margin-bottom: 15px;
+    letter-spacing: 1px;
 }
 #tooltip .attr {
     font-size: 18px;
@@ -95,6 +94,9 @@ body {
 }
 #tooltip li span {
     font-weight: bold;
+}
+#tooltip .avg {
+    color: #00C04A;
 }
 
 .graph-barchart {
@@ -156,7 +158,6 @@ body {
     clear: both;
 }
 .bubble {
-    width: 33%;
     float: left;
     margin-bottom: 50px;
 }
@@ -179,6 +180,12 @@ body {
     margin: 0 10px 10px 0;
     float: left;
     cursor: pointer;
+}
+.bubble.small .bub {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 15px;
 }
 .bubble .bub:last-child {
     margin-right: 0;
@@ -309,10 +316,18 @@ body {
 .multi-graph {
     cursor: pointer;
 }
+.graph-multistem .avg-label {
+    color: #00C04A;
+    font-weight: bold;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    margin: -16px 0 2px;
+}
 .graph-multistem .stem {
     width: 2px;
     height: 100%;
-    background-color: black;
+    background-color: #00C04A;
     position: absolute;
     z-index: 1;
 }
@@ -323,16 +338,16 @@ body {
     margin: 10px 0 20px;
 }
 .graph-multistem .area {
-    background-color: #fbfbf8;
+    background-color: #f7f7f7;
     height: 25px;
     line-height: 25px;
     padding-left: 10px;
     box-sizing: border-box;
     font-size: 14px;
 }
-.graph-multistem .area:nth-child(odd) {
-    background-color: #eee;
-}
+/*.graph-multistem .area:nth-child(odd) {
+    background-color: #e7e7e7;
+}*/
 .multi-graph .leafs {
     position: relative;
 }
@@ -385,6 +400,8 @@ body {
     position: absolute;
     left: 40px;
     font-size: 12px;
+    font-weight: bold;
+    color: #00C04A;
 }
 .waffle {
     position: relative;
@@ -407,9 +424,13 @@ body {
     clear: both;
     margin-bottom: 10px;
 }
-.waffle li span {
+.waffle li .title {
     width: 260px;
     float: right;
+    margin-bottom: 7px
+}
+.waffle li .num {
+    font-weight: bold;
 }
 .waffle .key-color {
     height: 12px;
@@ -430,7 +451,7 @@ body {
     left: 0px;
     top: 100%;
     font-size: 24px;
-    color: #666666;
+    color: #4DC9D2;
 }
 .big-number {
     font-weight: bold;
@@ -441,6 +462,9 @@ body {
     width: 100px;
     margin-left: 50px;
     cursor: pointer;
+}
+.thermometer.words {
+    margin-left: 32px;
 }
 .therm-wrapper {
     position: relative;
@@ -470,31 +494,14 @@ body {
     font-size: 10px;
     width: 50px;
 }
-.thermometer.number .value-wrapper .min {
+.thermometer .value-wrapper .min {
     left: -57px;
     text-align: right;
 }
 
-.thermometer.number .value-wrapper .max {
+.thermometer .value-wrapper .max {
     left: 208px;
     text-align: left;
-}
-
-.thermometer.no-number .value-wrapper .scale,
-.thermometer.no-number .circle-label {
-    -webkit-transform: rotate(-45deg);
-    bottom: 33px;
-    margin: 0;
-    font-size: 10px
-}
-.thermometer.no-number .value-wrapper .min {
-    left: -7px;
-}
-.thermometer.no-number .value-wrapper .max {
-    left: 191px;
-}
-.thermometer.no-number .circle-label {
-    margin: -33px 200px 0 5px;
 }
 
 .graph-thermometer h2 {
