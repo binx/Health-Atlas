@@ -150,12 +150,17 @@
                             updateIsotype(areaData[source][areaName],areaData[source]["MinimumValue"],areaData[source]["MaximumValue"], div, d.data);
                             break;
                         case "barchart":
-                            var dataAggregate = processBarData(d.data, source)
+                            var dataAggregate = processBarData(d.data, source);
                             updateBars(dataAggregate, source, div, notes.showLabels);
                             break;
                         case "bubble":
-                            var dataAggregate = processBarData(d.data, source)
+                            var dataAggregate = processBarData(d.data, source);
                             updateBubbles(dataAggregate, source, div);
+                            break;
+                        case "multistem":
+                            var dataAggregate = processBarData(d.data, source);
+                            updateMultiStem(dataAggregate, source, div);
+                            break;
                     }
                 });
             } else {
@@ -189,12 +194,17 @@
                     drawPie(areaData[source][areaName][attr], areaData[source]["AverageValue"][attr], areaData[source]["MinimumValue"][attr], areaData[source]["MaximumValue"][attr], attr, div);
                     break;
                 case "barchart":
-                    var dataAggregate = processBarData(data, source)
+                    var dataAggregate = processBarData(data, source);
                     drawBars(dataAggregate, source, div, notes.showLabels, notes.annotation);
                     break;
                 case "bubble":
-                    var dataAggregate = processBarData(data, source)
+                    var dataAggregate = processBarData(data, source);
                     drawBubbles(dataAggregate, source, div);
+                    break;
+                case "multistem":
+                    var dataAggregate = processBarData(data, source);
+                    drawMultiStem(dataAggregate, source, div);
+                    break;
             }
         }
 
@@ -522,8 +532,6 @@
                 .attr("d", arc)
                 .attr("fill",colorData(value, avg, min, max));
 
-            var pos = $(div[0]).find("svg").offset();
-
             div.select("svg")
                 .on("click",function(d){ showTooltip(attr, [{"place":areaName, "data":value}], "CPA"); })
         }
@@ -574,8 +582,62 @@
                 iso.select(".textVal")
                     .style("color",quartileColors[5 - Math.round(bg(valData[attr]))])
                     .text(formatNumber(" Percent ",valData[attr]));
+            });
+        }
 
-                var pos = $(div[0]).find(".v-"+i).offset();
+        function drawMultiStem(data, source, div) {
+
+            div.append("div").attr("class","areas").style("width",100/(data.length+1)+"%");
+
+            var g = div.selectAll(".multi-graph")
+                .data(data).enter()
+                .append("div").attr("class",function(d,i){ return "multi-graph m-"+i })
+                .style("width",100/(data.length+1)+"%");
+
+            g.append("div").attr("class","leafs");
+            g.append("div").attr("class","title").text(function(d){ return d.key });
+
+            updateMultiStem(data, source, div);
+        }
+
+        function updateMultiStem(data, source, div) {
+            var areas = div.select(".areas").selectAll(".area").data(data[0].obj)
+            areas.enter().append("div").attr("class","area");
+            areas.exit().remove();
+            areas.text(function(d) { return d.place; })
+                .style("width",(data.length+1)*100 + "%");
+
+            data.forEach(function(datum,i){
+                var wrapper = div.select(".m-"+i);
+                var graph = wrapper.select(".leafs");
+
+                var divWidth = $(graph[0]).width(),
+                    leafMaxWidth = divWidth/2,
+                    leafHeight = 25;
+
+                graph.style("height",datum.obj.length*leafHeight + "px");
+
+                var barScale = d3.scale.linear().domain([datum.min,datum.max]).range([2,leafMaxWidth]);
+                    var colorMinScale = d3.scale.linear().domain([datum.min,datum.avg]).range(["#64E0E5","#D4DCCF"]),
+                        colorMaxScale = d3.scale.linear().domain([datum.avg,datum.max]).range(["#D4DCCF","#FF885B"]);;
+
+                var leafs = graph.selectAll(".leaf").data(datum.obj);
+                leafs.enter().append("div").attr("class","leaf")
+                    .style("background-color","#fff");
+                leafs.exit().remove();
+
+                leafs.transition().duration(1000)
+                .style("width",function(d){
+                    d.diff = barScale(datum.avg) - barScale(d.data);
+                    return Math.abs(d.diff) + "px";
+                }).style("background-color",function(d){
+                    return (d.data < datum.avg) ? colorMinScale(d.data) : colorMaxScale(d.data);
+                }).style("left",function(d){
+                    var neg = (d.diff < 0) ? true : false;
+                    return divWidth/2 + (neg ? 2 : -d.diff) + "px";  
+                }).style("top",function(d,i){ return i*leafHeight + 5 + "px"});
+
+                wrapper.on("click",function(d){ showTooltip(datum.key, datum.obj, source); });
             });
         }
 
@@ -583,6 +645,7 @@
             var stem = div.selectAll(".stem-and-leaf")
                         .data([val]).enter()
                         .append("div").attr("class","stem-and-leaf");
+
             var svgWidth = 100,
                 boxPadding = 5,
                 leafHeight = 30,
@@ -609,31 +672,30 @@
         }
 
         function updateStemAndLeaf(attrs, val, avg, min, max, div) {
-            var leafMaxWidth = 50,
-                svgWidth = 100,
-                leafHeight = 30;
             var stem = div.selectAll(".stem-and-leaf").data([val]);
             attrs.forEach(function(attr,i){
-                var barScale = d3.scale.linear().domain([min[attr],max[attr]]).range([2,leafMaxWidth]);
-                var colorMinScale = d3.scale.linear().domain([min[attr],avg[attr]]).range(["#64E0E5","#D4DCCF"]),
-                    colorMaxScale = d3.scale.linear().domain([avg[attr],max[attr]]).range(["#D4DCCF","#FF885B"]);;
-
+                
                 var format = val[attr+"-FORMAT"];
                 var textDisplay = formatNumber(format, val[attr]);
                 stem.select(".t-"+i).html("<span>" +textDisplay +"</span> "+ attr )
                     .on("click",function(d){ showTooltip(attr, [{"place":areaName, "data":val[attr]}], "CPA"); });
 
-                var diff = barScale(avg[attr])-barScale(val[attr]),
-                    neg = (diff < 0) ? true : false;
+                var leafMaxWidth = 50,
+                    svgWidth = 100,
+                    leafHeight = 30;
 
-                stem.select("svg .leaf-"+i)
-                    .transition()
-                    .duration(1000)
+                var barScale = d3.scale.linear().domain([min[attr],max[attr]]).range([2,leafMaxWidth]);
+                    var colorMinScale = d3.scale.linear().domain([min[attr],avg[attr]]).range(["#64E0E5","#D4DCCF"]),
+                        colorMaxScale = d3.scale.linear().domain([avg[attr],max[attr]]).range(["#D4DCCF","#FF885B"]);;
+
+                var diff = barScale(avg[attr])-barScale(val[attr]),
+                        neg = (diff < 0) ? true : false;
+
+                div.select(".leaf-"+i)
+                    .transition().duration(1000)
                     .attr("x",(svgWidth/2 + (neg ? 2 : -diff)))
                     .attr("width",Math.abs(diff))
                     .attr("fill",(val[attr] < avg[attr]) ? colorMinScale(val[attr]) : colorMaxScale(val[attr]));
-
-                var pos = $(stem[0]).find(".leaf-"+i).offset();
 
                 div.select(".leaf-"+i)
                     .on("click",function(d){ showTooltip(attr, [{"place":areaName, "data":val[attr]}], "CPA"); });
