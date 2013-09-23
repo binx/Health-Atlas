@@ -313,7 +313,8 @@ body {
     width: 2px;
     height: 100%;
     background-color: black;
-    margin: 0 auto;
+    position: absolute;
+    z-index: 1;
 }
 .graph-multistem .title {
     text-align: center;
@@ -331,6 +332,9 @@ body {
 }
 .graph-multistem .area:nth-child(odd) {
     background-color: #eee;
+}
+.multi-graph .leafs {
+    position: relative;
 }
 .multi-graph .leaf {
     position: absolute;

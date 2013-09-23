@@ -594,8 +594,10 @@
                 .append("div").attr("class",function(d,i){ return "multi-graph m-"+i })
                 .style("width",100/(data.length+1)+"%");
 
+            var divWidth = $(div[0]).find(".areas").width();
+
             var l = g.append("div").attr("class","leafs");
-                l.append("div").attr("class","stem");
+                l.append("div").attr("class","stem").style("left",Math.floor(divWidth/2)+"px");
             g.append("div").attr("class","title").text(function(d){ return d.key });
 
             updateMultiStem(data, source, div);
@@ -637,7 +639,7 @@
                     return (d.data < datum.avg) ? colorMinScale(d.data) : colorMaxScale(d.data);
                 }).style("left",function(d){
                     var neg = (d.diff < 0) ? true : false;
-                    return divWidth/2 + (neg ? 1 : -d.diff - 1) + "px";  
+                    return divWidth/2 + (neg ? 2 : -d.diff) + "px";  
                 }).style("top",function(d,i){ return i*leafHeight + 5 + "px"});
 
                 wrapper.on("click",function(d){ showTooltip(datum.key, datum.obj, source); });
