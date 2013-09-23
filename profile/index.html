@@ -9,8 +9,20 @@
         <div id="map">
             <h1></h1>
             <svg></svg>
+            <div id="map-annotation"></div>
+            <div id="color-key">
+                <div class="title">Color Key</div>
+                <div class="color-bar"></div>
+                <div class="avg-bar" width="100%" height="20px"></div>
+                <div class="labels">
+                    <div class="low">low</div>
+                    <div class="avg">average</div>
+                    <div class="high">high</div>
+                </div>
+            </div>
             <div id="tooltip">
                 <div class="title">More Information</div>
+                <div class="prompt">Click on a statistic to learn more.</div>
                 <div class="attr"></div>
                 <ul></ul>
                 <div class="desc"></div>
@@ -209,7 +221,7 @@
         }
 
         function showTooltip(attr, data, source) {
-            tooltip.show();
+            tooltip.find(".prompt").hide();
             tooltip.find(".attr").text(attr);
 
             var ul = tooltip.find("ul").empty();
@@ -232,6 +244,7 @@
         }
 
         function loadMapData(collection, places, source) {
+            map.select("#map-annotation").text(source);
             var svg = map.select("svg g")
             var projection = d3.geo.albers().scale(25000)
                 .translate([160, 140])
@@ -365,7 +378,7 @@
                         .style("top",function(d){ return chartHeight - barScale(datum.avg) - 12 + "px"; });
                 } else 
                     chart.append("div").attr("class","title").text(datum.key);
-                    
+
                 if (showLabels) {
                     chart.append("div").attr("class","place-labels");
                 }
