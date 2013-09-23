@@ -594,7 +594,8 @@
                 .append("div").attr("class",function(d,i){ return "multi-graph m-"+i })
                 .style("width",100/(data.length+1)+"%");
 
-            g.append("div").attr("class","leafs");
+            var l = g.append("div").attr("class","leafs");
+                l.append("div").attr("class","stem");
             g.append("div").attr("class","title").text(function(d){ return d.key });
 
             updateMultiStem(data, source, div);
@@ -615,7 +616,9 @@
                     leafMaxWidth = divWidth/2,
                     leafHeight = 25;
 
-                graph.style("height",datum.obj.length*leafHeight + "px");
+                var graphHeight = datum.obj.length*leafHeight
+                graph.style("height", graphHeight+"px");
+                // graph.select(".stem").style("height")
 
                 var barScale = d3.scale.linear().domain([datum.min,datum.max]).range([2,leafMaxWidth]);
                     var colorMinScale = d3.scale.linear().domain([datum.min,datum.avg]).range(["#64E0E5","#D4DCCF"]),
@@ -628,13 +631,13 @@
 
                 leafs.transition().duration(1000)
                 .style("width",function(d){
-                    d.diff = barScale(datum.avg) - barScale(d.data);
+                    d.diff = Math.floor(barScale(datum.avg) - barScale(d.data));
                     return Math.abs(d.diff) + "px";
                 }).style("background-color",function(d){
                     return (d.data < datum.avg) ? colorMinScale(d.data) : colorMaxScale(d.data);
                 }).style("left",function(d){
                     var neg = (d.diff < 0) ? true : false;
-                    return divWidth/2 + (neg ? 2 : -d.diff) + "px";  
+                    return divWidth/2 + (neg ? 1 : -d.diff - 1) + "px";  
                 }).style("top",function(d,i){ return i*leafHeight + 5 + "px"});
 
                 wrapper.on("click",function(d){ showTooltip(datum.key, datum.obj, source); });

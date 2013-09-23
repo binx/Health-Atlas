@@ -309,6 +309,12 @@ body {
 .multi-graph {
     cursor: pointer;
 }
+.graph-multistem .stem {
+    width: 2px;
+    height: 100%;
+    background-color: black;
+    margin: 0 auto;
+}
 .graph-multistem .title {
     text-align: center;
     font-size: 12px;
