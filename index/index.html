@@ -41,7 +41,6 @@
             d3.csv("data/CPA.csv",function(csv){
                 var c = [];
                 csv.forEach(function(d){
-                    console.log(d)
                     if (specialRows.indexOf(d["Area Name"]) == -1 && d["Area Name"]) {
                         c.push(d);
                     } 
@@ -126,7 +125,7 @@
                     d.placeName = getClassName(d.properties.NAME_ALF);
                     return d.placeName;
                 }).on("mouseenter",function(d){
-                    var fillColor = (selectedArea && selectedArea != d.placeName) ? "#33B333" : "#45A3FF";
+                    var strokeColor = (selectedArea && selectedArea != d.placeName) ? "#33B333" : "#45A3FF";
 
                     var nameDiv = (selectedArea && selectedArea != d.placeName) ? "hovered" : "selected";
                     setAnnotation(nameDiv, d.properties.NAME_ALF, metaData[d.properties.NAME_ALF][mostRecentAttr+
@@ -136,7 +135,7 @@
                         if (a.placeName != d.placeName && a.placeName != selectedArea) return -1;
                         else return 1;
                     });
-                    d3.select(this).attr("stroke",fillColor);
+                    d3.select(this).attr("stroke",strokeColor);
                     highlightData(d.placeName);
 
                 }).on("mouseleave",function(d){
@@ -172,18 +171,13 @@
 
             var min = metaData["MinimumValue"][attr],
                 max = metaData["MaximumValue"][attr],
-                avg = metaData["AverageValue"][attr],
-                minColorScale = d3.scale.linear().domain([min,avg]).range(["#64E0E5","#D4DCCF"]),
-                maxColorScale = d3.scale.linear().domain([avg,max]).range(["#D4DCCF","#FF885B"]);
+                avg = metaData["AverageValue"][attr];
 
             dataset.forEach(function(v,i){
                 map.select("."+getClassName(v["Area Name"]))
                     .transition()
                     .attr("fill",function(d){
-                        if (v.val < avg)
-                            d.color = minColorScale(v.val);
-                        else
-                            d.color = maxColorScale(v.val);
+                        d.color = colorData(v.val, avg, min, max);
                         return d.color;
                     });
             });
@@ -236,9 +230,7 @@
                 entering.append("rect")
             g.exit().remove();
 
-            var barScale = d3.scale.linear().domain([min,max]).range([2,barMaxHeight]),
-                minColorScale = d3.scale.linear().domain([min,avg]).range(["#64E0E5","#D4DCCF"]),
-                maxColorScale = d3.scale.linear().domain([avg,max]).range(["#D4DCCF","#FF885B"]);
+            var barScale = d3.scale.linear().domain([min,max]).range([2,barMaxHeight]);
 
             g.attr("transform",function(d,i){
                 return "translate("+i*(barWidth)+",0)";
@@ -256,10 +248,7 @@
             .attr("y",function(d){
                 return (graphHeight - barScale(d.val));
             }).attr("fill",function(d){
-                if (d.val < avg)
-                    d.color = minColorScale(d.val);
-                else
-                    d.color = maxColorScale(d.val);
+                d.color = colorData(d.val, avg, min, max);
                 return d.color;
             });
 
@@ -275,7 +264,7 @@
                         return "#45A3FF";
                 });
 
-                var parentDiv = (selectedArea && selectedArea != d.placeName) ? "#hovered" : "#selected";
+                var parentDiv = (selectedArea && selectedArea != d.placeName) ? "hovered" : "selected";
                 setAnnotation(parentDiv, d["Area Name"], d.format, d.val);
 
                 highlightData(d.placeName);
@@ -332,7 +321,6 @@
         }
 
         function highlightData(p) {
-
             var g = graphs.selectAll("g");
             g.each(function(d){
                 var t = d3.select(this);
@@ -356,7 +344,16 @@
             graphs.selectAll("text")
                 .style("display",function(d){ return (d.placeName == selectedArea) ? "block" : "none"; });
             graphs.selectAll("rect")
-                .attr("fill",function(d){ return (d.placeName == selectedArea) ? "#45A3FF" : d.color; });
+                .attr("stroke",function(d){ return (d.placeName == selectedArea) ? "#45A3FF" : "none"; });
+        }
+
+        function colorData(val, avg, min, max) {
+            if (val > avg) {
+                var colorScale = d3.scale.linear().domain([avg,max]).range(["#D4DCCF","#EC8E4F"]);
+            } else {
+                var colorScale = d3.scale.linear().domain([min,avg]).range(["#4DC9D2","#D4DCCF"]);
+            }
+            return colorScale(val);
         }
     </script>
 </html>

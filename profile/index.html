@@ -282,7 +282,7 @@
             d3.selectAll(".area .num").text(function(d){
                 return formatNumber(areaData[d.source][areaName][d.attr+"-FORMAT"], areaData[d.source][areaName][d.attr])
             }).style("color",function(d){
-                return colorData(areaData[d.source][areaName][d.attr], areaData[d.source]["AverageValue"][d.attr], areaData[d.source]["MinimumValue"][d.attr], areaData[d.source]["MaximumValue"][d.attr])
+                return colorData(areaData[d.source][areaName][d.attr], areaData[d.source]["AverageValue"][d.attr], areaData[d.source]["MinimumValue"][d.attr], areaData[d.source]["MaximumValue"][d.attr]);
             });
         }
 
@@ -435,7 +435,7 @@
                 var div = chart.append("div").attr("class","graph-object")
                             .style("height",chartHeight+"px");
 
-                var barScale = d3.scale.linear().domain([datum.min,datum.max]).range([0,chartHeight]);
+                var barScale = d3.scale.linear().domain([datum.min,datum.max]).range([2,chartHeight]);
 
                 div.append("div").attr("class","avg-line")
                     .style("top",function(d){ return chartHeight - barScale(datum.avg) + "px"; });
@@ -489,7 +489,7 @@
                 barWidth = Math.min((chartWidth-minPadding*datum.obj.length)/datum.obj.length, 70),
                 barPadding = Math.max((chartWidth-(datum.obj.length*barWidth))/datum.obj.length,minPadding);
 
-                var barScale = d3.scale.linear().domain([datum.min,datum.max]).range([0,chartHeight]);
+                var barScale = d3.scale.linear().domain([datum.min,datum.max]).range([2,chartHeight]);
 
                 var bars = div.selectAll(".bar").data(datum.obj);
 
