@@ -11,6 +11,7 @@ body {
     font-size: 20px;
 }
 #map #map-annotation {
+	font-size: 10px;
     position: absolute;
     top: 300px;
     left: 20px;
@@ -38,10 +39,10 @@ body {
     letter-spacing: 1px;
 }
 #color-key .color-bar {
-    height: 20px;
+    height: 15px;
     width: 100%;
     position: absolute;
-    top: 20px;
+    top: 15px;
     background: #23a7f9; /* Old browsers */
     background: -moz-linear-gradient(left,  #23a7f9 0%, #c7cccf 50%, #c7cccf 51%, #ff6733 100%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, right top, color-stop(0%,#23a7f9), color-stop(50%,#c7cccf), color-stop(51%,#c7cccf), color-stop(100%,#ff6733)); /* Chrome,Safari4+ */
@@ -53,17 +54,18 @@ body {
 }
 #color-key .avg-bar {
     width: 2px;
-    height: 20px;
+    height: 18px;
     position: absolute;
     left: 50%;
-    top: 20px;
+    top: 15px;
     background-color: #00C04A;
 }
 #color-key .labels {
     position: absolute;
-    top: 45px;
+    top: 35px;
     width: 100%;
     font-style: italic;
+    font-size: 10px;
 }
 #color-key .low {
     position: absolute;
