@@ -226,6 +226,7 @@
 
             var ul = tooltip.find("ul").empty();
             data.forEach(function(datum){
+                console.log(datum, areaData[source]["AverageValue"][attr+"-FORMAT"], areaData[source]["AverageValue"][attr+"-FORMAT"], formatNumber(areaData[source]["AverageValue"][attr+"-FORMAT"],datum.data), areaData[source]["AverageValue"][attr])
                 if (datum.total) {
                     // calculating percentages for waffle types
                     ul.append($("<li>").html(datum.place + ": <span>" + 
@@ -814,6 +815,7 @@
             if (format == " Integer ")
                 value = parseInt(value).toFixed(0);
             else if (format == " Dollar ") {
+                if (value.match(/\$/)) return value;
                 value = parseInt(value).toFixed(0);
                 value = "$"+value.substring(0,value.length-3)+","+value.substring(2,value.length);
             } else if (format == " Percent ")
