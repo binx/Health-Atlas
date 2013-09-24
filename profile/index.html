@@ -583,7 +583,7 @@
                 key.select(".l-"+j)
                     .on("click",function(d){ 
                         showTooltip(land.title, [{"place":areaName, "data":land.data, "total":totalValue}], "CPA"); 
-                    }).select(".num").text("(" + p.toFixed(1) + "%)");
+                    }).select(".num").text("(" + p.toFixed(0) + "%)");
             });
         }
 
