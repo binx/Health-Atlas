@@ -226,11 +226,22 @@
 
             var ul = tooltip.find("ul").empty();
             data.forEach(function(datum){
-                ul.append($("<li>").html(datum.place + ": <span>" + 
-                    formatNumber(areaData[source]["AverageValue"][attr+"-FORMAT"],datum.data)+"</span>"));
+                if (datum.total) {
+                    // calculating percentages for waffle types
+                    ul.append($("<li>").html(datum.place + ": <span>" + 
+                        formatNumber(" Percent ",datum.data/datum.total)+"</span>"));
+                } else {
+                    ul.append($("<li>").html(datum.place + ": <span>" + 
+                        formatNumber(areaData[source]["AverageValue"][attr+"-FORMAT"],datum.data)+"</span>"));
+                }
             });
-            ul.append($("<li>").attr("class","avg").html("City of Los Angeles: <span>" + 
+            if (data[0].total) {
+                ul.append($("<li>").attr("class","avg").html("City of Los Angeles: <span>" + 
+                formatNumber(" Percent ",areaData[source]["AverageValue"][attr]/data[0].total)+"</span>"));
+            } else {
+                ul.append($("<li>").attr("class","avg").html("City of Los Angeles: <span>" + 
                 formatNumber(areaData[source]["AverageValue"][attr+"-FORMAT"],areaData[source]["AverageValue"][attr])+"</span>"));
+            }
 
             tooltip.find(".desc").text(areaData[source]["Description"][attr]);
         }
@@ -495,17 +506,21 @@
             var numBoxes = 0;
             var key = div.select(".boxes-key");
 
-            div.on("click",function(d){ showTooltip(); })
-
             waffleTypes.forEach(function(land,j){
                 var p = waffleTypes[j].data/totalValue*100;
                 for (var i = 0; i < Math.round(p); i++) {
                     var box = $(div[0]).find(".box").eq(numBoxes)
-                    box.css("background-color",colors[j]);
+                    box.css("background-color",colors[j])
+                        .click(function(){
+                            showTooltip(land.title, [{"place":areaName, "data":land.data, "total":totalValue}], "CPA");
+                        });
 
                     numBoxes++;
                 }
-                key.select(".l-"+j+" .num").text("(" + p.toFixed(1) + "%)");
+                key.select(".l-"+j)
+                    .on("click",function(d){ 
+                        showTooltip(land.title, [{"place":areaName, "data":land.data, "total":totalValue}], "CPA"); 
+                    }).select(".num").text("(" + p.toFixed(1) + "%)");
             });
         }
 
