@@ -109,8 +109,8 @@
         function generateMap(collection) {
             var svg = d3.select("#map").append("svg").attr("width","400").attr("height","600").append("g");
 
-            var projection = d3.geo.albers().scale(52000)
-                .translate([320, 280])
+            var projection = d3.geo.albers().scale(45000)
+                .translate([280, 230])
                 .rotate([118.25,0])
                 .center([0, 34.05]);
 
