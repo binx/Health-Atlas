@@ -37,7 +37,9 @@
                 <div class="title">More Information</div>
                 <div class="prompt">Click on a statistic to learn more.</div>
                 <div class="attr"></div>
-                <ul></ul>
+                <ul>
+                    <li class="avg">City of Los Angeles: <span></span></li>
+                </ul>
                 <div class="desc"></div>
             </div>
         </div>
@@ -193,6 +195,7 @@
                     appendGraph(d.source, d.type, d.data, d3.select(this), (d.notes ? d.notes : ""));
                 });
             }
+            updateTooltip();
             populatePopStats();
 
             loaded = true;
@@ -236,23 +239,33 @@
 
         function showTooltip(attr, data, source) {
             tooltip.find(".prompt").hide();
+            tooltip.find(".avg").show();
             tooltip.find(".attr").text(attr);
 
-            var ul = tooltip.find("ul").empty();
             var format = areaData[source]["AverageValue"][attr+"-FORMAT"],
                 avg = areaData[source]["AverageValue"][attr],
                 min = areaData[source]["MinimumValue"][attr],
                 max = areaData[source]["MaximumValue"][attr];
-            data.forEach(function(datum){
-                if (datum.total) {
-                    // calculating percentages for waffle types
-                    var value = formatNumber(" Percent ",datum.data/datum.total);
-                } else {
-                    var value = formatNumber(format,datum.data);
-                }
 
-                $("<li>").html(datum.place+": <span style='color:"+colorData(datum.data, avg, min, max)+"'>"+value+"</span>")
-                    .appendTo(ul);
+            var lis = d3.select("#tooltip ul").selectAll(".area").data(data);
+            var entering = lis.enter().insert("li",".avg").attr("class","area");
+            entering.append("span").attr("class","place");
+            entering.append("span").attr("class","num");
+            lis.exit().remove();
+
+            lis.select(".place").text(function(d){ return d.place + ": "; });
+            lis.select(".num").text(function(d){
+                d.attr = attr;
+                d.source = source;
+                if (d.total) {
+                    // calculating percentages for waffle types
+                    d.value = formatNumber(" Percent ",d.data/d.total);
+                } else {
+                    d.value = formatNumber(format,d.data);
+                }
+                return d.value;
+            }).style("color",function(d){
+                return colorData(d.data, avg, min, max);
             });
 
             if (data[0].total) {
@@ -260,9 +273,17 @@
             } else {
                 var avgValue = formatNumber(format, avg);
             }
-            ul.append($("<li>").attr("class","avg").html("City of Los Angeles: <span>" +avgValue+"</span>"));
+            tooltip.find(".avg span").text(avgValue);
 
             tooltip.find(".desc").text(areaData[source]["Description"][attr]);
+        }
+
+        function updateTooltip() {
+            d3.selectAll(".area .num").text(function(d){
+                return formatNumber(areaData[d.source][areaName][d.attr+"-FORMAT"], areaData[d.source][areaName][d.attr])
+            }).style("color",function(d){
+                return colorData(areaData[d.source][areaName][d.attr], areaData[d.source]["AverageValue"][d.attr], areaData[d.source]["MinimumValue"][d.attr], areaData[d.source]["MaximumValue"][d.attr])
+            });
         }
 
         function loadMap() {

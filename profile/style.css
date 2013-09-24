@@ -18,6 +18,8 @@ body {
 }
 #map svg {
     margin-left: 20px;
+    position: absolute;
+    top: 50px;
 }
 #map path {
     cursor: pointer;
@@ -156,12 +158,13 @@ body {
     font-size: 16px;
 }
 #tooltip li {
-    margin-bottom: 2px
+    margin-bottom: 3px;
 }
 #tooltip li span {
     font-weight: bold;
 }
 #tooltip .avg {
+    display: none;
     color: #00C04A;
 }
 
