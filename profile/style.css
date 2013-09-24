@@ -136,6 +136,9 @@ body {
     padding: 0;
     font-size: 16px;
 }
+#tooltip li {
+    margin-bottom: 2px
+}
 #tooltip li span {
     font-weight: bold;
 }
@@ -455,6 +458,7 @@ body {
 }
 .waffle .box {
     position: absolute;
+    cursor: pointer;
 }
 .waffle ul{
     margin: 0 20px;
@@ -467,6 +471,7 @@ body {
 .waffle li {
     clear: both;
     margin-bottom: 10px;
+    cursor: pointer;
 }
 .waffle li .title {
     width: 260px;
