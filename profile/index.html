@@ -9,6 +9,19 @@
         <div id="map">
             <h1></h1>
             <svg></svg>
+            <div id="pop-stats">
+                <h3>Total Population</h3>
+                <p class="pop-total"><span></span></p>
+                <h3>Population Density</h3>
+                <p class="pop-density"><span></span> sq mile</p>
+                <h3>Population Age</h3>
+                <p class="pop-under-5">under 5 <span></span></p>
+                <p class="pop-under-18">under 18 <span></span></p>
+                <p class="pop-over-65">over 65 <span></span></p>
+
+                <p class="pop-non-white" style="margin-top: 15px">non-white: <span></span></p>
+                <p class="pop-isolated">linguistically isolated: <span></span></p>
+            </div>
             <div id="map-annotation"></div>
             <div id="color-key">
                 <div class="title">Color Key</div>
@@ -180,6 +193,7 @@
                     appendGraph(d.source, d.type, d.data, d3.select(this), (d.notes ? d.notes : ""));
                 });
             }
+            populatePopStats();
 
             loaded = true;
 
@@ -225,24 +239,28 @@
             tooltip.find(".attr").text(attr);
 
             var ul = tooltip.find("ul").empty();
+            var format = areaData[source]["AverageValue"][attr+"-FORMAT"],
+                avg = areaData[source]["AverageValue"][attr],
+                min = areaData[source]["MinimumValue"][attr],
+                max = areaData[source]["MaximumValue"][attr];
             data.forEach(function(datum){
-                console.log(datum, areaData[source]["AverageValue"][attr+"-FORMAT"], areaData[source]["AverageValue"][attr+"-FORMAT"], formatNumber(areaData[source]["AverageValue"][attr+"-FORMAT"],datum.data), areaData[source]["AverageValue"][attr])
                 if (datum.total) {
                     // calculating percentages for waffle types
-                    ul.append($("<li>").html(datum.place + ": <span>" + 
-                        formatNumber(" Percent ",datum.data/datum.total)+"</span>"));
+                    var value = formatNumber(" Percent ",datum.data/datum.total);
                 } else {
-                    ul.append($("<li>").html(datum.place + ": <span>" + 
-                        formatNumber(areaData[source]["AverageValue"][attr+"-FORMAT"],datum.data)+"</span>"));
+                    var value = formatNumber(format,datum.data);
                 }
+
+                $("<li>").html(datum.place+": <span style='color:"+colorData(datum.data, avg, min, max)+"'>"+value+"</span>")
+                    .appendTo(ul);
             });
+
             if (data[0].total) {
-                ul.append($("<li>").attr("class","avg").html("City of Los Angeles: <span>" + 
-                formatNumber(" Percent ",areaData[source]["AverageValue"][attr]/data[0].total)+"</span>"));
+                var avgValue = formatNumber(" Percent ",avg/data[0].total);
             } else {
-                ul.append($("<li>").attr("class","avg").html("City of Los Angeles: <span>" + 
-                formatNumber(areaData[source]["AverageValue"][attr+"-FORMAT"],areaData[source]["AverageValue"][attr])+"</span>"));
+                var avgValue = formatNumber(format, avg);
             }
+            ul.append($("<li>").attr("class","avg").html("City of Los Angeles: <span>" +avgValue+"</span>"));
 
             tooltip.find(".desc").text(areaData[source]["Description"][attr]);
         }
@@ -303,6 +321,29 @@
                         break;
                 }
             }
+        }
+
+        function populatePopStats() {
+            var data = areaData["CPA"][areaName];
+            console.log(areaData);
+            var pop = map.select("#pop-stats"),
+                total = data["Total Population"];
+
+            function textAndColor(div, attr, format, total) {
+                var f = format ? format : data[attr+"-FORMAT"];
+                pop.select(div).text(formatNumber(f, total ? data[attr]/total : data[attr]))
+                    .style("color",colorData(data[attr], areaData["CPA"]["AverageValue"][attr], areaData["CPA"]["MinimumValue"][attr], areaData["CPA"]["MaximumValue"][attr]));
+            }
+            textAndColor(".pop-total span", "Total Population");
+            textAndColor(".pop-density span", "Population per Square Mile");
+
+            textAndColor(".pop-under-5 span", "Population Under Age 5 ", " Percent ", total);
+            textAndColor(".pop-under-18 span", "Population Under Age 18", " Percent ", total);
+            textAndColor(".pop-over-65 span", "Population Age 65 and Over", " Percent ", total);
+
+            textAndColor(".pop-non-white span", "Percentage Non-White and Hispanic Population");
+            textAndColor(".pop-isolated span", "Percentage of Linguistically-Isolated Households");
+
         }
 
         function processBarData(data, source) {
@@ -813,11 +854,11 @@
 
         function formatNumber(format, value) {
             if (format == " Integer ")
-                value = parseInt(value).toFixed(0);
+                value = parseInt(value).toFixed(0).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
             else if (format == " Dollar ") {
                 if (value.match(/\$/)) return value;
                 value = parseInt(value).toFixed(0);
-                value = "$"+value.substring(0,value.length-3)+","+value.substring(2,value.length);
+                value = "$"+value.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
             } else if (format == " Percent ")
                 value = (value*100).toFixed(0)+"%";
             return value;

@@ -26,6 +26,25 @@ body {
     fill: #ddd;
 }
 
+#pop-stats {
+    position: absolute;
+    top: 50px;
+    left: 330px;
+}
+#pop-stats h3 {
+    font-weight: normal;
+    text-decoration: underline;
+    font-size: 16px;
+    margin: 15px 0 0;
+}
+#pop-stats p {
+    margin: 3px 0;
+    font-size: 14px;
+}
+#pop-stats p span {
+    font-weight: bold;
+}
+
 #color-key {
     position: absolute;
     top: 350px;
