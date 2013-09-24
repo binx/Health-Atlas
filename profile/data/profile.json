@@ -105,6 +105,7 @@
                             "Life Expectancy at Birth"
                         ],
                         "notes": {
+                            "showAvg":true,
                             "showLabels":true,
                             "annotation":"years"
                         }
@@ -206,7 +207,10 @@
                         "source":"CPA",
                         "data": [
                             "Walkability Index"
-                        ]
+                        ],
+                        "notes": {
+                            "wordDesc":true
+                        }
                     }
                 },
                 {
@@ -247,7 +251,8 @@
                             "Average Annual Motor Vehicle Traffic Mortality Rate per 100,000 Residents "
                         ],
                         "notes": {
-                            "showLabels":true,
+                            "showLabels":false,
+                            "showAvg":true,
                             "annotation":"per year"
                         }
                     }
@@ -292,7 +297,10 @@
                         "source":"CPA",
                         "data": [
                             "Modified Retail Food Environment Index"
-                        ]
+                        ],
+                        "notes": {
+                            "wordDesc":true
+                        }
                     }
                 },
                 {
@@ -303,6 +311,19 @@
                         "data": [
                             "Percentage of Households that are CalFresh Recipients"
                         ]
+                    }
+                },
+                {
+                    "key":"Neighborhood Food Sources",
+                    "obj":{
+                        "type":"thermometer",
+                        "source":"CPA",
+                        "data": [
+                            "Neighborhood Food Sources "
+                        ],
+                        "notes": {
+                            "wordDesc":true
+                        }
                     }
                 },
                 {
@@ -321,7 +342,7 @@
                 {
                     "key":"Food Behaviors by Health District",
                     "obj":{
-                        "type":"barchart",
+                        "type":"bubble",
                         "source":"HD",
                         "data": [
                             "Percentage of Adults Who Reported that Accessing Fresh Produce (Fruits and Vegetables) was Very or Somewhat Easy",
@@ -381,7 +402,12 @@
                         "source":"CD",
                         "data":[
                             "Percentage of Homeless Population by City Council District"
-                        ]
+                        ],
+                        "notes":{
+                            "showAvg":true,
+                            "showLabels":false,
+                            "annotation":null
+                        }
                     }
                 },
                 {
@@ -406,7 +432,7 @@
                 {
                     "key":"Pollution Burden Index by Zipcode",
                     "obj":{
-                        "type":"barchart",
+                        "type":"multistem",
                         "source":"ZIP",
                         "data":[
                             "Pollution Burden Index",

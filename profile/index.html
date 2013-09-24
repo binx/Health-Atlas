@@ -9,8 +9,20 @@
         <div id="map">
             <h1></h1>
             <svg></svg>
+            <div id="map-annotation"></div>
+            <div id="color-key">
+                <div class="title">Color Key</div>
+                <div class="color-bar"></div>
+                <div class="avg-bar" width="100%" height="20px"></div>
+                <div class="labels">
+                    <div class="low">low</div>
+                    <div class="avg">average</div>
+                    <div class="high">high</div>
+                </div>
+            </div>
             <div id="tooltip">
                 <div class="title">More Information</div>
+                <div class="prompt">Click on a statistic to learn more.</div>
                 <div class="attr"></div>
                 <ul></ul>
                 <div class="desc"></div>
@@ -20,7 +32,7 @@
     </body>
     <script type="text/javascript">
         var specialRows = ["DataSource","Description","MinimumValue","MaximumValue","AverageValue","GeographicScale","AveValueGeo"];
-        var colors = ["yellow","orange","pink","green","purple","red"],
+        var colors = ["#F8F400","#D76F00","#6F0062","#808181","#00C6C5","#3CC758","#AC7A4D"],
             quartileColors = ["#EC8E4F","#FFD5B6","#D4DCCF","#A4DFD0","#4DC9D2"];
         var graphs = d3.select("#graphs"),
             map = d3.select("#map"),
@@ -184,7 +196,7 @@
                     break;
                 case "thermometer":
                     var attr = data[0];
-                    drawThermometer(attr, areaData[source][areaName][attr], areaData[source]["MinimumValue"][attr], areaData[source]["MaximumValue"][attr], areaData[source][areaName][attr+"-FORMAT"], div, notes.number);
+                    drawThermometer(attr, areaData[source][areaName][attr], areaData[source]["MinimumValue"][attr], areaData[source]["MaximumValue"][attr], areaData[source][areaName][attr+"-FORMAT"], div, notes.number, notes.wordDesc);
                     break;
                 case "stemandleaf":
                     drawStemAndLeaf(data,areaData[source][areaName],areaData[source]["AverageValue"],areaData[source]["MinimumValue"],areaData[source]["MaximumValue"], div);
@@ -195,7 +207,7 @@
                     break;
                 case "barchart":
                     var dataAggregate = processBarData(data, source);
-                    drawBars(dataAggregate, source, div, notes.showLabels, notes.annotation);
+                    drawBars(dataAggregate, source, div, notes.showAvg, notes.showLabels, notes.annotation);
                     break;
                 case "bubble":
                     var dataAggregate = processBarData(data, source);
@@ -209,7 +221,7 @@
         }
 
         function showTooltip(attr, data, source) {
-            tooltip.show();
+            tooltip.find(".prompt").hide();
             tooltip.find(".attr").text(attr);
 
             var ul = tooltip.find("ul").empty();
@@ -217,7 +229,7 @@
                 ul.append($("<li>").html(datum.place + ": <span>" + 
                     formatNumber(areaData[source]["AverageValue"][attr+"-FORMAT"],datum.data)+"</span>"));
             });
-            ul.append($("<li>").html("City: <span>" + 
+            ul.append($("<li>").attr("class","avg").html("City of Los Angeles: <span>" + 
                 formatNumber(areaData[source]["AverageValue"][attr+"-FORMAT"],areaData[source]["AverageValue"][attr])+"</span>"));
 
             tooltip.find(".desc").text(areaData[source]["Description"][attr]);
@@ -232,6 +244,7 @@
         }
 
         function loadMapData(collection, places, source) {
+            map.select("#map-annotation").text(source);
             var svg = map.select("svg g")
             var projection = d3.geo.albers().scale(25000)
                 .translate([160, 140])
@@ -308,7 +321,8 @@
 
         function drawBubbles(data, source, wrapper) {
             data.forEach(function(datum, i){
-                var chart = wrapper.append("div").attr("class","bubble b-"+i);
+                var chart = wrapper.append("div").attr("class","bubble b-"+i)
+                                .style("width",Math.min((100/data.length), 33) + "%");
                 chart.append("div").attr("class","bubble-wrapper");
                 chart.append("div").attr("class","desc").text(datum.key);
             });
@@ -316,11 +330,15 @@
         }
 
         function updateBubbles(data, source, wrapper) {
-            var bubbleWidth = 75,
+            var smallBubbles = (data.length > 3 && data[0].obj.length > 2),
+                bubbleWidth = smallBubbles ? 50 : 75,
                 bubblePadding = 10;
+                
             data.forEach(function(datum, i){
+                if (smallBubbles) $(".b-"+i).addClass("small");
+                else $(".b-"+i).removeClass("small");
                 var chart = wrapper.select(".b-"+i+" .bubble-wrapper")
-                                .style("width",(bubbleWidth*datum.obj.length)+(bubblePadding*(datum.obj.length-1))+"px");
+                                .style("width",(bubbleWidth*datum.obj.length)+(bubblePadding*(datum.obj.length-1)) + "px");
 
                 var bubbles = chart.selectAll(".bub").data(datum.obj);
                     bubbles.enter().append("div").attr("class","bub")
@@ -333,11 +351,11 @@
             })
         }
 
-        function drawBars(data, source, wrapper, showLabels, annotation) {
+        function drawBars(data, source, wrapper, showAvg, showLabels, annotation) {
             if (data.length == 1) wrapper.style("width","50%").style("clear","none").style("float","left");
 
             data.forEach(function(datum, i){
-                var chartWidth = (showLabels) ? 75 : (100/data.length);
+                var chartWidth = (showAvg) ? 75 : (100/data.length);
                 var chart = wrapper.append("div").attr("class","barchart c-"+i).style("width",chartWidth+"%"),
                     chartHeight = 120;
                 var div = chart.append("div").attr("class","graph-object")
@@ -353,16 +371,17 @@
                     .style("top",chartHeight-2+"px");
                 div.append("div").attr("class","axis")
                     .style("width","2px").style("height",chartHeight+"px");
+                if (showAvg) {
+                    chart.insert("h2",".graph-object").text(datum.key);
+                    div.append("div").attr("class","avg-annotation")
+                        .html("LA City average:<br>"+formatNumber(data[0].obj[0].format, datum.avg)+" "+(annotation ? annotation : ""))
+                        .style("top",function(d){ return chartHeight - barScale(datum.avg) - 12 + "px"; });
+                } else 
+                    chart.append("div").attr("class","title").text(datum.key);
 
                 if (showLabels) {
-                    chart.insert("h2",".graph-object").text(datum.key);
                     chart.append("div").attr("class","place-labels");
-                    div.append("div").attr("class","avg-annotation")
-                        .html("County Average<br>"+datum.avg+" "+annotation)
-                        .style("top",function(d){ return chartHeight - barScale(datum.avg) - 12 + "px"; });
                 }
-                else 
-                    chart.append("div").attr("class","title").text(datum.key);
             });
             updateBars(data, source, wrapper, showLabels);
         }
@@ -423,7 +442,7 @@
 
                 if (showLabels) {
                     var labels = wrapper.select(".place-labels").selectAll(".label").data(datum.obj);
-                    labels.enter().append("div").attr("class","label");
+                    labels.enter().append("div").attr("class","label").style("width",barWidth+"px");
                     labels.exit().remove();
 
                     labels.text(function(d){ return d.place; })
@@ -459,7 +478,7 @@
             types.forEach(function(land,i){
                 var li = key.append("li").attr("class","l-"+i);
                     li.append("div").attr("class","key-color").style("background-color",colors[i]);
-                    li.append("span").html(land + " <span class='num'></span>");
+                    li.append("span").attr("class","title").html(land + " <span class='num'></span>");
             });
 
             updateWaffle(data, descriptions, types, div);
@@ -493,16 +512,17 @@
         function drawPie(value, avgValue, min, max, attr, div) {
             var pie = div.selectAll(".pie").data([value])
                         .enter().append("div").attr("class","pie"),
-                pieSize = 120,
+                pieSize = 160,
+                circRadius = 60,
                 svg = pie.append("svg").attr("width",pieSize).attr("height",pieSize);
 
             var avg = d3.svg.arc()
-                .innerRadius(50)
-                .outerRadius(53)
+                .innerRadius(circRadius+10)
+                .outerRadius(circRadius+16)
                 .startAngle(0)
                 .endAngle(avgValue * (2*Math.PI));
 
-            svg.append("circle").attr("r",40)
+            svg.append("circle").attr("r",circRadius)
                 .attr("cx",pieSize/2).attr("cy",pieSize/2)
                 .attr("fill","#ddd");
 
@@ -513,7 +533,7 @@
                 .transition()
                 .attr("d", avg)
                 .attr("transform","translate("+pieSize/2+","+pieSize/2+")")
-                .attr("fill","green");
+                .attr("fill","#55D440");
 
             pie.append("div").attr("class","pie-avg")
                 .html("LA County<br> " + (avgValue*100).toFixed(0) + "%");
@@ -522,9 +542,10 @@
         }
 
         function updatePie(value, avg, min, max, attr, div) {
+            var circRadius = 60;
             var arc = d3.svg.arc()
-                .innerRadius(00)
-                .outerRadius(40)
+                .innerRadius(0)
+                .outerRadius(circRadius)
                 .startAngle(0)
                 .endAngle(value * 2*Math.PI);
 
@@ -596,6 +617,7 @@
 
             var divWidth = $(div[0]).find(".areas").width();
 
+            g.append("div").attr("class","avg-label").text("avg");
             var l = g.append("div").attr("class","leafs");
                 l.append("div").attr("class","stem").style("left",Math.floor(divWidth/2)+"px");
             g.append("div").attr("class","title").text(function(d){ return d.key });
@@ -623,8 +645,6 @@
                 // graph.select(".stem").style("height")
 
                 var barScale = d3.scale.linear().domain([datum.min,datum.max]).range([2,leafMaxWidth]);
-                    var colorMinScale = d3.scale.linear().domain([datum.min,datum.avg]).range(["#64E0E5","#D4DCCF"]),
-                        colorMaxScale = d3.scale.linear().domain([datum.avg,datum.max]).range(["#D4DCCF","#FF885B"]);;
 
                 var leafs = graph.selectAll(".leaf").data(datum.obj);
                 leafs.enter().append("div").attr("class","leaf")
@@ -636,7 +656,7 @@
                     d.diff = Math.floor(barScale(datum.avg) - barScale(d.data));
                     return Math.abs(d.diff) + "px";
                 }).style("background-color",function(d){
-                    return (d.data < datum.avg) ? colorMinScale(d.data) : colorMaxScale(d.data);
+                    return colorData(d.data, datum.avg, datum.min, datum.max);
                 }).style("left",function(d){
                     var neg = (d.diff < 0) ? true : false;
                     return divWidth/2 + (neg ? 2 : -d.diff) + "px";  
@@ -657,7 +677,9 @@
                 svgWrapper = stem.append("div").attr("class","wrapper")
                 svg = svgWrapper.append("svg").attr("width",svgWidth).attr("height",attrs.length*leafHeight);
 
-            svg.append("rect").attr("x",svgWidth/2).attr("width",2).attr("height",attrs.length*leafHeight);
+            svg.append("rect").attr("x",svgWidth/2)
+                .attr("width",2).attr("height",attrs.length*leafHeight)
+                .attr("fill","#00C04A");
 
             svgWrapper.append("div").attr("class","avg-title").text("avg");
                 
@@ -670,8 +692,6 @@
                     .attr("y",i*leafHeight + boxPadding)
                     .attr("height",(leafHeight - 2*boxPadding));
             });
-
-            svg.append("rect").attr("x",svgWidth/2).attr("width",2).attr("height",attrs.length*leafHeight);
 
             updateStemAndLeaf(attrs, val, avg, min, max, div);
         }
@@ -690,8 +710,6 @@
                     leafHeight = 30;
 
                 var barScale = d3.scale.linear().domain([min[attr],max[attr]]).range([2,leafMaxWidth]);
-                    var colorMinScale = d3.scale.linear().domain([min[attr],avg[attr]]).range(["#64E0E5","#D4DCCF"]),
-                        colorMaxScale = d3.scale.linear().domain([avg[attr],max[attr]]).range(["#D4DCCF","#FF885B"]);;
 
                 var diff = barScale(avg[attr])-barScale(val[attr]),
                         neg = (diff < 0) ? true : false;
@@ -700,17 +718,17 @@
                     .transition().duration(1000)
                     .attr("x",(svgWidth/2 + (neg ? 2 : -diff)))
                     .attr("width",Math.abs(diff))
-                    .attr("fill",(val[attr] < avg[attr]) ? colorMinScale(val[attr]) : colorMaxScale(val[attr]));
+                    .attr("fill",colorData(val[attr], avg[attr], min[attr], max[attr]));
 
                 div.select(".leaf-"+i)
                     .on("click",function(d){ showTooltip(attr, [{"place":areaName, "data":val[attr]}], "CPA"); });
             });
         }
 
-        function drawThermometer(attr, val, min, max, format, div, showNumber) {
+        function drawThermometer(attr, val, min, max, format, div, showNumber, wordDesc) {
             var therm = div.selectAll(".thermometer")
                 .data(["ok"]).enter()
-                .append("div").attr("class",(showNumber) ? "thermometer number" : "thermometer no-number");
+                .append("div").attr("class",wordDesc ? "thermometer words" : "thermometer");
 
             var thermHeight = 15,
                 thermWidth = 200,
@@ -727,8 +745,10 @@
                     .style("left",(thermWidth/5)*i + "px");
             }
 
-            var textMax = valueWrapper.append("div").attr("class","scale max").text(formatNumber(format, max));
-            var textMin = valueWrapper.append("div").attr("class","scale min").text(formatNumber(format, min));
+            var textMax = valueWrapper.append("div").attr("class","scale max")
+                            .text(wordDesc ? "most" : formatNumber(format, max));
+            var textMin = valueWrapper.append("div").attr("class","scale min")
+                            .text(wordDesc ? "least" : formatNumber(format, min));
 
             var circWrapper = valueWrapper.append("div")
                 .attr("class","circle-wrapper")
