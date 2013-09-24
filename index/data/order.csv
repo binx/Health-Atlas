@@ -1,57 +1,98 @@
-ID,Health Atlas Section,IndicatorName,GeographicScale,Chrolopleth Map Cat,Chrolopeth Map Order
-1,Demographic and Social Characteristics,Total Population,CPA,Demographics,0
-120,Demographic and Social Characteristics,Percentage of Total Population,CPA,Demographics,1
-4,Demographic and Social Characteristics,Percentage of Population Under Age 5 ,CPA,Demographics,2
-6,Demographic and Social Characteristics,Percentage of Population Under Age 18,CPA,Demographics,3
-8,Demographic and Social Characteristics,Percentage of Population Over Age 65,CPA,Demographics,4
-112,Demographic and Social Characteristics,Percentage White Alone Population,CPA,Demographics,5
-116,Demographic and Social Characteristics,Percentage Latino Alone Population ,CPA,Demographics,6
-113,Demographic and Social Characteristics,Percentage American American Alone Population,CPA,Demographics,7
-114,Demographic and Social Characteristics,Percentage Asian American Alone Population,CPA,Demographics,8
-115,Demographic and Social Characteristics,Percentage Native American Alone Population,CPA,Demographics,9
-117,Demographic and Social Characteristics,Percentage Native Hawaiian and Other Pacific Islander alone Population,CPA,Demographics,10
-118,Demographic and Social Characteristics,Percentage Other Population,CPA,Demographics,11
-12,Demographic and Social Characteristics,Percentage of Linguistically-Isolated Households,CPA,Demographics,12
-13,Economic Conditions,Hardship Index,CPA,Economic Conditions,13
-14,Economic Conditions,Per Capita Income ,CPA,Economic Conditions,14
-17,Economic Conditions,Percentage of Population below the Federal Poverty Level ,CPA,Economic Conditions,15
-15,Economic Conditions,Percentage of Unemployed Workers Age 16 and Over ,CPA,Economic Conditions,16
-19,Economic Conditions,Percentage of Population 200% below the Federal Poverty Level ,CPA,Economic Conditions,17
-110,Economic Conditions,Percentage of Population living in extreme poverty neighborhoods ,CPA,Economic Conditions,18
-21,Education,Percentage of Population Age 25 and Over that Did Not Graduate from High School ,CPA,Education,19
-22,Education,Percentage of Population Age 25 and Over that Graduated from High School ,CPA,Education,20
-23,Education,Percentage of Population Age 25 and Over with a Bachelor's Degree or Higher ,CPA,Education,21
-50,Health Conditions,Prevalence of Childhood Obesity,CPA,Health,22
-54,Health Conditions,Health Professional Shortage Areas,CPA,Health,23
-57,Land Use,Land Use Mix,CPA,Land use ,26
-58,Land Use,Land Use Diversity,CPA,Land use ,27
-56,Land Use,Intersection Density,CPA,Land use ,28
-65,Land Use,"Park Level of Service (Acres per 1,000 Residents)",CPA,Land use ,29
-66,Land Use,Percentage of the Population within One-Half Mile Walking Distance of a Park,CPA,Land use ,30
-2,Demographic and Social Characteristics,Population per Square Mile,CPA,Land use ,24
-67,Land Use,Employment Density,CPA,Land use ,25
-74,Transportation,Percentage of Households without Access to a Vehicle,CPA,Transportation,31
-68,Transportation,Percentage of Commuters Driving Alone to Work,CPA,Transportation,32
-69,Transportation,Percentage of Commuters Carpooling to Work,CPA,Transportation,33
-70,Transportation,Percentage of Commuters Taking Public Transportation to Work,CPA,Transportation,34
-71,Transportation,Percentage of Commuters Walking to Work,CPA,Transportation,35
-72,Transportation,Percentage of Commuters Biking to Work,CPA,Transportation,36
-76,Transportation,"Average Annual Rate of Motor Vehicle Collisions with Pedestrians per 10,000 Residents",CPA,Transportation,37
-77,Transportation,"Average Annual Rate of Motor Vehicle Collisions with Bicyclists per 10,000 Residents",CPA,Transportation,38
-78,Transportation,"Average Annual Rate of Motor Vehicle Collisions with Pedestrians and Bicyclists with Children within ½ Mile of a School per 10,000 Children",CPA,Transportation,39
-89,Food Systems,"Average Annual Rate of Motor Vehicle Collisions Involving Alcohol per 10,000 Residents",CPA,Transportation,40
-79,Food Systems,Modified Retail Food Environment Index,CPA,Food Systems,41
-80,Food Systems,"Grocery Store Rate per 10,000 Residents",CPA,Food Systems,42
-84,Food Systems,"Rate of Fast Food Restaurants per 10,000 Residents",CPA,Food Systems,43
-90,Food Systems,Percentage of Households that are CalFresh Recipients,CPA,Food Systems,44
-87,Food Systems,"Off-Sale Liquor License Rate per 10,000 Residents",CPA,Food Systems,45
-88,Food Systems,"On-Sale Liquor License Rate per 10,000 Residents",CPA,Food Systems,46
-93,Crime,"Violent Crime Rate per 1,000 Residents (6-Month Rate, April to September 2012)",CPA,Crime,47
-94,Crime,"Property Crime Rate per 1,000 Residents (6-Month Rate, April to September 2012)",CPA,Crime,48
-92,Crime,"Crime Rate for All Part I Offences per 1,000 Residents (6-Month Rate, April to September 2012)",CPA,Crime,49
-103,Housing,Percentage of Households Paying More than 30% of Income on Housing Costs,CPA,Housing,50
-98,Housing,Residential Density,CPA,Housing,51
-99,Housing,Housing Diversity,CPA,Housing,52
-100,Housing,Percentage of Renter-Occupied Housing Units,CPA,Housing,53
-101,Housing,Percentage of Housing Units with 1 or More than Persons per Room,CPA,Housing,54
-102,Housing,Percentage of Housing Units with 1.5 or More Persons per Room,CPA,Housing,55
+ID,Health Atlas Section,IndicatorName,GeographicScale,Keep/Remove,Topic,Revised Name,Section,Section Changed from Atlas,Group,Priority,Chart Type,Indicator Name,Summary,Chrolopleth Map Cat,Chrolopeth Map Order
+1,Demographic and Social Characteristics,Total Population,CPA,Keep,Demographics,,1,,General Pop,1.1,No chart - list of values (first but not the largest visual priority),,Yes,,
+120,Demographic and Social Characteristics,Percentage of Total Population,CPA,Add,Demographics,,1,,General Pop,1.2,No chart - list of values (first but not the largest visual priority),,Yes,Demographics,1
+3,Demographic and Social Characteristics,Population Under Age 5 ,CPA,Keep,Demographics,Under age 5,1,,General Pop,1.3,No chart - list of values (first but not the largest visual priority),,,,
+5,Demographic and Social Characteristics,Population Under Age 18,CPA,Keep,Demographics,Under age 18,1,,General Pop,1.4,No chart - list of values (first but not the largest visual priority),,,,
+7,Demographic and Social Characteristics,Population Age 65 and Over,CPA,Keep,Demographics,Age 65 and over ,1,,General Pop,1.5,No chart - list of values (first but not the largest visual priority),,,,
+4,Demographic and Social Characteristics,Percentage of Population Under Age 5 ,CPA,Keep,Demographics,Under age 5,1,,Age,2.1,Isotype people,,Yes,Demographics,2
+6,Demographic and Social Characteristics,Percentage of Population Under Age 18,CPA,Keep,Demographics,Under age 18,1,,Age,2.2,Isotype people,,Yes,Demographics,3
+8,Demographic and Social Characteristics,Percentage of Population Over Age 65,CPA,Keep,Demographics,Age 65 and over ,1,,Age,2.3,Isotype people,,Yes,Demographics,4
+112,Demographic and Social Characteristics,Percentage White Alone Population,CPA,Add,Demographics,White,1,,Race/Ethnicity,3.1,Waffle,,,Demographics,5
+116,Demographic and Social Characteristics,Percentage Latino Alone Population ,CPA,Add,Demographics,Latino,1,,Race/Ethnicity,3.2,Waffle,,,Demographics,6
+113,Demographic and Social Characteristics,Percentage American American Alone Population,CPA,Add,Demographics,What is this? African American? ,1,,Race/Ethnicity,3.3,Waffle,,,Demographics,7
+114,Demographic and Social Characteristics,Percentage Asian American Alone Population,CPA,Add,Demographics,Asian American,1,,Race/Ethnicity,3.4,Waffle,,,Demographics,8
+115,Demographic and Social Characteristics,Percentage Native American Alone Population,CPA,Add,Demographics,Native American,1,,Race/Ethnicity,3.5,Waffle,,,Demographics,9
+117,Demographic and Social Characteristics,Percentage Native Hawaiian and Other Pacific Islander alone Population,CPA,Add,Demographics,Native Hawaiian and other Pacific Islander ,1,,Race/Ethnicity,3.6,Waffle,,,Demographics,10
+118,Demographic and Social Characteristics,Percentage Other Population,CPA,Add,Demographics,Other ,1,,Race/Ethnicity,3.7,Waffle,,,Demographics,11
+10,Demographic and Social Characteristics,Percentage Non-White and Hispanic Population,CPA,Keep,Demographics,,1,,Summary Only,,Pie,,Yes,,
+12,Demographic and Social Characteristics,Percentage of Linguistically-Isolated Households,CPA,Keep,Demographics,,1,,Summary Only,,Pie,,Yes,Demographics,12
+9,Demographic and Social Characteristics,Non-White and Hispanic Population,CPA,Remove,Demographics,,1,,,,,,,,
+11,Demographic and Social Characteristics,Total Linguistically-Isolated Households,CPA,Remove,Demographics,,1,,,,,,,,
+13,Economic Conditions,Hardship Index,CPA,Keep,Economic Conditions,,2,,Econ Top,1,Isotype $?,,,Economic Conditions,13
+14,Economic Conditions,Per Capita Income ,CPA,Keep,Economic Conditions,,2,,Econ Top,1,Isotype $?,,,Economic Conditions,14
+17,Economic Conditions,Percentage of Population below the Federal Poverty Level ,CPA,Keep,Economic Conditions,Population below federal poverty line,2,,Poverty,2.1,Caterpillar bar or difference from mean,,,Economic Conditions,15
+15,Economic Conditions,Percentage of Unemployed Workers Age 16 and Over ,CPA,Keep,Economic Conditions,Unemployed age 16 and over,2,,Poverty,2.1,Caterpillar bar or difference from mean,,,Economic Conditions,16
+19,Economic Conditions,Percentage of Population 200% below the Federal Poverty Level ,CPA,Keep,Economic Conditions,Population below 200% below poverty line,2,,Poverty,2.2,Caterpillar bar or difference from mean,,,Economic Conditions,17
+110,Economic Conditions,Percentage of Population living in extreme poverty neighborhoods ,CPA,Keep,Economic Conditions,Population living in extreme poverty neighborhoods,2,,Poverty,2.4,Caterpillar bar or difference from mean,,,Economic Conditions,18
+21,Education,Percentage of Population Age 25 and Over that Did Not Graduate from High School ,CPA,Keep,Education,Without high school degree,3,,Educational Attainment,1.1,Isotype people / waffle,,Yes,Education,19
+22,Education,Percentage of Population Age 25 and Over that Graduated from High School ,CPA,Keep,Education,With high school degree,3,,Educational Attainment,1.2,Isotype people / waffle,,,Education,20
+23,Education,Percentage of Population Age 25 and Over with a Bachelor's Degree or Higher ,CPA,Keep,Education,With a bachelor's degree or higher ,3,,Educational Attainment,1.3,Isotype people / waffle,,,Education,21
+24,Health Conditions,Life Expectancy at Birth,PUMA,Keep,Health Outcomes,,4,,None,1,Bar,Life Expectancy at Birth,,,
+28,Health Conditions,"Coronary Heart Disease Mortality Rate per 100,000 Residents by City Council District",CD,Keep,Health Outcomes,Coronary Heart Disease,4,,Mortality,2.1,Bar,Coronary Heart Disease Mortality,,,
+32,Health Conditions,"Diabetes Mortality Rate per 100,000 Residents by City Council District",CD,Keep,Health Outcomes,Diabetes,4,,Mortality,2.2,Bar,Diabetes Mortality,,,
+31,Health Conditions,"Stroke Mortality Rate per 100,000 Residents by City Council District",CD,Keep,Health Outcomes,Stroke ,4,,Mortality,2.3,Bar,Stroke Mortality,,,
+53,Health Conditions,Percentage of Low Birth-Weight Infants ,ZipCode,Keep,Health Outcomes,Low birth weight,4,,ED/Hospitalizations,3.1,Bar,Low Birth Weight Infants,,,
+30,Health Conditions,"Rate of Heart Attacks in Population 45 and Over per 10,000 Residents",ZipCode,Keep,Health Outcomes,Heart attacks in adults age 45 and over,4,,ED/Hospitalizations,3.2,Bar,Heart Attack Hospitalization Rate,,,
+35,Health Conditions,"Asthma-Related Emergency Department Visit Rate in Children per 10,000 Residents",ZipCode,Keep,Health Outcomes,Asthma-related emergency room visits for children,4,,ED/Hospitalizations,3.3,Bar,Asthma-Related ED Visit Rate for Children,,,
+37,Health Conditions,"Asthma-Related Emergency Department Visit Rate in Adults per 10,000 Residents",ZipCode,Keep,Health Outcomes,Asthma-related emergency room visits for adults,4,,ED/Hospitalizations,3.4,Bar,Asthma-Related ED Visit Rate for Adults ,,,
+43,Health Conditions,Percentage of Children who Reported Fair or Poor Health,HD,Keep,Health Conditions,,5,,Mental Health,1.1,Bar,Children who Reported Fair or Poor Health,,,
+42,Health Conditions,Percentage of Adults who Reported Fair or Poor Health,HD,Keep,Health Conditions,,5,,Mental Health,1.2,Bar,Adults who Reported Fair or Poor Health,,,
+47,Health Conditions,Percentage of Adults with Depression,HD,Keep,Health Conditions,,5,,Mental Health,1.4,Bar,Adults who Reported Depression,,,
+50,Health Conditions,Prevalence of Childhood Obesity,CPA,Keep,Health Conditions,,5,,Weight,2.1,Isotype?,Childhood Obesity,,Health,22
+48,Health Conditions,Prevalence of Overweight Adults,HD,Keep,Health Conditions,,5,,Weight,2.21,Bar,Adult Overweight,,,
+49,Health Conditions,Prevalence of Obesity Adults,HD,Keep,Health Conditions,,5,,Weight,2.22,Bar,Adult Obesity,,,
+52,Health Conditions,Percentage of Children who Participated in Physical Activity per Week,HD,Keep,Health Conditions,,5,,Physical Activity,3.1,Bar,Children who Participated in Physical Activity,,,
+51,Health Conditions,Percentage of Adults who Met Physical Activity Guidelines for Aerobic and Muscle-Strengthening Activity Each Week,HD,Keep,Health Conditions,,5,,Physical Activity,3.2,Bar,Adults who Met Physical Activity Guidelines,,,
+54,Health Conditions,Health Professional Shortage Areas,CPA,Keep,Health Conditions,,5,,Access,4,?,Population in Health Shortage Areas,,Health,23
+63,Land Use,Entertainment Land Uses,CPA,Keep,Land Use,,6,,Land Use Mix,1,Waffle,,,,
+64,Land Use,Institutional/Open Space Land Uses,CPA,Keep,Land Use,,6,,Land Use Mix,1,Waffle,,,,
+60,Land Use,Multifamily Residential Land Uses,CPA,Keep,Land Use,,6,,Land Use Mix,1,Waffle,,,,
+62,Land Use,Office Land Uses,CPA,Keep,Land Use,,6,,Land Use Mix,1,Waffle,,,,
+61,Land Use,Retail Land Uses,CPA,Keep,Land Use,,6,,Land Use Mix,1,Waffle,,,,
+59,Land Use,Single Family Residential Land Uses,CPA,Keep,Land Use,,6,,Land Use Mix,1,Waffle,,,,
+55,Land Use,Walkability Index,CPA,Keep,Land Use,,6,,LU Summary,2.1,Difference from mean bar,,,Land use ,
+57,Land Use,Land Use Mix,CPA,Keep,Land Use,,6,,LU Summary,2.2,Difference from mean bar,,,Land use ,26
+58,Land Use,Land Use Diversity,CPA,Keep,Land Use,,6,,LU Summary,2.3,Difference from mean bar,,,Land use ,27
+56,Land Use,Intersection Density,CPA,Keep,Land Use,,6,,LU Summary,2.4,Difference from mean bar,,,Land use ,28
+65,Land Use,"Park Level of Service (Acres per 1,000 Residents)",CPA,Keep,Land Use,,6,,LU Summary,2.5,Difference from mean bar,,,Land use ,29
+66,Land Use,Percentage of the Population within One-Half Mile Walking Distance of a Park,CPA,Keep,Land Use,% who live within one-half mile of a park,6,,LU Summary,2.6,Difference from mean bar,,,Land use ,30
+2,Demographic and Social Characteristics,Population per Square Mile,CPA,Keep,Demographics,,6,Yes,Density (Pop/Emp),3.1,? Could be on differrence from mean,,,Land use ,24
+67,Land Use,Employment Density,CPA,Keep,Land Use,,6,,Density (Pop/Emp),3.2,? Could be on differrence from mean,,,Land use ,25
+74,Transportation,Percentage of Households without Access to a Vehicle,CPA,Keep,Transportation,,7,,Vehicle Access,1,Header stat - ? / Isotype?,,,Transportation ,31
+68,Transportation,Percentage of Commuters Driving Alone to Work,CPA,Keep,Transportation,,7,,Mode,2.1,Difference from mean,,,Transportation ,32
+69,Transportation,Percentage of Commuters Carpooling to Work,CPA,Keep,Transportation,,7,,Mode,2.2,Difference from mean,,,Transportation ,33
+70,Transportation,Percentage of Commuters Taking Public Transportation to Work,CPA,Keep,Transportation,,7,,Mode,2.3,Difference from mean,,,Transportation ,34
+71,Transportation,Percentage of Commuters Walking to Work,CPA,Keep,Transportation,,7,,Mode,2.4,Difference from mean,,,Transportation ,35
+72,Transportation,Percentage of Commuters Biking to Work,CPA,Keep,Transportation,,7,,Mode,2.6,Difference from mean,,,Transportation ,36
+73,Transportation,Percentage of Commuters Traveling by Other Means to Work,CPA,Keep,Transportation,,7,,Mode,2.6,Difference from mean,,,,
+76,Transportation,"Average Annual Rate of Motor Vehicle Collisions with Pedestrians per 10,000 Residents",CPA,Keep,Transportation,,7,,Collisions,3.1,Difference from mean,,,Transportation,37
+77,Transportation,"Average Annual Rate of Motor Vehicle Collisions with Bicyclists per 10,000 Residents",CPA,Keep,Transportation,,7,,Collisions,3.2,Difference from mean,,,Transportation,38
+78,Transportation,"Average Annual Rate of Motor Vehicle Collisions with Pedestrians and Bicyclists with Children within ½ Mile of a School per 10,000 Children",CPA,Keep,Transportation,,7,,Collisions,3.3,Difference from mean,,,Transportation,39
+89,Food Systems,"Average Annual Rate of Motor Vehicle Collisions Involving Alcohol per 10,000 Residents",CPA,Keep,Transportation,,7,Yes,MV Fatalities,3.4,,,,Transportation,40
+75,Transportation,"Average Annual Motor Vehicle Traffic Mortality Rate per 100,000 Residents ",ZipCode,Keep,Transportation,,7,,MV Fatalities,4,,,,,
+79,Food Systems,Modified Retail Food Environment Index,CPA,Keep,Food Systems,,8,,Food Environment,1.1,Difference from mean,,,Food Systems,41
+80,Food Systems,"Grocery Store Rate per 10,000 Residents",CPA,Keep,Food Systems,,8,,Food Environment,1.2,Difference from mean,,,Food Systems,42
+81,Food Systems,Neighborhood Food Sources ,CPA,Keep,Food Systems,,8,,Food Environment,1.3,Difference from mean,,,,
+84,Food Systems,"Rate of Fast Food Restaurants per 10,000 Residents",CPA,Keep,Food Systems,,8,,Food Environment,1.4,Difference from mean,,,Food Systems,43
+90,Food Systems,Percentage of Households that are CalFresh Recipients,CPA,Keep,Food Systems,,8,,Food Environment,1.5,Difference from mean,,,Food Systems,44
+87,Food Systems,"Off-Sale Liquor License Rate per 10,000 Residents",CPA,Keep,Food Systems,,8,,Food Environment,1.6,Difference from mean,,,Food Systems,45
+88,Food Systems,"On-Sale Liquor License Rate per 10,000 Residents",CPA,Keep,Food Systems,,8,,Food Environment,1.7,Difference from mean,,,Food Systems,46
+82,Food Systems,Percentage of Adults Who Reported that Accessing Fresh Produce (Fruits and Vegetables) was Very or Somewhat Easy,HD,Keep,Food Systems,Adults who reported easy access to fresh produce,8,,Food Behavior,2.1,Bar,,,,
+83,Food Systems,Percentage of Adults Who Reported Having Eaten Five or More Servings of Fruits or Vegetables in the Past Day,HD,Keep,Food Systems,Adults who reported eating five or more servings of fruit in the last day,8,,Food Behavior,2.2,Bar,,,,
+86,Food Systems,Percentage of Children Who Consumed Fast Food At Least Once a Week,HD,Keep,Food Systems,Children who ate fast food at least once a weekly,8,,Food Behavior,3.1,Bar,,,,
+85,Food Systems,Percentage of Adults Who Reported Consuming Fast Food at Least Once a Week,HD,Keep,Food Systems,Adults who ate fast food at least once a weekly,8,,Food Behavior,3.2,Bar,,,,
+93,Crime,"Violent Crime Rate per 1,000 Residents (6-Month Rate, April to September 2012)",CPA,Keep,Crime,,9,,Crime Summary,1.1,Difference from mean,,,Crime,47
+94,Crime,"Property Crime Rate per 1,000 Residents (6-Month Rate, April to September 2012)",CPA,Keep,Crime,,9,,Crime Summary,1.2,Difference from mean,,,Crime,48
+92,Crime,"Crime Rate for All Part I Offences per 1,000 Residents (6-Month Rate, April to September 2012)",CPA,Keep,Crime,,9,,Crime Summary,1.3,Difference from mean,,,Crime,49
+97,Crime,"Average Annual Mortality Rate for Homicide per 100,000 Residents",ZipCode,Keep,Crime,,9,,Crime Health,2.1,Bar,,,,
+96,Crime,"Average Annual Emergency Department Visit Rate for Assault per 100,000 Residents",ZipCode,Keep,Crime,,9,,Crime Health,2.2,Bar,,,,
+103,Housing,Percentage of Households Paying More than 30% of Income on Housing Costs,CPA,Keep,Housing,,10,,Housing cost,1,Header stat ,,,Housing,50
+98,Housing,Residential Density,CPA,Keep,Housing,,10,,General housing,2.1,Difference from mean,,,Housing,51
+99,Housing,Housing Diversity,CPA,Keep,Housing,,10,,General housing,2.2,Difference from mean,,,Housing,52
+100,Housing,Percentage of Renter-Occupied Housing Units,CPA,Keep,Housing,,10,,General housing,2.3,Difference from mean,,,Housing,53
+101,Housing,Percentage of Housing Units with 1 or More than Persons per Room,CPA,Keep,Housing,,10,,General housing,2.4,Difference from mean,,,Housing,54
+102,Housing,Percentage of Housing Units with 1.5 or More Persons per Room,CPA,Keep,Housing,,10,,General housing,2.5,Difference from mean,,,Housing,55
+119,Housing,Percentage of Homeless Population by City Council District,CD,Add,Housing,,10,,Homelessness,3,Pie Chart?,,,,
+109,Environmental Health,Pollution Burden Index,ZipCode,Keep,Environmental Health,,11,,EH Summary,1.1,Bar,,,,
+108,Environmental Health,Environmental Effects,ZipCode,Keep,Environmental Health,,11,,EH Summary,1.2,Bar,,,,
+107,Environmental Health,Pollution Exposure Score,ZipCode,Keep,Environmental Health,,11,,EH Summary,1.3,Bar,,,,
