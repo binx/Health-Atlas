@@ -32,7 +32,7 @@
     </body>
     <script type="text/javascript">
         var specialRows = ["DataSource","Description","MinimumValue","MaximumValue","AverageValue","GeographicScale","AveValueGeo"];
-        var colors = ["#F8F400","#D76F00","#6F0062","#808181","#00C6C5","#3CC758","#AC7A4D"],
+        var colors = ["#69BA0F","#45C0E7","#F5AC2D","#BE87A1","#DB3C00","#F5D700","#AC7A4D"],
             quartileColors = ["#EC8E4F","#FFD5B6","#D4DCCF","#A4DFD0","#4DC9D2"];
         var graphs = d3.select("#graphs"),
             map = d3.select("#map"),
@@ -804,9 +804,9 @@
 
         function colorData(val, avg, min, max) {
             if (val > avg) {
-                var colorScale = d3.scale.linear().domain([avg,max]).range(["#D4DCCF","#FF885B"]);
+                var colorScale = d3.scale.linear().domain([avg,max]).range(["#D4DCCF","#EC8E4F"]);
             } else {
-                var colorScale = d3.scale.linear().domain([min,avg]).range(["#64E0E5","#D4DCCF"]);
+                var colorScale = d3.scale.linear().domain([min,avg]).range(["#4DC9D2","#D4DCCF"]);
             }
             return colorScale(val);
         }
