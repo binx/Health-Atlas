@@ -401,7 +401,8 @@
                 var chart = wrapper.append("div").attr("class","bubble b-"+i)
                                 .style("width",Math.min((100/data.length), 33) + "%");
                 chart.append("div").attr("class","bubble-wrapper");
-                chart.append("div").attr("class","desc").text(datum.key);
+                console.log(areaData[source]["ShortLabel"])
+                chart.append("div").attr("class","desc").text(areaData[source]["ShortLabel"][datum.key]);
             });
             updateBubbles(data, source, wrapper);
         }
@@ -449,12 +450,12 @@
                 div.append("div").attr("class","axis")
                     .style("width","2px").style("height",chartHeight+"px");
                 if (showAvg) {
-                    chart.insert("h2",".graph-object").text(datum.key);
+                    chart.insert("h2",".graph-object").text(areaData[source]["ShortLabel"][datum.key]);
                     div.append("div").attr("class","avg-annotation")
                         .html("LA City average:<br>"+formatNumber(data[0].obj[0].format, datum.avg)+" "+(annotation ? annotation : ""))
                         .style("top",function(d){ return chartHeight - barScale(datum.avg) - 12 + "px"; });
                 } else 
-                    chart.append("div").attr("class","title").text(datum.key);
+                    chart.append("div").attr("class","title").text(areaData[source]["ShortLabel"][datum.key]);
 
                 if (showLabels) {
                     chart.append("div").attr("class","place-labels");
@@ -552,10 +553,10 @@
                 numBoxes++;
             }
 
-            types.forEach(function(land,i){
+            types.forEach(function(attr,i){
                 var li = key.append("li").attr("class","l-"+i);
                     li.append("div").attr("class","key-color").style("background-color",colors[i]);
-                    li.append("span").attr("class","title").html(land + " <span class='num'></span>");
+                    li.append("span").attr("class","title").html(areaData["CPA"]["ShortLabel"][attr] + " <span class='num'></span>");
             });
 
             updateWaffle(data, descriptions, types, div);
@@ -648,7 +649,7 @@
                 personScale = d3.scale.linear().domain([0,1]).range([9,400]),
                 imgWidth = 9;
 
-                iso.append("div").attr("class","title").text(attr);
+                iso.append("div").attr("class","title").text(areaData["CPA"]["ShortLabel"][attr]);
                 var graph = iso.append("div").attr("class","iso-graph");
 
                 var val = graph.append("div").attr("class","iso-line value v-"+i);
@@ -701,7 +702,7 @@
             g.append("div").attr("class","avg-label").text("avg");
             var l = g.append("div").attr("class","leafs");
                 l.append("div").attr("class","stem").style("left",Math.floor(divWidth/2)+"px");
-            g.append("div").attr("class","title").text(function(d){ return d.key });
+            g.append("div").attr("class","title").text(function(d){ return areaData[source]["ShortLabel"][d.key] });
 
             updateMultiStem(data, source, div);
         }
@@ -783,7 +784,7 @@
                 
                 var format = val[attr+"-FORMAT"];
                 var textDisplay = formatNumber(format, val[attr]);
-                stem.select(".t-"+i).html("<span>" +textDisplay +"</span> "+ attr )
+                stem.select(".t-"+i).html("<span>" +textDisplay +"</span> "+ areaData["CPA"]["ShortLabel"][attr] )
                     .on("click",function(d){ showTooltip(attr, [{"place":areaName, "data":val[attr]}], "CPA"); });
 
                 var leafMaxWidth = 50,
@@ -808,7 +809,7 @@
 
         function drawThermometer(attr, val, min, max, format, div, showNumber, wordDesc) {
             var therm = div.selectAll(".thermometer")
-                .data(["ok"]).enter()
+                .data([val]).enter()
                 .append("div").attr("class",wordDesc ? "thermometer words" : "thermometer");
 
             var thermHeight = 15,

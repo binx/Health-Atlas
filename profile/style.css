@@ -295,9 +295,8 @@ body {
     margin-bottom: 50px;
 }
 .bubble .desc {
-    padding: 0 20px;
+    padding: 0 20px 0 0;
     box-sizing: border-box;
-    text-align: left;
 }
 .bubble-wrapper {
     margin: 0 auto;
