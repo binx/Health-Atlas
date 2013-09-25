@@ -7,6 +7,10 @@
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
     <body>
+    <header>
+		<img id="tab" src="img/HealthyLAtab.png" alt="Healthy LA" height="45" width="98">
+		<h1>HEALTH PROFILES</h1>
+    </header>
         <div id="map">
             <h1></h1>
             <div id="color-key">
@@ -71,7 +75,7 @@
                     //organizing by subject heading, then adding graphs one by one
                     headings.forEach(function(s){
                         var section = graphs.append("div").attr("class","section");
-                        section.append("h2").html("<span>+</span> "+s.key);
+                        section.append("h2").html("<span></span> "+s.key);
                         var div = section.append("div").attr("class","graph-names").style("display","none");
 
                         s.values.forEach(function(graph){
@@ -93,14 +97,14 @@
                     });
 
                     $("#graphs").find("h2").click(function(){
-                        var plusMinus = $(this).find("span").text() == "+" ? "-" : "+";
+                        var plusMinus = $(this).find("span").text() == "" ? "-" : "";
                         $(this).find("span").text(plusMinus);
                         var p = $(this).parent();
                         p.find(".graph-names").slideToggle();
                     });
 
                     $("#graphs").find("h3").click(function(){
-                        var plusMinus = $(this).find("span").text() == "+" ? "-" : "+";
+                        var plusMinus = $(this).find("span").text() == "" ? "-" : "";
                         $(this).find("span").text(plusMinus);
 
                         $(this).toggleClass("active");

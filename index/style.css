@@ -3,6 +3,29 @@ body {
     margin: 0;
     padding: 0;
 }
+
+header{
+position:fixed;
+top:0;
+background-color: #FFF
+height: 46px;
+}
+
+header h1{
+font-weight: 100;
+font-size: 24px;
+color: #F07221;
+margin-left: 150px;
+margin-top: 12px;
+position: fixed;
+}
+
+#tab{
+margin-left: 40px;
+margin-top: -6px;
+position: fixed;
+}
+
 #map {
     width: 500px;
     height: 95%;
@@ -10,9 +33,10 @@ body {
     border: 0px solid orange;
     margin-left: 0px;
     box-sizing: border-box;
+    margin-top: 45px;
 }
 #map h1 {
-    text-align: left;
+    text-align: center;
     font-size: 20px;
     padding: 0 20px;
     left: 0px;
@@ -80,7 +104,7 @@ body {
 #annotation {
     position: absolute;
     bottom: 0;
-    padding: 10px;
+    padding: 24px;
     z-index: 1;
     background: rgba(255,255,255,.5);
 }
@@ -152,9 +176,10 @@ body {
     float: right;
     margin-right: 5%;
     position: relative;
-    margin-top: 36px;
+    margin-top: 72px;
     margin-bottom: 48px;
     padding-left: 25px;
+    
 
 }
 #graphs .graph {
