@@ -60,8 +60,11 @@
 
         d3.json("geo_data/profile.json",function(json){
             layoutData = json.data;
+   			var i=0;
             json.data.forEach(function(v){
-                var div = graphs.append("div").attr("class","section");
+             	i++;
+				var category ="section-"+i;
+                var div = graphs.append("div").attr("class",category);
                 div.append("h1").text(v.key);
                 var graphWrapper = div.append("div").attr("class","graph-wrapper");
 

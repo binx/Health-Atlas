@@ -43,8 +43,8 @@
     <script type="text/javascript">
         var specialRows = ["Source","Date","ShortLabel","DataSource","Description","MinimumValue","MaximumValue","AverageValue","GeographicScale","AveValueGeo"];
         var exclueRows = ["Area Name","Type","Specific area"];
-		var selectColor = "#D32FFF";
-		var highlightColor = "#42A200";
+		var selectColor = "#5C8385";
+		var highlightColor = "#FF5E85";
         var collection, descObj, sourceObj;
         var selectedArea = null,
         mostRecentAttr = "Total Population",
@@ -71,11 +71,12 @@
                         // return d["Chrolopleth Map Cat"];
                         return d["Health Atlas Section"];
                     }).entries(order);
-
+					var i = 0;
                     //organizing by subject heading, then adding graphs one by one
                     headings.forEach(function(s){
+                        i++
                         var section = graphs.append("div").attr("class","section");
-                        section.append("h2").html("<span></span> "+s.key);
+                        section.append("h2").html("<img src='img/category-icons/categoryicons-"+i+".png'>"+s.key);
                         var div = section.append("div").attr("class","graph-names").style("display","none");
 
                         s.values.forEach(function(graph){
@@ -141,7 +142,7 @@
                     d.placeName = getClassName(d.properties.NAME_ALF);
                     return d.placeName;
                 }).on("mouseenter",function(d){
-                    var strokeColor = (selectedArea && selectedArea != d.placeName) ? selectColor : highlightColor;
+                    var strokeColor = (selectedArea && selectedArea != d.placeName) ? highlightColor: selectColor ;
 
                     var nameDiv = (selectedArea && selectedArea != d.placeName) ? "hovered" : "selected";
                     setAnnotation(nameDiv, d.properties.NAME_ALF, metaData[d.properties.NAME_ALF][mostRecentAttr+
@@ -277,9 +278,9 @@
                 });
                 map.select("."+d.placeName).attr("stroke",function(d){
                     if (selectedArea && d.placeName != selectedArea)
-                        return "#33B333"
+                        return highlightColor
                     else 
-                        return "#45A3FF";
+                        return selectColor;
                 });
 
                 var parentDiv = (selectedArea && selectedArea != d.placeName) ? "hovered" : "selected";
@@ -344,7 +345,7 @@
                 var t = d3.select(this);
 
                 if (t.attr("class") == p) {
-                    t.select("rect").attr("stroke",(selectedArea && d.placeName != selectedArea) ? highlightColor : selectColor).attr("stroke-width",2);
+                    t.select("rect").attr("stroke",(selectedArea && d.placeName != selectedArea) ? highlightColor  : selectColor ).attr("stroke-width",2);
                     t.select("text").style("display","block");
 
                 } else if (t.attr("class") == selectedArea) {

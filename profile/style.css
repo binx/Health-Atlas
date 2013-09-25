@@ -117,17 +117,72 @@ body {
 .section {
     clear: both;
 }
+
+.section-1 {
+    clear: both;
+	background-repeat: no-repeat;
+    background-image: url(img/category-icons/categoryicons-1.png);
+}
+.section-2 {
+    clear: both;
+	background-repeat: no-repeat;
+    background-image: url(img/category-icons/categoryicons-2.png);
+}
+.section-3 {
+    clear: both;
+	background-repeat: no-repeat;
+    background-image: url(img/category-icons/categoryicons-3.png);
+}
+.section-4 {
+    clear: both;	
+    background-repeat: no-repeat;
+    background-image: url(img/category-icons/categoryicons-4.png);
+}
+.section-5 {
+    clear: both;
+	background-repeat: no-repeat;
+    background-image: url(img/category-icons/categoryicons-5.png);
+}
+.section-6 {
+    clear: both;
+	background-repeat: no-repeat;
+    background-image: url(img/category-icons/categoryicons-6.png);
+}
+.section-7 {
+    clear: both;
+	background-repeat: no-repeat;
+    background-image: url(img/category-icons/categoryicons-7.png);
+}
+.section-8 {
+    clear: both;
+	background-repeat: no-repeat;
+    background-image: url(img/category-icons/categoryicons-8.png);
+}
+.section-9 {
+    clear: both;
+	background-repeat: no-repeat;
+    background-image: url(img/category-icons/categoryicons-9.png);
+}
+.section-10 {
+    clear: both;
+   	background-repeat: no-repeat;
+    background-image: url(img/category-icons/categoryicons-10.png);
+}
+
 .graph-wrapper {
     padding-bottom: 24px;
 }
 
-.section h1 {
+#graphs h1 {
     border-bottom: 1px solid black;
     font-style: normal;
     font-weight:400;
     text-transform:uppercase;
     font-size: 18px;
     cursor: pointer;
+    margin-left:44px;
+    line-height: 36px;    
+    vertical-align: top;
 }
     
 #tooltip {
