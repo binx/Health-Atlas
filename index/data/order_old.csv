@@ -1,0 +1,57 @@
+ID,Health Atlas Section,IndicatorName,GeographicScale,Chrolopleth Map Cat,Chrolopeth Map Order
+1,Demographic and Social Characteristics,Total Population,CPA,Demographics,0
+120,Demographic and Social Characteristics,Percentage of Total Population,CPA,Demographics,1
+4,Demographic and Social Characteristics,Percentage of Population Under Age 5 ,CPA,Demographics,2
+6,Demographic and Social Characteristics,Percentage of Population Under Age 18,CPA,Demographics,3
+8,Demographic and Social Characteristics,Percentage of Population Over Age 65,CPA,Demographics,4
+112,Demographic and Social Characteristics,Percentage White Alone Population,CPA,Demographics,5
+116,Demographic and Social Characteristics,Percentage Latino Alone Population ,CPA,Demographics,6
+113,Demographic and Social Characteristics,Percentage American American Alone Population,CPA,Demographics,7
+114,Demographic and Social Characteristics,Percentage Asian American Alone Population,CPA,Demographics,8
+115,Demographic and Social Characteristics,Percentage Native American Alone Population,CPA,Demographics,9
+117,Demographic and Social Characteristics,Percentage Native Hawaiian and Other Pacific Islander alone Population,CPA,Demographics,10
+118,Demographic and Social Characteristics,Percentage Other Population,CPA,Demographics,11
+12,Demographic and Social Characteristics,Percentage of Linguistically-Isolated Households,CPA,Demographics,12
+13,Economic Conditions,Hardship Index,CPA,Economic Conditions,13
+14,Economic Conditions,Per Capita Income ,CPA,Economic Conditions,14
+17,Economic Conditions,Percentage of Population below the Federal Poverty Level ,CPA,Economic Conditions,15
+15,Economic Conditions,Percentage of Unemployed Workers Age 16 and Over ,CPA,Economic Conditions,16
+19,Economic Conditions,Percentage of Population 200% below the Federal Poverty Level ,CPA,Economic Conditions,17
+110,Economic Conditions,Percentage of Population living in extreme poverty neighborhoods ,CPA,Economic Conditions,18
+21,Education,Percentage of Population Age 25 and Over that Did Not Graduate from High School ,CPA,Education,19
+22,Education,Percentage of Population Age 25 and Over that Graduated from High School ,CPA,Education,20
+23,Education,Percentage of Population Age 25 and Over with a Bachelor's Degree or Higher ,CPA,Education,21
+50,Health Conditions,Prevalence of Childhood Obesity,CPA,Health,22
+54,Health Conditions,Health Professional Shortage Areas,CPA,Health,23
+57,Land Use,Land Use Mix,CPA,Land use ,26
+58,Land Use,Land Use Diversity,CPA,Land use ,27
+56,Land Use,Intersection Density,CPA,Land use ,28
+65,Land Use,"Park Level of Service (Acres per 1,000 Residents)",CPA,Land use ,29
+66,Land Use,Percentage of the Population within One-Half Mile Walking Distance of a Park,CPA,Land use ,30
+2,Demographic and Social Characteristics,Population per Square Mile,CPA,Land use ,24
+67,Land Use,Employment Density,CPA,Land use ,25
+74,Transportation,Percentage of Households without Access to a Vehicle,CPA,Transportation,31
+68,Transportation,Percentage of Commuters Driving Alone to Work,CPA,Transportation,32
+69,Transportation,Percentage of Commuters Carpooling to Work,CPA,Transportation,33
+70,Transportation,Percentage of Commuters Taking Public Transportation to Work,CPA,Transportation,34
+71,Transportation,Percentage of Commuters Walking to Work,CPA,Transportation,35
+72,Transportation,Percentage of Commuters Biking to Work,CPA,Transportation,36
+76,Transportation,"Average Annual Rate of Motor Vehicle Collisions with Pedestrians per 10,000 Residents",CPA,Transportation,37
+77,Transportation,"Average Annual Rate of Motor Vehicle Collisions with Bicyclists per 10,000 Residents",CPA,Transportation,38
+78,Transportation,"Average Annual Rate of Motor Vehicle Collisions with Pedestrians and Bicyclists with Children within ½ Mile of a School per 10,000 Children",CPA,Transportation,39
+89,Food Systems,"Average Annual Rate of Motor Vehicle Collisions Involving Alcohol per 10,000 Residents",CPA,Transportation,40
+79,Food Systems,Modified Retail Food Environment Index,CPA,Food Systems,41
+80,Food Systems,"Grocery Store Rate per 10,000 Residents",CPA,Food Systems,42
+84,Food Systems,"Rate of Fast Food Restaurants per 10,000 Residents",CPA,Food Systems,43
+90,Food Systems,Percentage of Households that are CalFresh Recipients,CPA,Food Systems,44
+87,Food Systems,"Off-Sale Liquor License Rate per 10,000 Residents",CPA,Food Systems,45
+88,Food Systems,"On-Sale Liquor License Rate per 10,000 Residents",CPA,Food Systems,46
+93,Crime,"Violent Crime Rate per 1,000 Residents (6-Month Rate, April to September 2012)",CPA,Crime,47
+94,Crime,"Property Crime Rate per 1,000 Residents (6-Month Rate, April to September 2012)",CPA,Crime,48
+92,Crime,"Crime Rate for All Part I Offences per 1,000 Residents (6-Month Rate, April to September 2012)",CPA,Crime,49
+103,Housing,Percentage of Households Paying More than 30% of Income on Housing Costs,CPA,Housing,50
+98,Housing,Residential Density,CPA,Housing,51
+99,Housing,Housing Diversity,CPA,Housing,52
+100,Housing,Percentage of Renter-Occupied Housing Units,CPA,Housing,53
+101,Housing,Percentage of Housing Units with 1 or More than Persons per Room,CPA,Housing,54
+102,Housing,Percentage of Housing Units with 1.5 or More Persons per Room,CPA,Housing,55

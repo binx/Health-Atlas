@@ -37,7 +37,7 @@
         </div>
     </body>
     <script type="text/javascript">
-        var specialRows = ["DataSource","Description","MinimumValue","MaximumValue","AverageValue","GeographicScale","AveValueGeo"];
+        var specialRows = ["Source","Date","ShortLabel","DataSource","Description","MinimumValue","MaximumValue","AverageValue","GeographicScale","AveValueGeo"];
         var exclueRows = ["Area Name","Type","Specific area"];
 
         var collection, descObj, sourceObj;
@@ -63,7 +63,8 @@
 
                 d3.csv("data/order.csv",function(order){
                     var headings = d3.nest().key(function(d){
-                        return d["Chrolopleth Map Cat"];
+                        // return d["Chrolopleth Map Cat"];
+                        return d["Health Atlas Section"];
                     }).entries(order);
 
                     //organizing by subject heading, then adding graphs one by one
@@ -79,7 +80,7 @@
                                 return {
                                     "Area Name" : d["Area Name"],
                                     "attr" : attr,
-                                    "val" : d[attr],
+                                    "val" : parseFloat(d[attr]),
                                     "format" : d[attr+"-FORMAT"]
                                 }
                             });
@@ -202,10 +203,11 @@
         }
 
         function formatNumber(format, num) {
-            if (format == "number")
-                return num.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
-            else if (format == "percentage")
+            if (format == " Integer " || format == " Rate ")
+                return String(num).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+            else if (format == " Percent ")
                 return (num*100).toFixed(0) + "%";
+            return num;
         }
 
         function getClassName(n) {
@@ -226,6 +228,7 @@
                 colorizeMap(masterData[mostRecentAttr],mostRecentAttr);
             });
 
+            console.log(attr)
             div.append("h3").data([attr]).html("<span>+</span> "+attr);
 
             var svg = div.append("svg").attr("height",graphHeight).attr("width","95%").style("display","none");

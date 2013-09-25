@@ -46,7 +46,7 @@
         <div id="graphs"></div>
     </body>
     <script type="text/javascript">
-        var specialRows = ["DataSource","Description","MinimumValue","MaximumValue","AverageValue","GeographicScale","AveValueGeo"];
+        var specialRows = ["DataSource","Description","MinimumValue","MaximumValue","AverageValue","GeographicScale","AveValueGeo","ShortLabel","Source","Date"];
         var colors = ["#69BA0F","#45C0E7","#F5AC2D","#BE87A1","#DB3C00","#F5D700","#AC7A4D"],
             quartileColors = ["#F07221","#E19A79","#c7cccf","#89BBD3","#55A4DB"];
         var graphs = d3.select("#graphs"),
@@ -58,7 +58,7 @@
 
         var layoutData;
 
-        d3.json("data/profile.json",function(json){
+        d3.json("geo_data/profile.json",function(json){
             layoutData = json.data;
             json.data.forEach(function(v){
                 var div = graphs.append("div").attr("class","section");
@@ -287,7 +287,7 @@
         }
 
         function loadMap() {
-            d3.json("data/map.json",function(collection){
+            d3.json("geo_data/map.json",function(collection){
                 mapData["CPA"] = collection;
                 map.select("svg").attr("width","200").attr("height","300").append("g");
                 loadMapData(collection, areaName, "CPA");
@@ -472,7 +472,7 @@
                 if (source in mapData) 
                     loadMapData(mapData[source], places, source);
                 else
-                    d3.json("data/"+source+"_small.json",function(collection){
+                    d3.json("geo_data/"+source+"_small.json",function(collection){
                         mapData[source] = collection;
                         loadMapData(collection, places, source);
                     });
