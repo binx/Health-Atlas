@@ -39,7 +39,8 @@
     <script type="text/javascript">
         var specialRows = ["Source","Date","ShortLabel","DataSource","Description","MinimumValue","MaximumValue","AverageValue","GeographicScale","AveValueGeo"];
         var exclueRows = ["Area Name","Type","Specific area"];
-
+		var selectColor = "#D32FFF";
+		var highlightColor = "#42A200";
         var collection, descObj, sourceObj;
         var selectedArea = null,
         mostRecentAttr = "Total Population",
@@ -136,7 +137,7 @@
                     d.placeName = getClassName(d.properties.NAME_ALF);
                     return d.placeName;
                 }).on("mouseenter",function(d){
-                    var strokeColor = (selectedArea && selectedArea != d.placeName) ? "#33B333" : "#45A3FF";
+                    var strokeColor = (selectedArea && selectedArea != d.placeName) ? selectColor : highlightColor;
 
                     var nameDiv = (selectedArea && selectedArea != d.placeName) ? "hovered" : "selected";
                     setAnnotation(nameDiv, d.properties.NAME_ALF, metaData[d.properties.NAME_ALF][mostRecentAttr+
@@ -310,12 +311,12 @@
         function highlightArea(p) {
             map.selectAll("path").attr("stroke","none");
             // map.selectAll("path").attr("fill",function(d){ return d.color; });
-            map.select("."+p).attr("stroke","#45A3FF");
+            map.select("."+p).attr("stroke",selectColor);
         }
 
         function resetAreas() {
             map.selectAll("path").attr("stroke",function(d){
-                if (d.placeName == selectedArea) return "#45A3FF";
+                if (d.placeName == selectedArea) return selectColor;
                 return "none";
             });
             if (!selectedArea) {
@@ -339,11 +340,11 @@
                 var t = d3.select(this);
 
                 if (t.attr("class") == p) {
-                    t.select("rect").attr("stroke",(selectedArea && d.placeName != selectedArea) ? "#33B333" : "#45A3FF").attr("stroke-width",2);
+                    t.select("rect").attr("stroke",(selectedArea && d.placeName != selectedArea) ? highlightColor : selectColor).attr("stroke-width",2);
                     t.select("text").style("display","block");
 
                 } else if (t.attr("class") == selectedArea) {
-                    t.select("rect").attr("stroke","#45A3FF");
+                    t.select("rect").attr("stroke", selectColor);
                     t.select("text").style("display","block");
 
                 } else {
@@ -357,7 +358,7 @@
             graphs.selectAll("text")
                 .style("display",function(d){ return (d.placeName == selectedArea) ? "block" : "none"; });
             graphs.selectAll("rect")
-                .attr("stroke",function(d){ return (d.placeName == selectedArea) ? "#45A3FF" : "none"; });
+                .attr("stroke",function(d){ return (d.placeName == selectedArea) ? selectColor : "none"; });
         }
 
         function colorData(val, avg, min, max) {

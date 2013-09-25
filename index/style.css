@@ -4,7 +4,7 @@ body {
     padding: 0;
 }
 #map {
-    width: 400px;
+    width: 500px;
     height: 95%;
     position: fixed;
     border: 0px solid orange;
@@ -98,15 +98,13 @@ body {
     position: absolute;
     left: 10px;
     width: 300px;
-    z-index: 1;
-    background-color: rgba(255,255,255,.5);
 }
 #map #selected-name {
-    color: #45A3FF;
+    color: #D32FFF;
     top: 500px;
 }
 #map #hovered-name {
-    color: #33B333;
+    color: #42A200;
     top: 550px;
 }
 #map #hovered-name .place,
@@ -156,7 +154,7 @@ body {
     position: relative;
     margin-top: 36px;
     margin-bottom: 48px;
-    margin-right: 0;
+    padding-left: 25px;
 
 }
 #graphs .graph {

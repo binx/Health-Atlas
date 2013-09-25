@@ -2,7 +2,7 @@ body {
     font-family: Gotham,  Helvetica;
 }
 #map {
-    width: 500px;
+    width: 400px;
     float: left;
     position: fixed;
 }
@@ -31,7 +31,7 @@ body {
 #pop-stats {
     position: absolute;
     top: 50px;
-    left: 300px;
+    left: 250px;
 }
 #pop-stats h3 {
     font-weight: normal;
@@ -105,15 +105,14 @@ body {
 }
 
 #graphs {
-    width: 60%;
-    background-color: #FFF;
-    border-left: 0px solid black;
-    padding-left: 0px;
+        width: 60%;
+    float: right;
+    margin-right: 5%;
+    position: relative;
     margin-top: 36px;
     margin-bottom: 48px;
-    box-sizing: border-box;
-    position: absolute;
-    right: 0;
+    padding-left: 25px;
+    
 }
 .section {
     clear: both;
