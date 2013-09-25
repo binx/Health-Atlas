@@ -348,7 +348,7 @@
             function nameMapSource(source) {
                 switch (source) {
                     case "CPA":
-                        return "Community Planning Arae";
+                        return "Community Planning Area";
                         break;
                     case "CD": 
                         return "Council District";
@@ -530,11 +530,12 @@
                     .style("top",chartHeight+"px")
                     .remove();
 
-                bars.transition().duration(1000)
+                bars.each(function(d){ if (d.data == -9999) d.null = true; })
+                    .transition().duration(1000)
                     .style("width",barWidth+"px")
-                    .style("height",function(d){ return barScale(d.data) + "px"; })
+                    .style("height",function(d){ return d.null ? "0px" : barScale(d.data) + "px"; })
                     .style("left",function(d,i){ return i*(barWidth+barPadding) + barPadding/2 + "px"; })
-                    .style("top",function(d){ return chartHeight - barScale(d.data) + "px"; })
+                    .style("top",function(d){ return d.null ? chartHeight + "px" : chartHeight - barScale(d.data) + "px"; })
                     .style("background-color",function(d){ return colorData(d.data, datum.avg, datum.min, datum.max); });
 
                 if (showLabels) {
@@ -625,7 +626,7 @@
 
             svg.append("circle").attr("r",circRadius)
                 .attr("cx",pieSize/2).attr("cy",pieSize/2)
-                .attr("fill","#ddd");
+                .attr("fill","#eee");
 
             svg.append("path").attr("class","pieData")
                 .attr("transform","translate("+pieSize/2+","+pieSize/2+")");
@@ -754,13 +755,15 @@
 
                 leafs.transition().duration(1000)
                 .style("width",function(d){
+                    if (d.data == -9999) d.null = true;
                     d.diff = Math.floor(barScale(datum.avg) - barScale(d.data));
-                    return Math.abs(d.diff) + "px";
+                    return d.null ? "0px" : Math.abs(d.diff) + "px";
                 }).style("background-color",function(d){
                     return colorData(d.data, datum.avg, datum.min, datum.max);
                 }).style("left",function(d){
+                    if (d.null) console.log(datum.key, d.data)
                     var neg = (d.diff < 0) ? true : false;
-                    return divWidth/2 + (neg ? 2 : -d.diff) + "px";  
+                    return d.null ? "0px" : divWidth/2 + (neg ? 2 : -d.diff) + "px";  
                 }).style("top",function(d,i){ return i*leafHeight + 5 + "px"});
 
                 wrapper.on("click",function(d){ showTooltip(datum.key, datum.obj, source); });
