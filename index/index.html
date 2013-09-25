@@ -211,6 +211,8 @@
         function formatNumber(format, num) {
             if (format == " Integer " || format == " Rate ")
                 return String(num).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+            else if (format == " Dollar ")
+                return "$"+String(num).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
             else if (format == " Percent ")
                 return (num*100).toFixed(0) + "%";
             return num;
@@ -234,7 +236,6 @@
                 colorizeMap(masterData[mostRecentAttr],mostRecentAttr);
             });
 
-            console.log(attr)
             div.append("h3").data([attr]).html("<span>+</span> "+attr);
 
             var svg = div.append("svg").attr("height",graphHeight).attr("width","95%").style("display","none");

@@ -298,7 +298,7 @@
         }
 
         function loadMapData(collection, places, source) {
-            map.select("#map-annotation").text(source);
+            map.select("#map-annotation").text(nameMapSource(source));
             var svg = map.select("svg g")
             var projection = d3.geo.albers().scale(25000)
                 .translate([160, 140])
@@ -342,6 +342,25 @@
                         break;
                     case "ZIP":
                         return "ZIPCODE";
+                        break;
+                }
+            }
+            function nameMapSource(source) {
+                switch (source) {
+                    case "CPA":
+                        return "Community Planning Arae";
+                        break;
+                    case "CD": 
+                        return "Council District";
+                        break;
+                    case "HD":
+                        return "HD";
+                        break;
+                    case "PUMA":
+                        return "PUMA";
+                        break;
+                    case "ZIP":
+                        return "Zipcode";
                         break;
                 }
             }
