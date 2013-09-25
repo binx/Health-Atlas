@@ -4,23 +4,79 @@ body {
     padding: 0;
 }
 #map {
-    width: 500px;
+    width: 400px;
     height: 95%;
     position: fixed;
     border: 0px solid orange;
-    margin: 2.5%;
+    margin-left: 0px;
     box-sizing: border-box;
 }
 #map h1 {
-    text-align: center;
+    text-align: left;
     font-size: 20px;
     padding: 0 20px;
+    left: 0px;
 }
 #map svg {
     position: absolute;
     top: 75px;
     left: 50px;
 }
+
+#color-key {
+    position: absolute;
+    top: 370px;
+    left: 20px;
+    width: 30%;
+}
+#color-key .title {
+    text-transform: uppercase;
+    font-size: 12px;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+#color-key .color-bar {
+    height: 15px;
+    width: 100%;
+    position: absolute;
+    top: 15px;
+    background: #23a7f9; /* Old browsers */
+    background: -moz-linear-gradient(left,  #55A4DB 0%, #c7cccf 50%, #c7cccf 51%, #F07221 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right top, color-stop(0%,#23a7f9), color-stop(50%,#c7cccf), color-stop(51%,#c7cccf), color-stop(100%,#ff6733)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(left,  #55A4DB 0%,#c7cccf 50%,#c7cccf 51%,#F07221 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(left,  #55A4DB 0%,#c7cccf 50%,#c7cccf 51%,#F07221 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(left,  #55A4DB 0%,#c7cccf 50%,#c7cccf 51%,#F07221 100%); /* IE10+ */
+    background: linear-gradient(to right,  #55A4DB 0%,#c7cccf 50%,#c7cccf 51%,#F07221 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#55A4DB', endColorstr='#F07221',GradientType=1 ); /* IE6-9 */
+}
+#color-key .avg-bar {
+    width: 2px;
+    height: 18px;
+    position: absolute;
+    left: 50%;
+    top: 15px;
+    background-color: #00C04A;
+}
+#color-key .labels {
+    position: absolute;
+    top: 35px;
+    width: 100%;
+    font-style: italic;
+    font-size: 10px;
+}
+#color-key .low {
+    position: absolute;
+}
+#color-key .high {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+#color-key .avg {
+    text-align: center;
+    color: #00C04A;
+}
+
 #annotation {
     position: absolute;
     bottom: 0;
@@ -92,26 +148,28 @@ body {
   
 }
 #graphs {
-    width: 55%;
+    width: 60%;
     float: right;
     margin-right: 5%;
     position: relative;
     margin-top: 36px;
     margin-bottom: 48px;
+    margin-right: 0;
+
 }
 #graphs .graph {
-    background-color: #DBF2EC;
+    background-color: #F0F0F0;
     padding: 3px 5px;
 }
 #graphs .graph:nth-child(odd) {
-    background-color: #FAF3E9;
+    background-color: #FFFFFF;
 }
 #graphs h2 {
-    color: #0088FF;
-    text-transform: uppercase;
+    border-bottom: 1px solid black;
+    font-style: normal;
+    font-weight:400;
+    text-transform:uppercase;
     font-size: 18px;
-    margin: 5px 0;
-    font-weight: normal;
     cursor: pointer;
 }
 #graphs h3 {

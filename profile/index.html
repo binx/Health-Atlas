@@ -18,8 +18,8 @@
                 <p class="pop-under-5">under 5 <span></span></p>
                 <p class="pop-under-18">under 18 <span></span></p>
                 <p class="pop-over-65">over 65 <span></span></p>
-
-                <p class="pop-non-white" style="margin-top: 15px">non-white: <span></span></p>
+				<h3>Race & Ethnicity</h3>
+                <p class="pop-non-white" >non-white: <span></span></p>
                 <p class="pop-isolated">linguistically isolated: <span></span></p>
             </div>
             <div id="map-annotation"></div>
@@ -48,7 +48,7 @@
     <script type="text/javascript">
         var specialRows = ["DataSource","Description","MinimumValue","MaximumValue","AverageValue","GeographicScale","AveValueGeo"];
         var colors = ["#69BA0F","#45C0E7","#F5AC2D","#BE87A1","#DB3C00","#F5D700","#AC7A4D"],
-            quartileColors = ["#EC8E4F","#FFD5B6","#D4DCCF","#A4DFD0","#4DC9D2"];
+            quartileColors = ["#F07221","#E19A79","#c7cccf","#89BBD3","#55A4DB"];
         var graphs = d3.select("#graphs"),
             map = d3.select("#map"),
             tooltip = $("#tooltip"),
@@ -614,7 +614,7 @@
                 .attr("fill","#55D440");
 
             pie.append("div").attr("class","pie-avg")
-                .html("LA County<br> " + (avgValue*100).toFixed(0) + "%");
+                .html("LA City<br> " + (avgValue*100).toFixed(0) + "%");
 
             updatePie(value, avgValue, min, max, attr, div);
         }
@@ -642,7 +642,7 @@
 
             isos.each(function(attr, i){
                 var iso = d3.select(this);
-                personScale = d3.scale.linear().domain([min[attr],max[attr]]).range([9,400]),
+                personScale = d3.scale.linear().domain([0,1]).range([9,400]),
                 imgWidth = 9;
 
                 iso.append("div").attr("class","title").text(attr);
@@ -667,7 +667,7 @@
                             .on("click",function(d){ showTooltip(d, [{"place":areaName, "data":valData[d]}], "CPA"); });
 
             attrs.forEach(function(attr,i){
-                var personScale = d3.scale.linear().domain([min[attr],max[attr]]).range([9,400]),
+                var personScale = d3.scale.linear().domain([0,1]).range([9,400]),
                 bg = d3.scale.linear().domain([min[attr],max[attr]]).range([1,5]);
 
                 var iso = isos.select(".v-"+i);
@@ -817,7 +817,7 @@
 
             for (var i = 0; i < 5; i++) {
                 thermWrapper.append("div").attr("class","therm-background")
-                    .style("background-color",quartileColors[i])
+                    .style("background-color",quartileColors[4-i])
                     .style("height",thermHeight + "px")
                     .style("width",thermWidth/5 + "px")
                     .style("left",(thermWidth/5)*i + "px");
@@ -866,9 +866,9 @@
 
         function colorData(val, avg, min, max) {
             if (val > avg) {
-                var colorScale = d3.scale.linear().domain([avg,max]).range(["#D4DCCF","#EC8E4F"]);
+                var colorScale = d3.scale.linear().domain([avg,max]).range(["#D4DCCF","#F07221"]);
             } else {
-                var colorScale = d3.scale.linear().domain([min,avg]).range(["#4DC9D2","#D4DCCF"]);
+                var colorScale = d3.scale.linear().domain([min,avg]).range(["#55A4DB","#D4DCCF"]);
             }
             return colorScale(val);
         }

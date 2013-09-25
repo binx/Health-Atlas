@@ -9,6 +9,16 @@
     <body>
         <div id="map">
             <h1></h1>
+            <div id="color-key">
+                <div class="title">Color Key</div>
+                <div class="color-bar"></div>
+                <div class="avg-bar" width="100%" height="20px"></div>
+                <div class="labels">
+                    <div class="low">low</div>
+                    <div class="avg">average</div>
+                    <div class="high">high</div>
+                </div>
+			</div>
             <div class="tooltip"></div>
             <div id="selected-name">
                 <span class="place"></span>
@@ -230,7 +240,7 @@
                 entering.append("rect")
             g.exit().remove();
 
-            var barScale = d3.scale.linear().domain([min,max]).range([2,barMaxHeight]);
+            var barScale = d3.scale.linear().domain([0,max]).range([2,barMaxHeight]);
 
             g.attr("transform",function(d,i){
                 return "translate("+i*(barWidth)+",0)";
@@ -349,9 +359,9 @@
 
         function colorData(val, avg, min, max) {
             if (val > avg) {
-                var colorScale = d3.scale.linear().domain([avg,max]).range(["#D4DCCF","#EC8E4F"]);
+                var colorScale = d3.scale.linear().domain([avg,max]).range(["#D4DCCF","#F07221"]);
             } else {
-                var colorScale = d3.scale.linear().domain([min,avg]).range(["#4DC9D2","#D4DCCF"]);
+                var colorScale = d3.scale.linear().domain([min,avg]).range(["#55A4DB","#D4DCCF"]);
             }
             return colorScale(val);
         }
