@@ -209,8 +209,8 @@ position: fixed;
 #graphs .graph:nth-child(odd) {
     background-color: #FFFFFF;
 }
-# graphs img{
-margin-bottom: -6px;
+#graphs img{
+    margin-bottom: -6px;
 }
 #graphs h2 {
     border-bottom: 1px solid black;
