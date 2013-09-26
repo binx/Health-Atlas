@@ -571,7 +571,7 @@
                         showTooltip(land.title, [{"place":areaName, "data":land.data, "total":totalValue}], "CPA"); 
                     }).select(".num").text("(" + p.toFixed(0) + "%)");
 
-                if (tooltipAttr == land)
+                if (tooltipAttr == land.title)
                     showTooltip(land.title, [{"place":areaName, "data":land.data, "total":totalValue}], "CPA");
             });
         }
