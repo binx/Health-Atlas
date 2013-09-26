@@ -240,7 +240,7 @@
         }
 
         function loadMap() {
-            d3.json("geo_data/map.json",function(collection){
+            d3.json("geo_data/CPA_small.json",function(collection){
                 mapData["CPA"] = collection;
                 map.select("svg").attr("width","200").attr("height","300").append("g");
                 loadMapData(collection, areaName, "CPA", null, null);
@@ -287,7 +287,7 @@
                         return "DIST";
                         break;
                     case "HD":
-                        return "Area";
+                        return "HD_NAME";
                         break;
                     case "PUMA":
                         return "NAMELSAD10";
