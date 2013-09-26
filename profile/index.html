@@ -192,13 +192,13 @@
                             updateMultiStem(dataAggregate, source, div);
                             break;
                     }
+                    updateTooltip();
                 });
             } else {
                 graphs.selectAll(".graph").each(function(d){ 
                     appendGraph(d.source, d.type, d.data, d3.select(this), (d.notes ? d.notes : ""));
                 });
             }
-            updateTooltip();
             populatePopStats();
 
             loaded = true;
@@ -240,11 +240,17 @@
             }
         }
 
+        var tooltipAttr, tooltipSource;
+
         function showTooltip(attr, data, source) {
             tooltip.find(".prompt").hide();
             tooltip.find(".avg").show();
             tooltip.find(".attr").text(attr);
 
+            tooltipAttr = attr;
+            tooltipSource = source;
+            var format = areaData[source]["AverageValue"][attr+"-FORMAT"],
+                avg = areaData[source]["AverageValue"][attr];
             var format = areaData[source]["AverageValue"][attr+"-FORMAT"],
                 avg = areaData[source]["AverageValue"][attr],
                 min = areaData[source]["MinimumValue"][attr],
@@ -260,15 +266,16 @@
             lis.select(".num").text(function(d){
                 d.attr = attr;
                 d.source = source;
+                if (d.value == -9999) d.null = true;
                 if (d.total) {
                     // calculating percentages for waffle types
                     d.value = formatNumber(" Percent ",d.data/d.total);
                 } else {
                     d.value = formatNumber(format,d.data);
                 }
-                return d.value;
+                return (d.null) ? "No Data Available" : d.value;
             }).style("color",function(d){
-                return colorData(d.data, avg, min, max);
+                return (d.null) ? "#808080" : colorData(d.data, avg, min, max);
             });
 
             if (data[0].total) {
@@ -281,7 +288,10 @@
             tooltip.find(".desc").text(areaData[source]["Description"][attr]);
         }
 
-        function updateTooltip() {
+        function updateTooltip(data) {
+            var source = tooltipSource, attr = tooltipAttr;
+
+            
             d3.selectAll(".area .num").text(function(d){
                 return formatNumber(areaData[d.source][areaName][d.attr+"-FORMAT"], areaData[d.source][areaName][d.attr])
             }).style("color",function(d){
@@ -293,11 +303,12 @@
             d3.json("geo_data/map.json",function(collection){
                 mapData["CPA"] = collection;
                 map.select("svg").attr("width","200").attr("height","300").append("g");
-                loadMapData(collection, areaName, "CPA");
+                loadMapData(collection, areaName, "CPA", null);
             });
+            processMapPlaces(map, null, [{"place":areaName,"data":null}], "CPA");
         }
 
-        function loadMapData(collection, places, source) {
+        function loadMapData(collection, places, source, placeData, attr) {
             map.select("#map-annotation").text(nameMapSource(source));
             var svg = map.select("svg g")
             var projection = d3.geo.albers().scale(25000)
@@ -310,21 +321,23 @@
             var paths = svg.selectAll('path')
                 .data(collection.features)
             
-            paths.enter().append('path').attr("fill","#fff");
+            paths.enter().append('path').attr("stroke","#bbb").attr("fill","#fff");
             paths.exit().remove();
 
             paths.attr('d', path)
                 .attr("fill",function(d){
+                    if (source == "PUMA") console.log(placeData, d)
                     var prop = getIdentifier(source);
-                    if (places.indexOf(d.properties[prop]) != -1)
-                        return "yellow";
+                    if (places.indexOf(d.properties[prop]) != -1) {
+                        if (typeof(placeData) == "undefined" || placeData[d.properties[prop]] == null)
+                            return "yellow";
+                        else
+                            return colorData(placeData[d.properties[prop]], areaData[source]["AverageValue"][attr], areaData[source]["MinimumValue"][attr], areaData[source]["MaximumValue"][attr]);
+                    }
                     return "#fff";
-                }).attr("stroke",function(d){
-                    if (d.properties.NAME_ALF == areaName)
-                        return "black";
-                    return "#aaa";
                 }).on("click",function(d){
-                    loadCPA(d.properties.OBJECTID);
+                    if (source == "CPA")
+                        loadCPA(d.properties.OBJECTID);
                 });
             function getIdentifier(source) {
                 switch (source) {
@@ -368,7 +381,6 @@
 
         function populatePopStats() {
             var data = areaData["CPA"][areaName];
-            console.log(areaData);
             var pop = map.select("#pop-stats"),
                 total = data["Total Population"];
 
@@ -420,7 +432,6 @@
                 var chart = wrapper.append("div").attr("class","bubble b-"+i)
                                 .style("width",Math.min((100/data.length), 33) + "%");
                 chart.append("div").attr("class","bubble-wrapper");
-                console.log(areaData[source]["ShortLabel"])
                 chart.append("div").attr("class","desc").text(areaData[source]["ShortLabel"][datum.key]);
             });
             updateBubbles(data, source, wrapper);
@@ -434,6 +445,9 @@
             data.forEach(function(datum, i){
                 if (smallBubbles) $(".b-"+i).addClass("small");
                 else $(".b-"+i).removeClass("small");
+
+                processMapPlaces(wrapper.select(".b-"+i), datum.key, datum.obj, source);
+
                 var chart = wrapper.select(".b-"+i+" .bubble-wrapper")
                                 .style("width",(bubbleWidth*datum.obj.length)+(bubblePadding*(datum.obj.length-1)) + "px");
 
@@ -483,29 +497,33 @@
             updateBars(data, source, wrapper, showLabels);
         }
 
-        function updateBars(data, source, wrapper, showLabels) {
-            $(wrapper[0]).hover(function(){
+        function processMapPlaces(div, attr, placeData, source) {
+            $(div[0]).hover(function(){
                 places = [];
-                data[0].obj.forEach(function(p){
-                    if (source == "CD")
-                        places.push(p.place.substr(-1));
-                    else
-                        places.push(p.place);
+                data = {};
+                placeData.forEach(function(p){
+                    places.push(p.place);
+                    data[p.place] = p.data;
                 });
                 if (source in mapData) 
-                    loadMapData(mapData[source], places, source);
+                    loadMapData(mapData[source], places, source, data, attr);
                 else
                     d3.json("geo_data/"+source+"_small.json",function(collection){
+                        console.log(source, collection)
                         mapData[source] = collection;
-                        loadMapData(collection, places, source);
+                        loadMapData(collection, places, source, data, attr);
                     });
-            },function(){
-                loadMapData(mapData["CPA"], areaName, "CPA");
             });
+        }
+
+        function updateBars(data, source, wrapper, showLabels) {
 
             data.forEach(function(datum,i){
                 var chart = wrapper.select(".c-"+i),
                     div = chart.select(".graph-object");
+
+                processMapPlaces(chart, datum.key, datum.obj, source);
+
                 var chartWidth = $(div[0]).width(),
                 minPadding = 10,
                 chartHeight = 120,
@@ -583,6 +601,7 @@
         }
 
         function updateWaffle(data, descriptions, types, div) {
+            processMapPlaces(div, null, [{"place":areaName,"data":null}], "CPA");
 
             var waffleTypes = [], totalValue = 0;
             types.forEach(function(type,i){
@@ -644,6 +663,7 @@
         }
 
         function updatePie(value, avg, min, max, attr, div) {
+            processMapPlaces(div, null, [{"place":areaName,"data":null}], "CPA");
             var circRadius = 60;
             var arc = d3.svg.arc()
                 .innerRadius(0)
@@ -687,6 +707,8 @@
         }
 
         function updateIsotype(valData, min, max, div, attrs) {
+            processMapPlaces(div, null, [{"place":areaName,"data":null}], "CPA");
+
             var isos = div.selectAll(".isotype").data(attrs)
                             .on("click",function(d){ showTooltip(d, [{"place":areaName, "data":valData[d]}], "CPA"); });
 
@@ -728,6 +750,8 @@
         }
 
         function updateMultiStem(data, source, div) {
+            // processMapPlaces(div, data[0].obj, source);
+
             var areas = div.select(".areas").selectAll(".area").data(data[0].obj)
             areas.enter().append("div").attr("class","area");
             areas.exit().remove();
@@ -737,6 +761,8 @@
             data.forEach(function(datum,i){
                 var wrapper = div.select(".m-"+i);
                 var graph = wrapper.select(".leafs");
+
+                processMapPlaces(wrapper, datum.key, datum.obj, source);
 
                 var divWidth = $(graph[0]).width(),
                     leafMaxWidth = divWidth/2,
@@ -761,7 +787,6 @@
                 }).style("background-color",function(d){
                     return colorData(d.data, datum.avg, datum.min, datum.max);
                 }).style("left",function(d){
-                    if (d.null) console.log(datum.key, d.data)
                     var neg = (d.diff < 0) ? true : false;
                     return d.null ? "0px" : divWidth/2 + (neg ? 2 : -d.diff) + "px";  
                 }).style("top",function(d,i){ return i*leafHeight + 5 + "px"});
@@ -801,6 +826,8 @@
         }
 
         function updateStemAndLeaf(attrs, val, avg, min, max, div) {
+            processMapPlaces(div, null, [{"place":areaName,"data":null}], "CPA");
+
             var stem = div.selectAll(".stem-and-leaf").data([val]);
             attrs.forEach(function(attr,i){
                 
@@ -871,6 +898,8 @@
         }
 
         function updateThermometer(attr, val, min, max, format, div, showNumber) {
+            processMapPlaces(div, null, [{"place":areaName,"data":null}], "CPA");
+
             var thermHeight = 15,
                 thermWidth = 200;
             div.selectAll(".thermometer").data([val])
@@ -891,6 +920,7 @@
         }
 
         function colorData(val, avg, min, max) {
+            if (val == -9999) return "#fff";
             if (val > avg) {
                 var colorScale = d3.scale.linear().domain([avg,max]).range(["#D4DCCF","#F07221"]);
             } else {

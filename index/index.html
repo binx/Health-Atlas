@@ -104,7 +104,7 @@
                         p.find(".graph-names").slideToggle();
                     });
 
-                    $("#graphs").find("h3").click(function(){
+                    $("#graphs h3").click(function(){
                         var plusMinus = $(this).find("span").text() == "" ? "-" : "";
                         $(this).find("span").text(plusMinus);
 
@@ -113,7 +113,7 @@
                         d3.select(this).each(function(d){ mostRecentAttr = d; });
 
                         var p = $(this).parent();
-                        p.find("svg").slideToggle();
+                        p.find(".wrapper").slideToggle();
                     });
                 });
             });
@@ -238,7 +238,8 @@
 
             div.append("h3").data([attr]).html("<span>+</span> "+attr);
 
-            var svg = div.append("svg").attr("height",graphHeight).attr("width","95%").style("display","none");
+            var wrapper = div.append("div").attr("class","wrapper").style("display","none");
+            var svg = wrapper.append("svg").attr("height",graphHeight).attr("width","95%");
             var barWidth = $("#graphs").width()*.92/s.length;
             var g = svg.selectAll("g").data(s);
             var entering = g.enter().append("g")

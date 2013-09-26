@@ -539,6 +539,10 @@ body {
     font-weight: bold;
     color: #00C04A;
 }
+.graph-waffle {
+    width: 50%;
+    float: left;
+}
 .waffle {
     position: relative;
 }
