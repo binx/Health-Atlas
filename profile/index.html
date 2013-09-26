@@ -223,7 +223,6 @@
                 } else {
                     d.value = formatNumber(format,d.data);
                 }
-                console.log(d.value, d.format, d.null, d.data, d.total)
                 return (d.null) ? "No Data Available" : d.value;
             }).style("color",function(d){
                 return (d.null) ? "#808080" : colorData(d.data, avg, min, max);
@@ -728,9 +727,19 @@
                     .style("background-color","#fff");
                 leafs.exit().remove();
 
-                leafs.transition().duration(1000)
+                graph.selectAll(".n-d").remove();
+
+                leafs.each(function(d,i){
+                    if (d.data == -9999) {
+                        d.null = true;
+                        graph.append("div").attr("class","n-d")
+                            .style("left",divWidth/2 + 5 + "px")
+                            .style("top",i*leafHeight + 7 + "px")
+                            .text("no data");
+                    }
+                })
+                .transition().duration(1000)
                 .style("width",function(d){
-                    if (d.data == -9999) d.null = true;
                     d.diff = Math.floor(barScale(datum.avg) - barScale(d.data));
                     return d.null ? "0px" : Math.abs(d.diff) + "px";
                 }).style("background-color",function(d){
