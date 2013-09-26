@@ -224,6 +224,11 @@ body {
 #tooltip li span {
     font-weight: bold;
 }
+#tooltip li .n-d {
+    line-height: 19px;
+    padding-left: 5px;
+    font-weight: normal;
+}
 #tooltip .avg {
     display: none;
     color: #00C04A;
@@ -253,6 +258,9 @@ body {
     margin-bottom: 50px;
     position: relative;
     cursor: pointer;
+}
+.barchart .n-d {
+    letter-spacing: 1px;
 }
 .barchart .graph-object {
     width: 90%;
@@ -488,6 +496,7 @@ body {
     box-sizing: border-box;
     font-size: 14px;
 }
+
 /*.graph-multistem .area:nth-child(odd) {
     background-color: #e7e7e7;
 }*/
