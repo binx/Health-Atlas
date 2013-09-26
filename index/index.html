@@ -7,10 +7,10 @@
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
     <body>
-    <header>
-		<img id="tab" src="img/HealthyLAtab.png" alt="Healthy LA" height="45" width="98">
-		<h1>HEALTH PROFILES</h1>
-    </header>
+        <header>
+    		<img id="tab" src="img/HealthyLAtab.png" alt="Healthy LA" height="45" width="98">
+    		<h1>HEALTH PROFILES</h1>
+        </header>
         <div id="map">
             <h1></h1>
             <div id="color-key">
@@ -39,6 +39,10 @@
         </div>
         <div id="graphs">
         </div>
+        <div id="shield"></div>
+        <div id="popup">
+            <h1>click to make me disappear!</h1>
+        </div>
     </body>
     <script type="text/javascript">
         var specialRows = ["Source","Date","ShortLabel","DataSource","Description","MinimumValue","MaximumValue","AverageValue","GeographicScale","AveValueGeo"];
@@ -47,8 +51,9 @@
 		var highlightColor = "#FF5E85";
         var collection, descObj, sourceObj;
         var selectedArea = null,
-        mostRecentAttr = "Total Population",
+        mostRecentAttr = "Percentage of Total Population",
         mostRecentData,
+        numberOfCPAs,
         masterData = {},
         metaData = {};
 
@@ -65,18 +70,18 @@
                 });
 
                 generateMap(collection);
+                numberOfCPAs = c.length;
 
                 d3.csv("data/order.csv",function(order){
                     var headings = d3.nest().key(function(d){
-                        // return d["Chrolopleth Map Cat"];
-                        return d["Health Atlas Section"];
+                        if (d["Chrolopleth Map Cat"] != "")
+                            return d["Chrolopleth Map Cat"];
                     }).entries(order);
-					var i = 0;
+                    headings.shift();
                     //organizing by subject heading, then adding graphs one by one
-                    headings.forEach(function(s){
-                        i++
+                    headings.forEach(function(s,index){
                         var section = graphs.append("div").attr("class","section");
-                        section.append("h2").html("<img src='img/category-icons/categoryicons-"+i+".png'>"+s.key);
+                        section.append("h2").html("<img src='img/category-icons/categoryicons-"+index+".png'>"+s.key);
                         var div = section.append("div").attr("class","graph-names").style("display","none");
 
                         s.values.forEach(function(graph){
@@ -104,7 +109,7 @@
                         p.find(".graph-names").slideToggle();
                     });
 
-                    $("#graphs").find("h3").click(function(){
+                    $("#graphs h3").click(function(){
                         var plusMinus = $(this).find("span").text() == "" ? "-" : "";
                         $(this).find("span").text(plusMinus);
 
@@ -113,7 +118,7 @@
                         d3.select(this).each(function(d){ mostRecentAttr = d; });
 
                         var p = $(this).parent();
-                        p.find("svg").slideToggle();
+                        p.find(".wrapper").slideToggle();
                     });
                 });
             });
@@ -160,6 +165,7 @@
                     d3.select(this).attr("fill",function(d){ return d.color || "#fff"; });
                     d3.select(this).attr("stroke","none");
                     resetAnnotation("hovered");
+                    if (!selectedArea) resetAnnotation("selected");
                     resetBars();
                     map.select(".tooltip").style("display","none");
                 }).on("click",function(d){
@@ -238,7 +244,8 @@
 
             div.append("h3").data([attr]).html("<span>+</span> "+attr);
 
-            var svg = div.append("svg").attr("height",graphHeight).attr("width","95%").style("display","none");
+            var wrapper = div.append("div").attr("class","wrapper").style("display","none");
+            var svg = wrapper.append("svg").attr("height",graphHeight).attr("width","95%");
             var barWidth = $("#graphs").width()*.92/s.length;
             var g = svg.selectAll("g").data(s);
             var entering = g.enter().append("g")
@@ -366,6 +373,26 @@
             graphs.selectAll("rect")
                 .attr("stroke",function(d){ return (d.placeName == selectedArea) ? selectColor : "none"; });
         }
+
+        $(window).resize(function(){
+            var barWidth = $("#graphs").width()*.92/numberOfCPAs;
+
+            var svg = graphs.selectAll("svg");
+
+            svg.each(function(){
+                var g = d3.select(this).selectAll("g")
+                g.attr("transform",function(d,i){
+                    return "translate("+i*(barWidth)+",0)";
+                });
+
+                g.select("rect").attr('width',barWidth-7);
+            });
+        });
+
+        $("#popup").click(function(){
+            $(this).fadeOut();
+            $("#shield").fadeOut();
+        });
 
         function colorData(val, avg, min, max) {
             if (val > avg) {

@@ -42,12 +42,12 @@ ID,Health Atlas Section,IndicatorName,GeographicScale,Keep/Remove,Topic,Revised 
 66,Land Use,Percentage of the Population within One-Half Mile Walking Distance of a Park,CPA,Keep,Land Use,% who live within one-half mile of a park,6,,LU Summary,2.6,Difference from mean bar,,,Land use ,30
 2,Demographic and Social Characteristics,Population per Square Mile,CPA,Keep,Demographics,,6,Yes,Density (Pop/Emp),3.1,? Could be on differrence from mean,,,Land use ,24
 67,Land Use,Employment Density,CPA,Keep,Land Use,,6,,Density (Pop/Emp),3.2,? Could be on differrence from mean,,,Land use ,25
-74,Transportation,Percentage of Households without Access to a Vehicle,CPA,Keep,Transportation,,7,,Vehicle Access,1,Header stat - ? / Isotype?,,,Transportation ,31
-68,Transportation,Percentage of Commuters Driving Alone to Work,CPA,Keep,Transportation,,7,,Mode,2.1,Difference from mean,,,Transportation ,32
-69,Transportation,Percentage of Commuters Carpooling to Work,CPA,Keep,Transportation,,7,,Mode,2.2,Difference from mean,,,Transportation ,33
-70,Transportation,Percentage of Commuters Taking Public Transportation to Work,CPA,Keep,Transportation,,7,,Mode,2.3,Difference from mean,,,Transportation ,34
-71,Transportation,Percentage of Commuters Walking to Work,CPA,Keep,Transportation,,7,,Mode,2.4,Difference from mean,,,Transportation ,35
-72,Transportation,Percentage of Commuters Biking to Work,CPA,Keep,Transportation,,7,,Mode,2.6,Difference from mean,,,Transportation ,36
+74,Transportation,Percentage of Households without Access to a Vehicle,CPA,Keep,Transportation,,7,,Vehicle Access,1,Header stat - ? / Isotype?,,,Transportation,31
+68,Transportation,Percentage of Commuters Driving Alone to Work,CPA,Keep,Transportation,,7,,Mode,2.1,Difference from mean,,,Transportation,32
+69,Transportation,Percentage of Commuters Carpooling to Work,CPA,Keep,Transportation,,7,,Mode,2.2,Difference from mean,,,Transportation,33
+70,Transportation,Percentage of Commuters Taking Public Transportation to Work,CPA,Keep,Transportation,,7,,Mode,2.3,Difference from mean,,,Transportation,34
+71,Transportation,Percentage of Commuters Walking to Work,CPA,Keep,Transportation,,7,,Mode,2.4,Difference from mean,,,Transportation,35
+72,Transportation,Percentage of Commuters Biking to Work,CPA,Keep,Transportation,,7,,Mode,2.6,Difference from mean,,,Transportation,36
 73,Transportation,Percentage of Commuters Traveling by Other Means to Work,CPA,Keep,Transportation,,7,,Mode,2.6,Difference from mean,,,,
 76,Transportation,"Average Annual Rate of Motor Vehicle Collisions with Pedestrians per 10,000 Residents",CPA,Keep,Transportation,,7,,Collisions,3.1,Difference from mean,,,Transportation,37
 77,Transportation,"Average Annual Rate of Motor Vehicle Collisions with Bicyclists per 10,000 Residents",CPA,Keep,Transportation,,7,,Collisions,3.2,Difference from mean,,,Transportation,38
