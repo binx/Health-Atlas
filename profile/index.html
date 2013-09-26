@@ -76,77 +76,30 @@
             $("#graphs h1").click(function(){
                 $(this).parent().find(".graph-wrapper").slideToggle();
             })
-            loadCPA(1);
+            loadDataSource(1, 0);
         });
 
-        function loadCPA(id) {
-            d3.csv("data/"+id+"-CPA.csv",function(csv){
-                areaName = csv[0]["Area Name"];
-                areaData["CPA"] = {};
+        var dataSources = ["CPA","CD","HD","PUMA","ZIP"];
+
+        function loadDataSource(id, i) {
+            var source = dataSources[i];
+
+            d3.csv("data/"+id+"-"+source+".csv",function(csv){
+                if (source == "CPA") areaName = csv[0]["Area Name"];
+                areaData[source] = {};
 
                 csv.forEach(function(v,i){
                     if (v["Area Name"] != "") {
-                        areaData["CPA"][v["Area Name"]] = v;
-                    }
-                });
-                loadCD(id);
-            });            
-        }
-        function loadCD(id) {
-            d3.csv("data/"+id+"-CD.csv",function(csv){
-                areaData["CD"] = {};
-                csv.forEach(function(v,i){
-                    if (v["Area Name"] != "") {
                         if (v["Specific area"] != "")
-                            areaData["CD"][v["Specific area"]] = v;
+                            areaData[source][v["Specific area"]] = v;
                         else
-                            areaData["CD"][v["Area Name"]] = v;
+                            areaData[source][v["Area Name"]] = v;
                     }
                 });
-                loadHD(id);
+
+                if (i < dataSources.length-1) loadDataSource(id, i+1);
+                else showData();
             });
-        }
-        function loadHD(id) {
-            d3.csv("data/"+id+"-HD.csv",function(csv){
-                areaData["HD"] = {};
-                csv.forEach(function(v,i){
-                    if (v["Area Name"] != "") {
-                        if (v["Specific area"] != "")
-                            areaData["HD"][v["Specific area"]] = v;
-                        else
-                            areaData["HD"][v["Area Name"]] = v;
-                    }
-                });
-                loadPUMA(id);
-            });            
-        }
-        function loadPUMA(id) {
-            areaData["PUMA"] = {};
-            d3.csv("data/"+id+"-PUMA.csv",function(csv){
-                csv.forEach(function(v,i){
-                    if (v["Area Name"] != "") {
-                        if (v["Specific area"] != "")
-                            areaData["PUMA"][v["Specific area"]] = v;
-                        else
-                            areaData["PUMA"][v["Area Name"]] = v;
-                    }
-                });
-                loadZIP(id);
-            });            
-        }
-        function loadZIP(id) {
-            areaData["ZIP"] = {};
-            d3.csv("data/"+id+"-ZIP.csv",function(csv){
-                csv.forEach(function(v,i){
-                    if (v["Area Name"] != "") {
-                        if (v["Specific area"] != "")
-                            areaData["ZIP"][v["Specific area"]] = v;
-                        else
-                            areaData["ZIP"][v["Area Name"]] = v;
-                    }
-                });
-                showData();
-            });            
         }
 
         var loaded = false;
@@ -192,7 +145,6 @@
                             updateMultiStem(dataAggregate, source, div);
                             break;
                     }
-                    updateTooltip();
                 });
             } else {
                 graphs.selectAll(".graph").each(function(d){ 
@@ -240,21 +192,19 @@
             }
         }
 
-        var tooltipAttr, tooltipSource;
+        var tooltipAttr;
 
         function showTooltip(attr, data, source) {
             tooltip.find(".prompt").hide();
             tooltip.find(".avg").show();
             tooltip.find(".attr").text(attr);
-
-            tooltipAttr = attr;
-            tooltipSource = source;
-            var format = areaData[source]["AverageValue"][attr+"-FORMAT"],
-                avg = areaData[source]["AverageValue"][attr];
+            
             var format = areaData[source]["AverageValue"][attr+"-FORMAT"],
                 avg = areaData[source]["AverageValue"][attr],
                 min = areaData[source]["MinimumValue"][attr],
                 max = areaData[source]["MaximumValue"][attr];
+
+            tooltipAttr = attr;
 
             var lis = d3.select("#tooltip ul").selectAll(".area").data(data);
             var entering = lis.enter().insert("li",".avg").attr("class","area");
@@ -273,6 +223,7 @@
                 } else {
                     d.value = formatNumber(format,d.data);
                 }
+                console.log(d.value, d.format, d.null, d.data, d.total)
                 return (d.null) ? "No Data Available" : d.value;
             }).style("color",function(d){
                 return (d.null) ? "#808080" : colorData(d.data, avg, min, max);
@@ -288,24 +239,13 @@
             tooltip.find(".desc").text(areaData[source]["Description"][attr]);
         }
 
-        function updateTooltip(data) {
-            var source = tooltipSource, attr = tooltipAttr;
-
-            
-            d3.selectAll(".area .num").text(function(d){
-                return formatNumber(areaData[d.source][areaName][d.attr+"-FORMAT"], areaData[d.source][areaName][d.attr])
-            }).style("color",function(d){
-                return colorData(areaData[d.source][areaName][d.attr], areaData[d.source]["AverageValue"][d.attr], areaData[d.source]["MinimumValue"][d.attr], areaData[d.source]["MaximumValue"][d.attr]);
-            });
-        }
-
         function loadMap() {
             d3.json("geo_data/map.json",function(collection){
                 mapData["CPA"] = collection;
                 map.select("svg").attr("width","200").attr("height","300").append("g");
-                loadMapData(collection, areaName, "CPA", null);
+                loadMapData(collection, areaName, "CPA", null, null);
+                processMapPlaces(map, null, [{"place":areaName,"data":null}], "CPA");
             });
-            processMapPlaces(map, null, [{"place":areaName,"data":null}], "CPA");
         }
 
         function loadMapData(collection, places, source, placeData, attr) {
@@ -326,10 +266,9 @@
 
             paths.attr('d', path)
                 .attr("fill",function(d){
-                    if (source == "PUMA") console.log(placeData, d)
                     var prop = getIdentifier(source);
                     if (places.indexOf(d.properties[prop]) != -1) {
-                        if (typeof(placeData) == "undefined" || placeData[d.properties[prop]] == null)
+                        if (!placeData || placeData[d.properties[prop]] == null)
                             return "yellow";
                         else
                             return colorData(placeData[d.properties[prop]], areaData[source]["AverageValue"][attr], areaData[source]["MinimumValue"][attr], areaData[source]["MaximumValue"][attr]);
@@ -337,7 +276,7 @@
                     return "#fff";
                 }).on("click",function(d){
                     if (source == "CPA")
-                        loadCPA(d.properties.OBJECTID);
+                        loadDataSource(d.properties.OBJECTID,0);
                 });
             function getIdentifier(source) {
                 switch (source) {
@@ -459,6 +398,9 @@
                     .style("background-color",function(d){
                         return colorData(d.data, datum.avg, datum.min, datum.max);
                     }).on("click",function(){ showTooltip(datum.key, datum.obj, source); });
+
+                if (tooltipAttr == datum.key)
+                    showTooltip(datum.key, datum.obj, source);
             })
         }
 
@@ -509,7 +451,6 @@
                     loadMapData(mapData[source], places, source, data, attr);
                 else
                     d3.json("geo_data/"+source+"_small.json",function(collection){
-                        console.log(source, collection)
                         mapData[source] = collection;
                         loadMapData(collection, places, source, data, attr);
                     });
@@ -566,6 +507,8 @@
                 }
 
                 chart.on("click",function(){ showTooltip(datum.key, datum.obj, source); });
+                if (tooltipAttr == datum.key)
+                    showTooltip(datum.key, datum.obj, source);
             });
         }
 
@@ -627,6 +570,9 @@
                     .on("click",function(d){ 
                         showTooltip(land.title, [{"place":areaName, "data":land.data, "total":totalValue}], "CPA"); 
                     }).select(".num").text("(" + p.toFixed(0) + "%)");
+
+                if (tooltipAttr == land)
+                    showTooltip(land.title, [{"place":areaName, "data":land.data, "total":totalValue}], "CPA");
             });
         }
 
@@ -677,6 +623,8 @@
 
             div.select("svg")
                 .on("click",function(d){ showTooltip(attr, [{"place":areaName, "data":value}], "CPA"); })
+            if (tooltipAttr == attr)
+                showTooltip(attr, [{"place":areaName, "data":value}], "CPA");
         }
 
         function drawIsotype(valData, avgData, min, max, desc, attrs, div) {
@@ -727,6 +675,9 @@
                 iso.select(".textVal")
                     .style("color",quartileColors[5 - Math.round(bg(valData[attr]))])
                     .text(formatNumber(" Percent ",valData[attr]));
+
+                if (tooltipAttr == attr)
+                    showTooltip(attr, [{"place":areaName, "data":valData[attr]}], "CPA");
             });
         }
 
@@ -750,7 +701,6 @@
         }
 
         function updateMultiStem(data, source, div) {
-            // processMapPlaces(div, data[0].obj, source);
 
             var areas = div.select(".areas").selectAll(".area").data(data[0].obj)
             areas.enter().append("div").attr("class","area");
@@ -770,7 +720,6 @@
 
                 var graphHeight = datum.obj.length*leafHeight
                 graph.style("height", graphHeight+"px");
-                // graph.select(".stem").style("height")
 
                 var barScale = d3.scale.linear().domain([datum.min,datum.max]).range([2,leafMaxWidth]);
 
@@ -792,6 +741,8 @@
                 }).style("top",function(d,i){ return i*leafHeight + 5 + "px"});
 
                 wrapper.on("click",function(d){ showTooltip(datum.key, datum.obj, source); });
+                if (tooltipAttr == datum.key)
+                    showTooltip(datum.key, datum.obj, source);
             });
         }
 
@@ -853,6 +804,8 @@
 
                 div.select(".leaf-"+i)
                     .on("click",function(d){ showTooltip(attr, [{"place":areaName, "data":val[attr]}], "CPA"); });
+                if (tooltipAttr == attr)
+                    showTooltip(attr, [{"place":areaName, "data":val[attr]}], "CPA");
             });
         }
 
@@ -904,6 +857,9 @@
                 thermWidth = 200;
             div.selectAll(".thermometer").data([val])
                 .on("click",function(d){ showTooltip(attr, [{"place":areaName, "data":val}], "CPA"); });
+
+            if (tooltipAttr == attr)
+                showTooltip(attr, [{"place":areaName, "data":val}], "CPA");
 
             var posScale = d3.scale.linear().domain([max,min]).range([0,thermWidth-thermHeight]);
             div.select(".circle-wrapper")
