@@ -80,8 +80,9 @@
                     headings.shift();
                     //organizing by subject heading, then adding graphs one by one
                     headings.forEach(function(s,index){
+                    	var imageIndex = index+1;
                         var section = graphs.append("div").attr("class","section");
-                        section.append("h2").html("<img src='img/category-icons/categoryicons-"+index+".png'>"+s.key);
+                        section.append("h2").html("<img src='img/category-icons/categoryicons-"+imageIndex+".png'>"+s.key);
                         var div = section.append("div").attr("class","graph-names").style("display","none");
 
                         s.values.forEach(function(graph){
