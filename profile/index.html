@@ -327,7 +327,7 @@
             function textAndColor(div, attr, format, total) {
                 var f = format ? format : data[attr+"-FORMAT"];
                 pop.select(div).text(formatNumber(f, total ? data[attr]/total : data[attr]))
-                    .style("color",colorData(data[attr], areaData["CPA"]["AverageValue"][attr], areaData["CPA"]["MinimumValue"][attr], areaData["CPA"]["MaximumValue"][attr]));
+                    .style("color","black");
             }
             textAndColor(".pop-total span", "Total Population");
             textAndColor(".pop-density span", "Population per Square Mile");
@@ -372,7 +372,9 @@
                 var chart = wrapper.append("div").attr("class","bubble b-"+i)
                                 .style("width",Math.min((100/data.length), 33) + "%");
                 chart.append("div").attr("class","bubble-wrapper");
-                chart.append("div").attr("class","desc").text(areaData[source]["ShortLabel"][datum.key]);
+                chart.append("div").attr("class","place-labels");
+			 	chart.append("div").attr("class","desc").text(areaData[source]["ShortLabel"][datum.key]);
+
             });
             updateBubbles(data, source, wrapper);
         }
@@ -395,6 +397,13 @@
                     bubbles.enter().append("div").attr("class","bub")
                     bubbles.exit().remove();
 
+              	var labels = wrapper.select(".place-labels").selectAll(".label").data(datum.obj);
+                    labels.enter().append("div").attr("class","label").style("width",bubbleWidth+"px");	
+                    labels.exit().remove();
+                    labels.text(function(d){ return d.place; })
+                    .style("left",function(d,i){ return i*(bubbleWidth+bubblePadding) + bubbleWidth + "px"; });
+
+
                 bubbles.text(function(d){ return formatNumber(d.format, d.data); })
                     .style("background-color",function(d){
                         return colorData(d.data, datum.avg, datum.min, datum.max);
@@ -403,6 +412,9 @@
                 if (tooltipAttr == datum.key)
                     showTooltip(datum.key, datum.obj, source);
             })
+
+
+            
         }
 
         function drawBars(data, source, wrapper, showAvg, showLabels, annotation) {
@@ -441,7 +453,7 @@
         }
 
         function processMapPlaces(div, attr, placeData, source) {
-            $(div[0]).hover(function(){
+            $(div[0]).click(function(){
                 places = [];
                 data = {};
                 placeData.forEach(function(p){

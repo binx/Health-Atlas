@@ -19,7 +19,7 @@
                     }
                 },
                 {
-                    "key":"Age",
+                    "key":"Age of Population",
                     "obj": {
                         "type":"isotype",
                         "source":"CPA",
@@ -405,7 +405,7 @@
                         ],
                         "notes":{
                             "showAvg":true,
-                            "showLabels":false,
+                            "showLabels":true,
                             "annotation":null
                         }
                     }

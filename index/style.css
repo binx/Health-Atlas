@@ -139,9 +139,13 @@ position: fixed;
 }
 #map #hovered-name ,
 #map #selected-name {
+	background-color: white;
+	opacity: 
+	z-index: 100;
     position: absolute;
-    left: 10px;
+    left: 16px;
     width: 300px;
+    
 }
 #map #selected-name {
     color: #5C8385;
@@ -200,7 +204,10 @@ position: fixed;
     margin-bottom: 48px;
     padding-left: 25px;
     display:table-cell;
+}
 
+#graphs .section{
+    border-top: 1px solid black;
 }
 #graphs .graph {
     background-color: #F0F0F0;
@@ -213,7 +220,6 @@ position: fixed;
     margin-bottom: -6px;
 }
 #graphs h2 {
-    border-bottom: 1px solid black;
     font-style: normal;
     font-weight:400;
     text-transform:uppercase;
