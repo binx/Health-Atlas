@@ -205,8 +205,10 @@ The <span id="green">average value</span> is often indicated with a green line.<
 
             var min = metaData["MinimumValue"][attr],
                 max = metaData["MaximumValue"][attr],
-                avg = metaData["AverageValue"][attr];
-				format =  " Percent ";
+                avg = metaData["AverageValue"][attr],
+                format = metaData["AverageValue"][attr+"-FORMAT"];
+
+            console.log(metaData)
 
             dataset.forEach(function(v,i){
                 map.select("."+getClassName(v["Area Name"]))
