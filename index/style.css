@@ -70,7 +70,7 @@ position: fixed;
 #color-key {
     position: absolute;
     top: 370px;
-    left: 20px;
+    left: 24px;
     width: 30%;
 }
 #color-key .title {
@@ -138,31 +138,40 @@ position: fixed;
     margin-top: 15px;
 }
 #map #hovered-name ,
-#map #selected-name {
+#map #selected-name, 
+#map #city-average-name{
+	font-size: 12px;
 	background-color: white;
-	opacity: 
 	z-index: 100;
     position: absolute;
-    left: 16px;
+    left: 24px;
     width: 300px;
     
 }
 #map #selected-name {
     color: #5C8385;
-    top: 500px;
+    top: 512px;
 }
 #map #hovered-name {
     color: #FF5E85;
-    top: 550px;
+    top: 544px;
 }
+
+#map #city-average-name {
+    color: #00C04A;
+    top: 480px;
+}
+
 #map #hovered-name .place,
 #map #selected-name .place {
 }
 #map #hovered-name .value,
-#map #selected-name .value {
+#map #selected-name .value 
+#map #city-average-name .value{
     font-weight: bold;
     margin-left: 5px;
 }
+
 #map h2 {
     font-size: 18px;
     font-weight: normal;

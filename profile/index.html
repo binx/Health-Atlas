@@ -11,7 +11,8 @@
             <svg></svg>
             <div id="pop-stats">
                 <h3>Total Population:</h3>
-                <p class="pop-total"><span></span></p>
+                <p class="pop-total"><span></span> people</p>
+                <p class=pop-totalPercent><span></span> of Los Angeles</p>
                 <h3>Population Density:</h3>
                 <p class="pop-density"><span></span> sq mile</p>
                 <h3>Population Age</h3>
@@ -323,13 +324,15 @@
             var data = areaData["CPA"][areaName];
             var pop = map.select("#pop-stats"),
                 total = data["Total Population"];
-
+				
             function textAndColor(div, attr, format, total) {
                 var f = format ? format : data[attr+"-FORMAT"];
                 pop.select(div).text(formatNumber(f, total ? data[attr]/total : data[attr]))
                     .style("color","black");
             }
             textAndColor(".pop-total span", "Total Population");
+            textAndColor(".pop-totalPercent span", "Total Population", " Percent ", 3857799);
+
             textAndColor(".pop-density span", "Population per Square Mile");
 
             textAndColor(".pop-under-5 span", "Population Under Age 5 ", " Percent ", total);

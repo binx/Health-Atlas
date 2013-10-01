@@ -28,6 +28,11 @@
                 <span class="place"></span>
                 <span class="value"></span>
             </div>
+               <div id="city-average-name">
+                <span class="place"></span>
+                <span class="value"></span>
+            </div>
+            
             <div id="annotation">
                 <div class="source"></div>
                 <div class="desc"></div>
@@ -192,6 +197,7 @@
             var min = metaData["MinimumValue"][attr],
                 max = metaData["MaximumValue"][attr],
                 avg = metaData["AverageValue"][attr];
+				format =  " Percent ";
 
             dataset.forEach(function(v,i){
                 map.select("."+getClassName(v["Area Name"]))
@@ -202,6 +208,8 @@
                     });
             });
             fillAnnotation(attr);
+ 			map.select("#city-average-name .place").text("City Average: ");
+            map.select("#city-average-name .value").text(formatNumber(format, avg));
             if (selectedArea) {
                 dataset.forEach(function(p){
                     if (p.placeName == selectedArea) {
