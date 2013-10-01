@@ -208,8 +208,6 @@ The <span id="green">average value</span> is often indicated with a green line.<
                 avg = metaData["AverageValue"][attr],
                 format = metaData["AverageValue"][attr+"-FORMAT"];
 
-            console.log(metaData)
-
             dataset.forEach(function(v,i){
                 map.select("."+getClassName(v["Area Name"]))
                     .transition()
@@ -286,7 +284,6 @@ The <span id="green">average value</span> is often indicated with a green line.<
             });
 
             g.select("rect").attr("height",function(d){
-                if (barScale(d.val) < 0) console.log(attr, d.val, min);
                 return barScale(d.val);
             }).attr('width',barWidth-7)
             .attr("y",function(d){
@@ -326,7 +323,6 @@ The <span id="green">average value</span> is often indicated with a green line.<
                     setAnnotation("selected", d["Area Name"], d.format, d.val);
                     highlightArea(d.placeName);
                     highlightData(d.placeName);
-                    
                 }
             });
         }
@@ -340,8 +336,10 @@ The <span id="green">average value</span> is often indicated with a green line.<
 
         function highlightArea(p) {
             map.selectAll("path").attr("stroke","none");
-            // map.selectAll("path").attr("fill",function(d){ return d.color; });
-            map.select("."+p).attr("stroke",selectColor);
+            map.select("."+p).attr("stroke",selectColor)
+                .each(function(d){
+                    $(".neighborhoods a").attr("href","../neighborhoods#id="+d.properties.OBJECTID);
+                });    
         }
 
         function resetAreas() {
