@@ -918,7 +918,7 @@
 
         function colorData(val, avg, min, max) {
             if (val == -9999) return "#fff";
-            if (val > avg) {
+            if (parseFloat(val) > parseFloat(avg)) {
                 var colorScale = d3.scale.linear().domain([avg,max]).range(["#D4DCCF","#F07221"]);
             } else {
                 var colorScale = d3.scale.linear().domain([min,avg]).range(["#55A4DB","#D4DCCF"]);
