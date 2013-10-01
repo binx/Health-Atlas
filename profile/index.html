@@ -77,7 +77,11 @@
             $("#graphs h1").click(function(){
                 $(this).parent().find(".graph-wrapper").slideToggle();
             })
-            loadDataSource(1, 0);
+
+            var cpaID = 1;
+            if (location.hash) cpaID = location.hash.split("=")[1];
+
+            loadDataSource(cpaID, 0);
         });
 
         var dataSources = ["CPA","CD","HD","PUMA","ZIP"];
@@ -277,9 +281,9 @@
                     }
                     return "#fff";
                 }).on("click",function(d){
-                    if (source == "CPA")
-                        loadDataSource(d.properties.OBJECTID,0);
+                    window.location.hash = "id="+d.properties.OBJECTID;
                 });
+
             function getIdentifier(source) {
                 switch (source) {
                     case "CPA":
@@ -659,10 +663,11 @@
                 .data(attrs).enter()
                 .append("div").attr("class","isotype");
 
+            var personScale = d3.scale.linear().domain([0,1]).range([9,400]),
+                imgWidth = 9;
+
             isos.each(function(attr, i){
                 var iso = d3.select(this);
-                personScale = d3.scale.linear().domain([0,1]).range([9,400]),
-                imgWidth = 9;
 
                 iso.append("div").attr("class","title").text(areaData["CPA"]["ShortLabel"][attr]);
                 var graph = iso.append("div").attr("class","iso-graph");
@@ -931,6 +936,11 @@
             } else if (format == " Percent ")
                 value = (value*100).toFixed(0)+"%";
             return value;
+        }
+
+        window.onhashchange = function setCPA(){
+            var id = location.hash.split("=")[1];
+            loadDataSource(id,0);
         }
 
     </script>
