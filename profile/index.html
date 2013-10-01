@@ -392,19 +392,21 @@
                 else $(".b-"+i).removeClass("small");
 
                 processMapPlaces(wrapper.select(".b-"+i), datum.key, datum.obj, source);
+                var divWidth = (bubbleWidth*datum.obj.length)+(bubblePadding*(datum.obj.length-1));
 
-                var chart = wrapper.select(".b-"+i+" .bubble-wrapper")
-                                .style("width",(bubbleWidth*datum.obj.length)+(bubblePadding*(datum.obj.length-1)) + "px");
+                var chart = wrapper.select(".b-"+i);
+                
+                chart.select(".bubble-wrapper").style("width", divWidth + "px");
+                chart.select(".place-labels").style("width", divWidth + "px");
 
-                var bubbles = chart.selectAll(".bub").data(datum.obj);
+                var bubbles = chart.select(".bubble-wrapper").selectAll(".bub").data(datum.obj);
                     bubbles.enter().append("div").attr("class","bub")
                     bubbles.exit().remove();
 
-              	var labels = wrapper.select(".place-labels").selectAll(".label").data(datum.obj);
-                    labels.enter().append("div").attr("class","label").style("width",bubbleWidth+"px");	
+              	var labels = chart.select(".place-labels").selectAll(".label").data(datum.obj);
+                    labels.enter().append("div").attr("class","label");
                     labels.exit().remove();
-                    labels.text(function(d){ return d.place; })
-                    .style("left",function(d,i){ return i*(bubbleWidth+bubblePadding) + bubbleWidth + "px"; });
+                    labels.text(function(d){ return d.place; });
 
 
                 bubbles.text(function(d){ return formatNumber(d.format, d.data); })

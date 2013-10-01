@@ -273,7 +273,7 @@ The <span id="green">average value</span> is often indicated with a green line.<
                 entering.append("rect")
             g.exit().remove();
 
-            var barScale = d3.scale.linear().domain([0,max]).range([2,barMaxHeight]);
+            var barScale = d3.scale.linear().domain([Math.min(min, 0),max]).range([2,barMaxHeight]);
 
             g.attr("transform",function(d,i){
                 return "translate("+i*(barWidth)+",0)";
@@ -286,6 +286,7 @@ The <span id="green">average value</span> is often indicated with a green line.<
             });
 
             g.select("rect").attr("height",function(d){
+                if (barScale(d.val) < 0) console.log(attr, d.val, min);
                 return barScale(d.val);
             }).attr('width',barWidth-7)
             .attr("y",function(d){
