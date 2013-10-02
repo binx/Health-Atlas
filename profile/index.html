@@ -10,18 +10,18 @@
             <h1></h1>
             <svg></svg>
             <div id="pop-stats">
-                <h3>Total Population:</h3>
+                <h3>Total Population</h3>
                 <p class="pop-total"><span></span> people</p>
                 <p class=pop-totalPercent><span></span> of Los Angeles</p>
-                <h3>Population Density:</h3>
-                <p class="pop-density"><span></span> sq mile</p>
+                <h3>Population Density</h3>
+                <p class="pop-density"><span></span> per sq mile</p>
                 <h3>Population Age</h3>
-                <p class="pop-under-5">under 5: <span></span></p>
-                <p class="pop-under-18">under 18: <span></span></p>
-                <p class="pop-over-65">over 65: <span></span></p>
+                <p class="pop-under-5">Under 5: <span></span></p>
+                <p class="pop-under-18">Under 18: <span></span></p>
+                <p class="pop-over-65">Over 65: <span></span></p>
 				<h3>Race & Ethnicity</h3>
-                <p class="pop-non-white" >non-white: <span></span></p>
-                <p class="pop-isolated">linguistically isolated: <span></span></p>
+                <p class="pop-non-white" >Non-white: <span></span></p>
+                <p class="pop-isolated">Linguistically isolated: <span></span></p>
             </div>
             <div id="map-annotation"></div>
             <div id="color-key">
@@ -34,8 +34,9 @@
                     <div class="high">high</div>
                 </div>
             </div>
+            
             <div id="tooltip">
-                <div class="title">More Information</div>
+                <div class="title">More Information <span id="guide"><a href="www.guidebook.com">download a full guide to sources</a></span></div>
                 <div class="prompt">Click on a statistic to learn more.</div>
                 <div class="attr"></div>
                 <ul>
@@ -306,19 +307,19 @@
             function nameMapSource(source) {
                 switch (source) {
                     case "CPA":
-                        return "Community Planning Area";
+                        return "Community Planning Areas";
                         break;
                     case "CD": 
-                        return "Council District";
+                        return "Council Districts";
                         break;
                     case "HD":
-                        return "HD";
+                        return "Health Districts";
                         break;
                     case "PUMA":
-                        return "PUMA";
+                        return "Public Use Microdata Areas";
                         break;
                     case "ZIP":
-                        return "Zipcode";
+                        return "Zip Codes";
                         break;
                 }
             }
@@ -339,9 +340,9 @@
 
             textAndColor(".pop-density span", "Population per Square Mile");
 
-            textAndColor(".pop-under-5 span", "Population Under Age 5 ", " Percent ", total);
-            textAndColor(".pop-under-18 span", "Population Under Age 18", " Percent ", total);
-            textAndColor(".pop-over-65 span", "Population Age 65 and Over", " Percent ", total);
+            textAndColor(".pop-under-5 span", "Population Under Age 5 ");
+            textAndColor(".pop-under-18 span", "Population Under Age 18");
+            textAndColor(".pop-over-65 span", "Population Age 65 and Over");
 
             textAndColor(".pop-non-white span", "Percentage Non-White and Hispanic Population");
             textAndColor(".pop-isolated span", "Percentage of Linguistically-Isolated Households");
@@ -493,7 +494,7 @@
                 barWidth = Math.min((chartWidth-minPadding*datum.obj.length)/datum.obj.length, 70),
                 barPadding = Math.max((chartWidth-(datum.obj.length*barWidth))/datum.obj.length,minPadding);
 
-                var barScale = d3.scale.linear().domain([datum.min,datum.max]).range([2,chartHeight]);
+                var barScale = d3.scale.linear().domain([datum.min,datum.max]).range([10,chartHeight]);
 
                 var bars = div.selectAll(".bar").data(datum.obj);
 
@@ -622,7 +623,7 @@
 
             svg.append("circle").attr("r",circRadius)
                 .attr("cx",pieSize/2).attr("cy",pieSize/2)
-                .attr("fill","#eee");
+                .attr("fill","#ddd");
 
             svg.append("path").attr("class","pieData")
                 .attr("transform","translate("+pieSize/2+","+pieSize/2+")");

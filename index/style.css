@@ -35,7 +35,7 @@ position: fixed;
 }
 #popup {
 	font-size: 14px;
-	line-height: 20px;
+	line-height: 22px;
 	margin-right:25%;
     background-color: white;
     border: 2px solid black;
@@ -46,6 +46,9 @@ position: fixed;
     text-align: left;
     cursor: pointer;
     padding:16px 36px;
+}
+#popup li{
+padding-bottom: 4px;
 }
 #popup p{
 }
@@ -86,7 +89,7 @@ margin-right: auto;
     border: 0px solid orange;
     margin-left: 0px;
     box-sizing: border-box;
-    margin-top: 45px;
+    margin-top: 24px;
 }
 #map h1 {
     text-align: center;
@@ -199,7 +202,7 @@ margin-right: auto;
 #map #selected-name .place {
 }
 #map #hovered-name .value,
-#map #selected-name .value 
+#map #selected-name .value, 
 #map #city-average-name .value{
     font-weight: bold;
     margin-left: 5px;
@@ -250,6 +253,8 @@ margin-right: auto;
 
 #graphs .section{
     border-top: 1px solid black;
+    margin-bottom: 0px;
+    margin-top: 0px;
 }
 #graphs .graph {
     background-color: #F0F0F0;
@@ -258,18 +263,96 @@ margin-right: auto;
 #graphs .graph:nth-child(odd) {
     background-color: #FFFFFF;
 }
-#graphs img{
-    margin-bottom: -6px;
-}
+
 #graphs h2 {
+
+    margin-bottom: 6px;
+    margin-top: 6px;
     font-style: normal;
     font-weight:400;
     text-transform:uppercase;
     font-size: 18px;
     cursor: pointer;
+    margin-left:48px;
     line-height: 36px;    
     vertical-align: top;
 }
+
+.section-1 {
+    clear: both;
+    border-top: 1px solid black;
+	background-repeat: no-repeat;
+    background-image: url(img/category-icons/categoryicons-1.png);
+    background-position: 0px 8px;
+}
+.section-2 {
+    clear: both;
+    border-top: 1px solid black;
+	background-repeat: no-repeat;
+    background-image: url(img/category-icons/categoryicons-2.png);
+    background-position: 0px 8px;
+}
+.section-3 {
+    clear: both;
+    border-top: 1px solid black;
+	background-repeat: no-repeat;
+    background-image: url(img/category-icons/categoryicons-3.png);
+    background-position: 0px 8px;
+}
+.section-4 {
+    clear: both;	
+    border-top: 1px solid black;
+    background-repeat: no-repeat;
+    background-image: url(img/category-icons/categoryicons-4.png);
+    background-position: 0px 8px;
+}
+.section-5 {
+    clear: both;
+    border-top: 1px solid black;
+	background-repeat: no-repeat;
+    background-image: url(img/category-icons/categoryicons-5.png);
+    background-position: 0px 8px;
+}
+.section-6 {
+    clear: both;
+    border-top: 1px solid black;
+	background-repeat: no-repeat;
+    background-image: url(img/category-icons/categoryicons-6.png);
+    background-position: 0px 8px;
+}
+.section-7 {
+    clear: both;
+    border-top: 1px solid black;
+	background-repeat: no-repeat;
+    background-image: url(img/category-icons/categoryicons-7.png);
+    background-position: 0px 8px;
+}
+.section-8 {
+    clear: both;
+    border-top: 1px solid black;
+	background-repeat: no-repeat;
+    background-image: url(img/category-icons/categoryicons-8.png);
+    background-position: 0px 8px;
+}
+.section-9 {
+    clear: both;
+    border-top: 1px solid black;
+	background-repeat: no-repeat;
+    background-image: url(img/category-icons/categoryicons-9.png);
+    background-position: 0px 8px;
+}
+.section-10 {
+    clear: both;
+    border-top: 1px solid black;
+   	background-repeat: no-repeat;
+    background-image: url(img/category-icons/categoryicons-10.png);
+    background-position: 0px 8px;
+}
+
+#graphs img{
+margin:auto;
+}
+
 #graphs h3 {
     font-weight: normal;
     margin: 0;

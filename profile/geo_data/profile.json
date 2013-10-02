@@ -4,7 +4,7 @@
             "key":"Demographic and Social Characteristics",
             "obj": [
                 {
-                    "key":"Race and Ethinicity",
+                    "key":"Race and Ethnicity",
                     "obj": {
                         "type":"waffle",
                         "source":"CPA",
@@ -36,7 +36,7 @@
             "key":"Economic Conditions",
             "obj":[
                 {
-                    "key":"Average per Capita Income",
+                    "key":"Per Capita Income",
                     "obj": {
                         "type":"thermometer",
                         "source":"CPA",
@@ -67,8 +67,8 @@
                         "type":"stemandleaf",
                         "source":"CPA",
                         "data": [
-                            "Percentage of Population below the Federal Poverty Level ",
                             "Percentage of Unemployed Workers Age 16 and Over ",
+                            "Percentage of Population below the Federal Poverty Level ",
                             "Percentage of Population 200% below the Federal Poverty Level ",
                             "Percentage of Population living in extreme poverty neighborhoods "
                         ]
