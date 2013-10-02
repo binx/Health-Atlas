@@ -22,7 +22,7 @@ ID,Health Atlas Section,IndicatorName,GeographicScale,Keep/Remove,Topic,Revised 
 15,Economic Conditions,Percentage of Unemployed Workers Age 16 and Over ,CPA,Keep,Economic Conditions,Unemployed age 16 and over,2,,Poverty,2.1,Caterpillar bar or difference from mean,,,Economic Conditions,16
 17,Economic Conditions,Percentage of Population below the Federal Poverty Level ,CPA,Keep,Economic Conditions,Population below federal poverty line,2,,Poverty,2.1,Caterpillar bar or difference from mean,,,Economic Conditions,15
 19,Economic Conditions,Percentage of Population 200% below the Federal Poverty Level ,CPA,Keep,Economic Conditions,Population below 200% below poverty line,2,,Poverty,2.2,Caterpillar bar or difference from mean,,,Economic Conditions,17
-110,Economic Conditions,Percentage of Population living in extreme poverty neighborhoods ,CPA,Keep,Economic Conditions,Population living in extreme poverty neighborhoods,2,,Poverty,2.4,Caterpillar bar or difference from mean,,,Economic Conditions,18
+110,Economic Conditions,Percentage of Population Living in Extreme Poverty Neighborhoods ,CPA,Keep,Economic Conditions,Population living in extreme poverty neighborhoods,2,,Poverty,2.4,Caterpillar bar or difference from mean,,,Economic Conditions,18
 21,Education,Percentage of Population Age 25 and Over that Did Not Graduate from High School ,CPA,Keep,Education,Without high school degree,3,,Educational Attainment,1.1,Isotype people / waffle,,Yes,Education,19
 22,Education,Percentage of Population Age 25 and Over that Graduated from High School ,CPA,Keep,Education,With high school degree,3,,Educational Attainment,1.2,Isotype people / waffle,,,Education,20
 23,Education,Percentage of Population Age 25 and Over with a Bachelor's Degree or Higher ,CPA,Keep,Education,With a bachelor's degree or higher ,3,,Educational Attainment,1.3,Isotype people / waffle,,,Education,21
@@ -38,7 +38,7 @@ ID,Health Atlas Section,IndicatorName,GeographicScale,Keep/Remove,Topic,Revised 
 57,Land Use,Land Use Mix,CPA,Keep,Land Use,,6,,LU Summary,2.2,Difference from mean bar,,,Land use ,26
 58,Land Use,Land Use Diversity,CPA,Keep,Land Use,,6,,LU Summary,2.3,Difference from mean bar,,,Land use ,27
 56,Land Use,Intersection Density,CPA,Keep,Land Use,,6,,LU Summary,2.4,Difference from mean bar,,,Land use ,28
-65,Land Use,"Park Level of Service (Acres per 1,000 Residents)",CPA,Keep,Land Use,,6,,LU Summary,2.5,Difference from mean bar,,,Land use ,29
+65,Land Use,"Park Level of Service",CPA,Keep,Land Use,,6,,LU Summary,2.5,Difference from mean bar,,,Land use ,29
 66,Land Use,Percentage of the Population within One-Half Mile Walking Distance of a Park,CPA,Keep,Land Use,% who live within one-half mile of a park,6,,LU Summary,2.6,Difference from mean bar,,,Land use ,30
 2,Demographic and Social Characteristics,Population per Square Mile,CPA,Keep,Demographics,,6,Yes,Density (Pop/Emp),3.1,? Could be on differrence from mean,,,Land use ,24
 67,Land Use,Employment Density,CPA,Keep,Land Use,,6,,Density (Pop/Emp),3.2,? Could be on differrence from mean,,,Land use ,25
@@ -49,8 +49,9 @@ ID,Health Atlas Section,IndicatorName,GeographicScale,Keep/Remove,Topic,Revised 
 71,Transportation,Percentage of Commuters Walking to Work,CPA,Keep,Transportation,,7,,Mode,2.4,Difference from mean,,,Transportation,35
 72,Transportation,Percentage of Commuters Biking to Work,CPA,Keep,Transportation,,7,,Mode,2.6,Difference from mean,,,Transportation,36
 73,Transportation,Percentage of Commuters Traveling by Other Means to Work,CPA,Keep,Transportation,,7,,Mode,2.6,Difference from mean,,,,
-76,Transportation,"Average Annual Rate of Motor Vehicle Collisions with Pedestrians per 10,000 Residents",CPA,Keep,Transportation,,7,,Collisions,3.1,Difference from mean,,,Transportation,37
-77,Transportation,"Average Annual Rate of Motor Vehicle Collisions with Bicyclists per 10,000 Residents",CPA,Keep,Transportation,,7,,Collisions,3.2,Difference from mean,,,Transportation,38
+76,Transportation,"Rate of Motor Vehicle Collisions with Pedestrians per 10,000 Residents",CPA,Keep,Transportation,,7,,Collisions,3.1,Difference from mean,,,Transportation,37
+77,Transportation,"Rate of Motor Vehicle Collisions with Bicyclists per 10,000 Residents",CPA,Keep,Transportation,,7,,Collisions,3.2,Difference from mean,,,Transportation,38
+78, Transportation,"Rate of Motor Vehicle Collisions with Pedestrians and Bicyclists with Children within One-Half Mile of a School per 10,000 Children",CPA,Keep,Transportation,,7,,Collisions,3.2,Difference from mean,,,Transportation,38
 89,Transportation,"Average Annual Rate of Motor Vehicle Collisions Involving Alcohol per 10,000 Residents",CPA,Keep,Transportation,,7,Yes,MV Fatalities,3.4,,,,Transportation,40
 79,Food Systems,Modified Retail Food Environment Index,CPA,Keep,Food Systems,,8,,Food Environment,1.1,Difference from mean,,,Food Systems,41
 81,Food Systems,Neighborhood Food Sources ,CPA,Keep,Food Systems,,8,,Food Environment,1.3,Difference from mean,,,,
@@ -59,9 +60,9 @@ ID,Health Atlas Section,IndicatorName,GeographicScale,Keep/Remove,Topic,Revised 
 87,Food Systems,"Off-Sale Liquor License Rate per 10,000 Residents",CPA,Keep,Food Systems,,8,,Food Environment,1.6,Difference from mean,,,Food Systems,45
 88,Food Systems,"On-Sale Liquor License Rate per 10,000 Residents",CPA,Keep,Food Systems,,8,,Food Environment,1.7,Difference from mean,,,Food Systems,46
 90,Food Systems,Percentage of Households that are CalFresh Recipients,CPA,Keep,Food Systems,,8,,Food Environment,1.5,Difference from mean,,,Food Systems,44
-93,Crime,"Violent Crime Rate per 1,000 Residents (6-Month Rate, April to September 2012)",CPA,Keep,Crime,,9,,Crime Summary,1.1,Difference from mean,,,Crime,47
-94,Crime,"Property Crime Rate per 1,000 Residents (6-Month Rate, April to September 2012)",CPA,Keep,Crime,,9,,Crime Summary,1.2,Difference from mean,,,Crime,48
-92,Crime,"Crime Rate for All Part I Offences per 1,000 Residents (6-Month Rate, April to September 2012)",CPA,Keep,Crime,,9,,Crime Summary,1.3,Difference from mean,,,Crime,49
+93,Crime,"Violent Crime Rate per 1,000 Residents",CPA,Keep,Crime,,9,,Crime Summary,1.1,Difference from mean,,,Crime,47
+94,Crime,"Property Crime Rate per 1,000 Residents ",CPA,Keep,Crime,,9,,Crime Summary,1.2,Difference from mean,,,Crime,48
+92,Crime,"Crime Rate for All Part I Offences per 1,000 Residents",CPA,Keep,Crime,,9,,Crime Summary,1.3,Difference from mean,,,Crime,49
 103,Housing,Percentage of Households Paying More than 30% of Income on Housing Costs,CPA,Keep,Housing,,10,,Housing cost,1,Header stat ,,,Housing,50
 98,Housing,Residential Density,CPA,Keep,Housing,,10,,General housing,2.1,Difference from mean,,,Housing,51
 99,Housing,Housing Diversity,CPA,Keep,Housing,,10,,General housing,2.2,Difference from mean,,,Housing,52
