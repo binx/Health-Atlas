@@ -249,7 +249,7 @@
             d3.json("geo_data/CPA_small.json",function(collection){
                 mapData["CPA"] = collection;
                 map.select("svg").attr("width","200").attr("height","300").append("g");
-                loadMapData(collection, areaName, "CPA", null, null);
+                loadMapData(collection, [areaName], "CPA", null, null);
                 processMapPlaces(map, null, [{"place":areaName,"data":null}], "CPA");
             });
         }
@@ -269,6 +269,10 @@
             
             paths.enter().append('path').attr("stroke","#bbb").attr("fill","#fff");
             paths.exit().remove();
+
+            $("#map svg").hover(function(){
+                loadMapData(mapData["CPA"], [areaName], "CPA", null, null);
+            });
 
             paths.attr('d', path)
                 .attr("fill",function(d){
@@ -933,8 +937,10 @@
                 if (value.match(/\$/)) return value;
                 value = parseInt(value).toFixed(0);
                 value = "$"+value.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
-            } else if (format == " Percent ")
-                value = (value*100).toFixed(0)+"%";
+            } else if (format == " Percent ") {
+                if (String(value).search("%") == -1)
+                    value = (value*100).toFixed(0)+"%";
+            }
             return value;
         }
 
